@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>爱因斯坦的问题 — 经典逻辑推理</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Noto+Serif+SC:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0f1115;
+  --surface:#1a1d23;
+  --card:#242933;
+  --accent:#d4a537;
+  --accent-bright:#f0c94d;
+  --accent-dim:#8a6d1b;
+  --text:#e0e0e0;
+  --text-dim:#a0a0a0;
+  --border:rgba(212,165,55,0.15);
+  --house-1:#e0ca3c;
+  --house-2:#4a7adf;
+  --house-3:#c0392b;
+  --house-4:#4a9a5e;
+  --house-5:#f8f9fa;
+}
+[data-theme="light"]{
+  --bg:#f4f5f7;
+  --surface:#ffffff;
+  --card:#ffffff;
+  --accent:#b08235;
+  --accent-bright:#d4a537;
+  --accent-dim:#8a6d1b;
+  --text:#1a1a1c;
+  --text-dim:#5a5a5e;
+  --border:rgba(176,130,53,0.2);
+}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Noto Serif SC',serif;
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+  line-height:1.8;
+  overflow-x:hidden;
+}
+
+/* ===== Background ===== */
+.bg-layer{
+  position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(circle at 10% 10%, rgba(212,165,55,0.03), transparent 40%),
+    radial-gradient(circle at 90% 90%, rgba(74,122,223,0.02), transparent 40%),
+    var(--bg);
+}
+
+.container{position:relative;z-index:2;max-width:1000px;margin:0 auto;padding:0 24px}
+
+/* ===== Navigation ===== */
+.back-link, .theme-toggle-sub{
+  position:fixed;top:28px;z-index:100;
+  display:flex;align-items:center;justify-content:center;
+  text-decoration:none;transition:all 0.3s;
+  background:var(--surface);backdrop-filter:blur(8px);
+  border-radius:40px;border:1px solid var(--border);
+  color:var(--text);
+}
+.back-link{left:28px;padding:10px 18px;gap:8px;font-size:0.85rem;}
+.theme-toggle-sub{right:28px;width:44px;height:44px;cursor:pointer;}
+.back-link:hover, .theme-toggle-sub:hover{
+  border-color:var(--accent);color:var(--accent-bright);
+}
+.back-link svg, .theme-toggle-sub svg{width:18px;height:18px;fill:currentColor}
+.theme-toggle-sub .sun-icon{display:none}
+[data-theme="light"] .theme-toggle-sub .sun-icon{display:block}
+[data-theme="light"] .theme-toggle-sub .moon-icon{display:none}
+
+/* ===== Hero ===== */
+.hero{
+  min-height:90vh;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;padding:60px 0;
+}
+.hero-icon{font-size:4rem;margin-bottom:24px;filter:drop-shadow(0 0 10px rgba(212,165,55,0.2))}
+.hero h1{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(2.2rem,7vw,3.8rem);
+  font-weight:900;
+  background:linear-gradient(135deg, var(--accent-bright), var(--accent), var(--accent-dim));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  margin-bottom:12px;
+}
+.hero .subtitle{
+  font-size:1.1rem;color:var(--text-dim);letter-spacing:0.2em;margin-bottom:40px;
+}
+.hero-rule{
+  max-width:640px;text-align:left;background:var(--surface);
+  border:1px solid var(--border);padding:28px 32px;border-radius:4px;
+  font-size:0.92rem;color:var(--text-dim);line-height:1.9;
+}
+.hero-rule strong{color:var(--accent);font-weight:600}
+
+/* ===== Puzzle Content ===== */
+section{padding:80px 0}
+.label{
+  display:inline-block;font-size:0.72rem;letter-spacing:0.25em;
+  color:var(--accent);border:1px solid var(--border);
+  padding:4px 14px;border-radius:2px;margin-bottom:16px;text-transform:uppercase;
+}
+.section-title{font-size:2rem;font-weight:800;margin-bottom:32px}
+
+/* ===== Rules & Conditions ===== */
+.clue-toolbar{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-bottom:24px;flex-wrap:wrap;gap:16px;
+}
+.clue-filters{display:flex;gap:8px;flex-wrap:wrap}
+.clue-filter-btn{
+  background:var(--surface);border:1px solid var(--border);
+  color:var(--text-dim);padding:6px 14px;border-radius:20px;
+  font-size:0.75rem;cursor:pointer;transition:all 0.3s;
+}
+.clue-filter-btn:hover{border-color:var(--accent);color:var(--accent)}
+.clue-filter-btn.active{background:var(--accent);color:var(--bg);border-color:var(--accent)}
+
+.clue-stats{font-size:0.75rem;color:var(--text-dim)}
+.clue-stats span{color:var(--accent);font-weight:700}
+
+.conditions-grid{
+  display:grid;grid-template-columns:repeat(auto-fit, minmax(280px, 1fr));gap:16px;
+  margin-bottom:40px;
+}
+.condition-item{
+  background:var(--card);border:1px solid var(--border);
+  padding:18px 20px;border-radius:6px;font-size:0.88rem;
+  display:flex;gap:16px;transition:all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor:pointer;position:relative;overflow:hidden;
+}
+.condition-item::before{
+  content:'';position:absolute;left:0;top:0;bottom:0;width:3px;
+  background:var(--accent);opacity:0;transition:opacity 0.3s;
+}
+.condition-item:hover{border-color:var(--accent);transform:translateX(4px)}
+.condition-item.checked{opacity:0.5;border-color:var(--border)}
+.condition-item.checked::after{
+  content:'✓';position:absolute;right:12px;top:12px;
+  color:var(--accent);font-size:1.2rem;font-weight:900;
+}
+.condition-item.checked p{text-decoration:line-through;color:var(--text-dim)}
+
+.condition-icon{
+  font-size:1.2rem;width:32px;height:32px;
+  background:rgba(212,165,55,0.05);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.condition-num{color:var(--accent-dim);font-family:'Playfair Display',serif;font-weight:700;font-size:0.75rem;margin-top:2px}
+.condition-content{flex:1}
+.condition-content p{margin-bottom:4px}
+.clue-tag{
+  font-size:0.65rem;padding:1px 8px;border-radius:10px;
+  background:rgba(212,165,55,0.08);color:var(--accent-dim);
+  text-transform:uppercase;letter-spacing:0.05em;
+}
+
+/* Category Specific Colors */
+.cat-pos{--cat-color:#4a7adf}.cat-color{--cat-color:#c0392b}.cat-person{--cat-color:#d4a537}.cat-drink{--cat-color:#4a9a5e}.cat-smoke{--cat-color:#8a5abf}.cat-pet{--cat-color:#e07060}
+.clue-tag{color:var(--cat-color);background:rgba(var(--cat-color-rgb),0.1)}
+
+
+/* ===== Solving Table ===== */
+.solving-container{
+  overflow-x:auto;margin:40px 0;padding-bottom:20px;
+}
+.logic-table{
+  width:100%;min-width:800px;border-collapse:collapse;
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:8px;overflow:hidden;
+}
+.logic-table th, .logic-table td{
+  padding:16px;text-align:center;border:1px solid var(--border);
+}
+.logic-table th{
+  background:rgba(212,165,55,0.05);color:var(--accent);
+  font-size:0.9rem;letter-spacing:0.1em;
+}
+.logic-table td{font-size:0.95rem}
+.house-num{font-family:'Playfair Display',serif;font-weight:900;font-size:1.2rem;color:var(--accent)}
+.house-color-tag{
+  display:inline-block;width:20px;height:20px;border-radius:50%;
+  vertical-align:middle;margin-right:8px;border:1px solid rgba(255,255,255,0.2);
+}
+
+/* ===== Deduction Steps ===== */
+.steps-timeline{margin-top:40px}
+.step-item{
+  position:relative;padding-left:40px;margin-bottom:32px;
+  opacity:0;transform:translateY(20px);transition:all 0.6s ease-out;
+}
+.step-item.visible{opacity:1;transform:translateY(0)}
+.step-item::before{
+  content:'';position:absolute;left:0;top:10px;width:12px;height:12px;
+  border-radius:50%;background:var(--accent-dim);border:2px solid var(--accent);
+}
+.step-item::after{
+  content:'';position:absolute;left:5px;top:22px;bottom:-20px;width:2px;
+  background:var(--border);
+}
+.step-item:last-child::after{display:none}
+.step-title{font-weight:700;color:var(--accent-bright);margin-bottom:8px}
+.step-content{font-size:0.92rem;color:var(--text-dim)}
+
+/* ===== Final Result ===== */
+.answer-box{
+  background:rgba(212,165,55,0.08);border:1px solid var(--accent);
+  padding:40px;border-radius:8px;text-align:center;margin-top:60px;
+}
+.answer-box h3{color:var(--accent-bright);font-size:1.5rem;margin-bottom:16px}
+.answer-highlight{
+  font-size:2.4rem;font-weight:900;color:var(--house-4);
+  margin:20px 0;display:block;text-shadow:0 0 20px rgba(74, 154, 94, 0.2);
+}
+
+/* ===== Insight ===== */
+.insight{
+  background:var(--surface);border-left:4px solid var(--accent);
+  padding:24px 32px;border-radius:0 4px 4px 0;margin-top:40px;
+}
+.insight h4{color:var(--accent);margin-bottom:12px}
+.insight p{font-size:0.9rem;color:var(--text-dim)}
+
+footer{
+  text-align:center;padding:60px 0 40px;color:var(--text-dim);
+  font-size:0.8rem;border-top:1px solid var(--border);
+}
+
+@media(max-width:640px){
+  .logic-table th, .logic-table td{padding:10px 8px;font-size:0.8rem}
+  .hero h1{font-size:2rem}
+}
+</style>
+</head>
+<body>
+
+<div class="bg-layer"></div>
+
+<a href="../index.html" class="back-link">
+  <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+  <span>返回首页</span>
+</a>
+
+<button class="theme-toggle-sub" id="themeToggle">
+  <svg class="moon-icon" viewBox="0 0 24 24"><path d="M12.1,22c-4.9,0-9-3.8-9.1-8.7c0-3.1,1.5-6.1,4.1-8c0.2-0.1,0.5-0.1,0.7,0.1c0.2,0.2,0.2,0.5,0.1,0.7c-0.5,0.9-0.7,1.8-0.7,2.8c0,3.5,2.8,6.3,6.3,6.3c1,0,1.9-0.2,2.8-0.7c0.2-0.1,0.5-0.1,0.7,0.1c0.2,0.2,0.2,0.5,0.1,0.7C15.1,20.5,13.6,22,12.1,22z"/></svg>
+  <svg class="sun-icon" viewBox="0 0 24 24"><path d="M12,18c-3.3,0-6-2.7-6-6s2.7-6,6-6s6,2.7,6,6S15.3,18,12,18z M12,8c-2.2,0-4,1.8-4,4s1.8,4,4,4s4-1.8,4-4S14.2,8,12,8z M11,1h2v3h-2V1z M11,20h2v3h-2V20z M3.5,4.9l2.1-2.1l1.4,1.4L4.9,6.3L3.5,4.9z M17,18.4l2.1-2.1l1.4,1.4l-2.1,2.1L17,18.4z M1,11h3v2H1V11z M20,11h3v2h-3V11z M4.9,17.7l2.1,2.1l-1.4,1.4l-2.1-2.1L4.9,17.7z M18.4,5.6l2.1-2.1l1.4,1.4l-2.1,2.1L18.4,5.6z"/></svg>
+</button>
+
+<div class="container">
+  <section class="hero">
+    <div class="hero-icon">🧩</div>
+    <h1>Einstein's Riddle</h1>
+    <p class="subtitle">爱 因 斯 坦 的 谜 题</p>
+    <div class="hero-rule">
+      据说这道题由爱因斯坦在 20 世纪初编写，他声称<strong>世界上 90% 的人</strong>都无法解答。题目给出了 15 个关于 5 栋房子主人的已知条件，核心矛盾在于：<strong>谁养鱼？</strong>
+    </div>
+  </section>
+
+  <section id="conditions" class="reveal">
+    <span class="label">Conditions / 已知条件</span>
+    <h2 class="section-title">复杂的线索网</h2>
+    
+    <div class="clue-toolbar">
+      <div class="clue-filters" id="clueFilters">
+        <button class="clue-filter-btn active" data-filter="all">全部</button>
+        <button class="clue-filter-btn" data-filter="pos">位置</button>
+        <button class="clue-filter-btn" data-filter="color">颜色</button>
+        <button class="clue-filter-btn" data-filter="person">国籍</button>
+        <button class="clue-filter-btn" data-filter="drink">饮品</button>
+        <button class="clue-filter-btn" data-filter="smoke">香烟</button>
+        <button class="clue-filter-btn" data-filter="pet">宠物</button>
+      </div>
+      <div class="clue-stats">已分析: <span id="checkedCount">0</span>/15</div>
+    </div>
+
+    <div class="conditions-grid" id="conditionsGrid">
+      <div class="condition-item" data-cat="person,color">
+        <div class="condition-icon">🇬🇧</div>
+        <div class="condition-content">
+          <span class="condition-num">01</span>
+          <p>英国人住在红房子里</p>
+          <span class="clue-tag cat-person">国籍</span>
+          <span class="clue-tag cat-color">颜色</span>
+        </div>
+      </div>
+      <div class="condition-item" data-cat="person,pet">
+        <div class="condition-icon">🇸🇪</div>
+        <div class="condition-content">
+          <span class="condition-num">02</span>
+          <p>瑞典人养了一条狗</p>
+          <span class="clue-tag cat-person">国籍</span>
+          <span class="clue-tag cat-pet">宠物</span>
+        </div>
+      </div>
+      <div class="condition-item" data-cat="person,drink">
+        <div class="condition-icon">🇩🇰</div>
+        <div class="condition-content">
+          <span class="condition-num">03</span>
+          <p>丹麦人喝茶</p>
+          <span class="clue-tag cat-person">国籍</span>
+          <span class="clue-tag cat-drink">饮品</span>
+        </div>
+      </div>
+      <div class="condition-item" data-cat="pos,color">
+        <div class="condition-icon">⬅️</div>
+        <div class="condition-content">
+          <span class="condition-num">04</span>
+          <p>绿房子在白房子的左边</p>
+          <span class="clue-tag cat-pos">位置</span>
+          <span class="clue-tag cat-color">颜色</span>
+        </div>
+      </div>
+      <div class="condition-item" data-cat="color,drink">
+        <div class="condition-icon">☕</div>
+        <div class="condition-content">
+          <span class="condition-num">05</span>
+          <p>绿房子主人喝咖啡</p>
+          <span class="clue-tag cat-color">颜色</span>
+          <span class="clue-tag cat-drink">饮品</span>
+        </div>
+      </div>
+      <div class="condition-item" data-cat="smoke,pet">
+        <div class="condition-icon">🐦</div>
+        <div class="condition-content">
+          <span class="condition-num">06</span>
+          <p>抽 PALL MALL 烟的人养了一只鸟</p>
+          <span class="clue-tag cat-smoke">香烟</span>
+          <span class="clue-tag cat-pet">宠物</span>
+        </div>
+      </div>
+      <div class="condition-item" data-cat="color,smoke">
+        <div class="condition-icon">🚬</div>
+        <div class="condition-content">
+          <span class="condition-num">07</span>
+          <p>黄房子主人抽 DUNHILL 烟</p>
+          <span class="clue-tag cat-color">颜色</span>
+          <span class="clue-tag cat-smoke">香烟</span>
+        </div>
+      </div>
+      <div class="condition-item" data-cat="pos,drink">
+        <div class="condition-icon">🥛</div>
+        <div class="condition-content">
+          <span class="condition-num">08</span>
+          <p>住在中间房子的人喝牛奶</p>
+          <span class="clue-tag cat-pos">位置</span>
+          <span class="clue-tag cat-drink">饮品</span>
+        </div>
+      </div>
+      <div class="condition-item" data-cat="person,pos">
+        <div class="condition-icon">🇳🇴</div>
+        <div class="condition-content">
+          <span class="condition-num">09</span>
+          <p>挪威人住在第一间房子</p>
+          <span class="clue-tag cat-person">国籍</span>
+          <span class="clue-tag cat-pos">位置</span>
+        </div>
+      </div>
+      <div class="condition-item" data-cat="pos,smoke,pet">
+        <div class="condition-icon">🐱</div>
+        <div class="condition-content">
+          <span class="condition-num">10</span>
+          <p>抽混合烟的人住在养猫人的旁边</p>
+          <span class="clue-tag cat-pos">位置</span>
+          <span class="clue-tag cat-smoke">香烟</span>
+          <span class="clue-tag cat-pet">宠物</span>
+        </div>
+      </div>
+      <div class="condition-item" data-cat="pos,smoke,pet">
+        <div class="condition-icon">🐴</div>
+        <div class="condition-content">
+          <span class="condition-num">11</span>
+          <p>养马人住在抽 DUNHILL 烟人的旁边</p>
+          <span class="clue-tag cat-pos">位置</span>
+          <span class="clue-tag cat-smoke">香烟</span>
+          <span class="clue-tag cat-pet">宠物</span>
+        </div>
+      </div>
+      <div class="condition-item" data-cat="smoke,drink">
+        <div class="condition-icon">🍺</div>
+        <div class="condition-content">
+          <span class="condition-num">12</span>
+          <p>抽 BLUE MASTER 烟的人喝啤酒</p>
+          <span class="clue-tag cat-smoke">香烟</span>
+          <span class="clue-tag cat-drink">饮品</span>
+        </div>
+      </div>
+      <div class="condition-item" data-cat="person,smoke">
+        <div class="condition-icon">🇩🇪</div>
+        <div class="condition-content">
+          <span class="condition-num">13</span>
+          <p>德国人抽 PRINCE 烟</p>
+          <span class="clue-tag cat-person">国籍</span>
+          <span class="clue-tag cat-smoke">香烟</span>
+        </div>
+      </div>
+      <div class="condition-item" data-cat="pos,person,color">
+        <div class="condition-icon">🏠</div>
+        <div class="condition-content">
+          <span class="condition-num">14</span>
+          <p>挪威人住在蓝房子旁边</p>
+          <span class="clue-tag cat-pos">位置</span>
+          <span class="clue-tag cat-color">颜色</span>
+        </div>
+      </div>
+      <div class="condition-item" data-cat="pos,smoke,drink">
+        <div class="condition-icon">💧</div>
+        <div class="condition-content">
+          <span class="condition-num">15</span>
+          <p>抽混合烟的人的邻居喝矿泉水</p>
+          <span class="clue-tag cat-pos">位置</span>
+          <span class="clue-tag cat-smoke">香烟</span>
+          <span class="clue-tag cat-drink">饮品</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <section id="solution" class="reveal">
+    <span class="label">Analysis / 逻辑推演</span>
+    <h2 class="section-title">排除与填充</h2>
+    
+    <div class="steps-timeline">
+      <div class="step-item reveal">
+        <div class="step-title">第一步：确定固定锚点</div>
+        <div class="step-content">
+          根据条件 9，<strong>挪威人</strong>住在第 1 间房。根据条件 14，挪威人住在蓝房子旁边，所以 <strong>第 2 间房是蓝色</strong>。根据条件 8，中间（第 3 间）的人喝<strong>牛奶</strong>。
+        </div>
+      </div>
+      <div class="step-item reveal">
+        <div class="step-title">第二步：锁定颜色与国籍</div>
+        <div class="step-content">
+          条件 4 和 5 指出绿房子在白房子左边且主人喝咖啡。绿色不能是第 2 间（蓝色），也不能是第 3 间（牛奶），所以绿色只能是第 4 间，白色是第 5 间。剩下的红房子和黄房子分别对应第 3 间和第 1 间。因此，<strong>第 1 间是黄色</strong>（抽 Dunhill），<strong>第 3 间是红色</strong>（英国人）。
+        </div>
+      </div>
+      <div class="step-item reveal">
+        <div class="step-title">第三步：填补空缺</div>
+        <div class="step-content">
+          根据条件 11，养马人住在抽 Dunhill（第 1 间）旁边，所以第 2 间养马。现在我们要放丹麦人（茶）和德国人（Prince），通过复杂的排除法，我们发现德国人只能住在第 4 间（绿房子）。
+        </div>
+      </div>
+    </div>
+
+    <div class="solving-container reveal">
+      <table class="logic-table">
+        <thead>
+          <tr>
+            <th>位置</th>
+            <th>第一间</th>
+            <th>第二间</th>
+            <th>第三间</th>
+            <th>第四间</th>
+            <th>第五间</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th>颜色</th>
+            <td><span class="house-color-tag" style="background:var(--house-1)"></span>黄色</td>
+            <td><span class="house-color-tag" style="background:var(--house-2)"></span>蓝色</td>
+            <td><span class="house-color-tag" style="background:var(--house-3)"></span>红色</td>
+            <td><span class="house-color-tag" style="background:var(--house-4)"></span>绿色</td>
+            <td><span class="house-color-tag" style="background:var(--house-5)"></span>白色</td>
+          </tr>
+          <tr>
+            <th>国籍</th>
+            <td>挪威人</td>
+            <td>丹麦人</td>
+            <td>英国人</td>
+            <td style="color:var(--accent-bright); font-weight:700">德国人</td>
+            <td>瑞典人</td>
+          </tr>
+          <tr>
+            <th>饮料</th>
+            <td>水</td>
+            <td>茶</td>
+            <td>牛奶</td>
+            <td>咖啡</td>
+            <td>啤酒</td>
+          </tr>
+          <tr>
+            <th>香烟</th>
+            <td>Dunhill</td>
+            <td>混合烟</td>
+            <td>Pall Mall</td>
+            <td>Prince</td>
+            <td>Blue Master</td>
+          </tr>
+          <tr>
+            <th>宠物</th>
+            <td>猫</td>
+            <td>马</td>
+            <td>鸟</td>
+            <td style="color:var(--house-4); font-weight:900">鱼 🐟</td>
+            <td>狗</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="answer-box reveal">
+      <h3>最终答案</h3>
+      <p>在层层迷雾之后，唯一的幸存者是：</p>
+      <span class="answer-highlight">德国人养鱼</span>
+    </div>
+
+    <div class="insight reveal">
+      <h4>逻辑的魅力</h4>
+      <p>爱因斯坦谜题本质上是一个<strong>约束满足问题 (Constraint Satisfaction Problem)</strong>。虽然线索繁杂，但只要找到第一个确定的锚点，利用排除法将可能性逐一剔除，真相就会像拼图一样自动显现。这种推导过程也是现代计算机逻辑运算的基础。</p>
+    </div>
+  </section>
+
+  <footer>
+    <span>&#9670;</span> 爱因斯坦的问题 — 经典逻辑博弈 <span>&#9670;</span>
+  </footer>
+</div>
+
+<script>
+/**
+ * 初始化页面交互。
+ */
+(function() {
+  // 主题切换
+  var themeToggle = document.getElementById('themeToggle');
+  themeToggle.addEventListener('click', function() {
+    var isLight = document.documentElement.getAttribute('data-theme') === 'light';
+    var newTheme = isLight ? 'dark' : 'light';
+    document.documentElement.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+  });
+  
+  var savedTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+  document.documentElement.setAttribute('data-theme', savedTheme);
+
+  // 滚动显现
+  var reveals = document.querySelectorAll('.reveal');
+  var observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1 });
+
+  reveals.forEach(function(el) { observer.observe(el); });
+
+  // 线索交互逻辑
+  (function() {
+    var items = document.querySelectorAll('.condition-item');
+    var filters = document.querySelectorAll('.clue-filter-btn');
+    var checkedCount = document.getElementById('checkedCount');
+
+    // 切换勾选状态
+    items.forEach(function(item) {
+      item.addEventListener('click', function() {
+        this.classList.toggle('checked');
+        updateCount();
+      });
+    });
+
+    // 更新已勾选数量
+    function updateCount() {
+      var count = document.querySelectorAll('.condition-item.checked').length;
+      checkedCount.textContent = count;
+    }
+
+    // 分类过滤
+    filters.forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var filter = this.getAttribute('data-filter');
+        
+        // 更新按钮状态
+        filters.forEach(function(b) { b.classList.remove('active'); });
+        this.classList.add('active');
+
+        // 过滤线索
+        items.forEach(function(item) {
+          if (filter === 'all') {
+            item.style.display = 'flex';
+          } else {
+            var cats = item.getAttribute('data-cat').split(',');
+            if (cats.indexOf(filter) !== -1) {
+              item.style.display = 'flex';
+            } else {
+              item.style.display = 'none';
+            }
+          }
+        });
+      });
+    });
+  })();
+})();
+</script>
+</body>
+</html>

@@ -43,7 +43,6 @@ TITLE_MAP = {
     "帽子问题": "hat-puzzle",
     "开关问题": "switch-puzzle",
     "密码问题": "password-puzzle",
-    "分割金条": "gold-bar",
 }
 
 # 难度星级（1-10，默认5）
@@ -58,7 +57,6 @@ DIFFICULTY_MAP = {
     "帽子问题": 7,
     "开关问题": 8,
     "密码问题": 6,
-    "分割金条": 4,
 }
 
 # 分类关键词识别

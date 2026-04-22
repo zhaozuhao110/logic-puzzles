@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>五个囚犯 — 微软面试经典博弈题</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Noto+Serif+SC:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --prison-bg:#0a0c10;
+  --prison-wall:#1a1d23;
+  --prison-bars:#2c313a;
+  --bean-green:#4a9a5e;
+  --bean-green-bright:#6edb87;
+  --bean-green-dim:#2d5e39;
+  --danger-red:#c0392b;
+  --text-main:#d1d5db;
+  --text-dim:#9ca3af;
+  --accent:#4a9a5e;
+  --card-bg:rgba(26, 29, 35, 0.9);
+  --card-border:rgba(74, 154, 94, 0.2);
+}
+[data-theme="light"]{
+  --prison-bg:#f3f4f6;
+  --prison-wall:#ffffff;
+  --prison-bars:#e5e7eb;
+  --bean-green:#2d5e39;
+  --bean-green-bright:#4a9a5e;
+  --bean-green-dim:#1b3d24;
+  --danger-red:#a8281a;
+  --text-main:#1f2937;
+  --text-dim:#4b5563;
+  --accent:#2d5e39;
+  --card-bg:rgba(255, 255, 255, 0.9);
+  --card-border:rgba(45, 94, 57, 0.2);
+}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Noto Serif SC',serif;
+  background:var(--prison-bg);
+  color:var(--text-main);
+  min-height:100vh;
+  overflow-x:hidden;
+  line-height:1.8;
+}
+
+/* ===== Prison Background ===== */
+.bg-layer{
+  position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(74, 154, 94, 0.05), transparent 40%),
+    radial-gradient(circle at 80% 80%, rgba(192, 57, 43, 0.03), transparent 40%),
+    var(--prison-bg);
+}
+.bg-layer::before{
+  content:'';position:absolute;inset:0;
+  background:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity:0.03;
+}
+
+.container{position:relative;z-index:2;max-width:900px;margin:0 auto;padding:0 24px}
+
+/* ===== Navigation ===== */
+.back-link, .theme-toggle-sub{
+  position:fixed;top:28px;z-index:100;
+  display:flex;align-items:center;justify-content:center;
+  text-decoration:none;transition:all 0.3s;
+  background:var(--card-bg);backdrop-filter:blur(8px);
+  border-radius:40px;border:1px solid var(--card-border);
+  color:var(--text-main);
+}
+.back-link{left:28px;padding:10px 18px;gap:8px;font-size:0.85rem;}
+.theme-toggle-sub{right:28px;width:44px;height:44px;cursor:pointer;}
+.back-link:hover, .theme-toggle-sub:hover{
+  border-color:var(--accent);color:var(--bean-green-bright);
+}
+.theme-toggle-sub .sun-icon{display:none}
+[data-theme="light"] .theme-toggle-sub .sun-icon{display:block}
+[data-theme="light"] .theme-toggle-sub .moon-icon{display:none}
+.back-link svg, .theme-toggle-sub svg{width:18px;height:18px;fill:currentColor}
+
+/* ===== Hero ===== */
+.hero{
+  min-height:90vh;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;
+}
+.hero-icon{
+  font-size:4rem;margin-bottom:24px;filter:drop-shadow(0 0 12px rgba(74, 154, 94, 0.3));
+}
+.hero h1{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(2.5rem,8vw,4rem);
+  font-weight:900;
+  background:linear-gradient(135deg, var(--bean-green-bright), var(--bean-green), var(--bean-green-dim));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  margin-bottom:12px;
+}
+.hero .subtitle{
+  font-size:1.1rem;color:var(--text-dim);letter-spacing:0.2em;margin-bottom:40px;
+}
+
+/* ===== Sections ===== */
+section{padding:80px 0}
+.label{
+  display:inline-block;font-size:0.7rem;letter-spacing:0.2em;
+  color:var(--bean-green);border:1px solid var(--card-border);
+  padding:4px 12px;border-radius:2px;margin-bottom:16px;text-transform:uppercase;
+}
+.section-title{
+  font-size:2rem;font-weight:800;margin-bottom:32px;
+}
+
+/* ===== Rules Grid ===== */
+.rules-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(240px, 1fr));gap:20px}
+.rule-card{
+  background:var(--card-bg);border:1px solid var(--card-border);
+  padding:24px;border-radius:4px;transition:all 0.3s;
+}
+.rule-card:hover{border-color:var(--bean-green);transform:translateY(-4px)}
+.rule-card h3{color:var(--bean-green-bright);font-size:1.1rem;margin-bottom:12px}
+.rule-card p{font-size:0.9rem;color:var(--text-dim)}
+
+/* ===== Deduction ===== */
+.deduction-steps{margin-top:40px}
+.step-card{
+  background:var(--card-bg);border:1px solid var(--card-border);
+  border-left:4px solid var(--bean-green);
+  padding:24px;margin-bottom:20px;border-radius:0 4px 4px 0;
+}
+.step-card h4{color:var(--bean-green-bright);margin-bottom:12px;display:flex;align-items:center;gap:10px}
+.step-card p{font-size:0.95rem;margin-bottom:12px}
+.step-card strong{color:var(--danger-red)}
+
+/* ===== Insight ===== */
+.insight{
+  background:rgba(74, 154, 94, 0.05);border:1px solid var(--card-border);
+  padding:32px;border-radius:8px;margin-top:40px;position:relative;
+}
+.insight h3{color:var(--bean-green-bright);margin-bottom:16px}
+.insight p{font-size:1rem;color:var(--text-main)}
+
+footer{
+  text-align:center;padding:60px 0 40px;color:var(--text-dim);
+  font-size:0.8rem;border-top:1px solid var(--card-border);
+}
+
+/* ===== Animations ===== */
+.reveal{opacity:0;transform:translateY(20px);transition:all 0.6s ease-out}
+.reveal.visible{opacity:1;transform:translateY(0)}
+
+@media(max-width:640px){
+  .hero h1{font-size:2.5rem}
+  .back-link{top:16px;left:16px;padding:8px 14px}
+  .theme-toggle-sub{top:16px;right:16px}
+}
+</style>
+</head>
+<body>
+
+<div class="bg-layer"></div>
+
+<a href="../index.html" class="back-link">
+  <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+  <span>返回首页</span>
+</a>
+
+<button class="theme-toggle-sub" id="themeToggle">
+  <svg class="moon-icon" viewBox="0 0 24 24"><path d="M12.1,22c-4.9,0-9-3.8-9.1-8.7c0-3.1,1.5-6.1,4.1-8c0.2-0.1,0.5-0.1,0.7,0.1c0.2,0.2,0.2,0.5,0.1,0.7c-0.5,0.9-0.7,1.8-0.7,2.8c0,3.5,2.8,6.3,6.3,6.3c1,0,1.9-0.2,2.8-0.7c0.2-0.1,0.5-0.1,0.7,0.1c0.2,0.2,0.2,0.5,0.1,0.7C15.1,20.5,13.6,22,12.1,22z"/></svg>
+  <svg class="sun-icon" viewBox="0 0 24 24"><path d="M12,18c-3.3,0-6-2.7-6-6s2.7-6,6-6s6,2.7,6,6S15.3,18,12,18z M12,8c-2.2,0-4,1.8-4,4s1.8,4,4,4s4-1.8,4-4S14.2,8,12,8z M11,1h2v3h-2V1z M11,20h2v3h-2V20z M3.5,4.9l2.1-2.1l1.4,1.4L4.9,6.3L3.5,4.9z M17,18.4l2.1-2.1l1.4,1.4l-2.1,2.1L17,18.4z M1,11h3v2H1V11z M20,11h3v2h-3V11z M4.9,17.7l2.1,2.1l-1.4,1.4l-2.1-2.1L4.9,17.7z M18.4,5.6l2.1-2.1l1.4,1.4l-2.1,2.1L18.4,5.6z"/></svg>
+</button>
+
+<div class="container">
+  <section class="hero">
+    <div class="hero-icon">🫘</div>
+    <h1>Five Prisoners</h1>
+    <p class="subtitle">五个囚犯与 100 颗绿豆</p>
+    <div class="hero-question" style="max-width: 600px; margin: 0 auto; color: var(--text-dim); font-size: 0.95rem;">
+      微软经典面试题：在绝对理性的死亡威胁下，谁能在这场博弈中存活？
+    </div>
+  </section>
+
+  <section id="rules" class="reveal">
+    <span class="label">The Rules / 游戏规则</span>
+    <h2 class="section-title">残酷的生存游戏</h2>
+    <div class="rules-grid">
+      <div class="rule-card">
+        <h3>100 颗绿豆</h3>
+        <p>5 个囚犯按 1-5 号顺序抓豆，总共 100 颗，不必抓完，但每人至少抓 1 颗。</p>
+      </div>
+      <div class="rule-card">
+        <h3>极值处死</h3>
+        <p>抓得<strong>最多</strong>和<strong>最少</strong>的人将被处死。若有并列，一并处死。</p>
+      </div>
+      <div class="rule-card">
+        <h3>信息获取</h3>
+        <p>不能交流，但抓的时候可以摸出剩下的豆子数，从而推断前面人的选择。</p>
+      </div>
+      <div class="rule-card">
+        <h3>行为逻辑</h3>
+        <p>绝对聪明且理性。目标优先级：<strong>1. 保命</strong>；<strong>2. 杀掉更多人</strong>。</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="solution" class="reveal">
+    <span class="label">Analysis / 逻辑推演</span>
+    <h2 class="section-title">死亡的螺旋</h2>
+    
+    <div class="deduction-steps">
+      <div class="step-card">
+        <h4><span>1.</span> 寻找安全区</h4>
+        <p>想要活命，必须让自己抓的豆子数处于<strong>中间位置</strong>。这意味着不能是全场最高，也不能是全场最低。</p>
+      </div>
+
+      <div class="step-card">
+        <h4><span>2.</span> 2 号的困境</h4>
+        <p>假设 1 号抓了 x 颗。2 号面临选择：</p>
+        <p>如果 2 号抓的数量明显偏离 x，他极易成为极值。为了生存，他必须紧贴 1 号，抓 x 或 x±1。</p>
+      </div>
+
+      <div class="step-card">
+        <h4><span>3.</span> 3 号的绝望</h4>
+        <p>当 3 号去抓豆子时，他发现前两人几乎持平（x 与 x 或 x±1）。</p>
+        <p>此时 3 号发现，无论他怎么选，他都很难避开“最大”或“最小”的宿命。因为只要他稍微变动，就会和前两人构成极值对立。</p>
+      </div>
+
+      <div class="step-card">
+        <h4><span>4.</span> 第二准则触发</h4>
+        <p>由于 3 号发现自己必死无疑，根据规则：<strong>“先求保命，再去多杀人”</strong>。</p>
+        <p>3 号会选择让更多人陪葬。他会继续把豆子数维持在 x 或 x±1 的极小波动范围内，确保 1 号和 2 号也处于极值状态。</p>
+      </div>
+
+      <div class="step-card">
+        <h4><span>5.</span> 全员覆没</h4>
+        <p>4 号和 5 号面临同样的局面。由于前面的囚犯已经把“安全空间”压缩到了零，后面的人在无法保命的情况下，都会选择执行“多杀人”的策略。</p>
+        <p><strong>最终结果：</strong>所有人的豆子数都极其接近，导致所有人要么是并列最大，要么是并列最小。</p>
+      </div>
+    </div>
+
+    <div class="insight reveal">
+      <h3>核心洞见</h3>
+      <p>在这个博弈模型中，<strong>“并列处死”</strong>和<strong>“杀人优先级”</strong>是毁灭性的。当生存空间被绝对理性的前序决策者压缩到极致时，系统的稳定性会崩塌。由于每个人都无法确保自己不在极值端，且在必死时倾向于拉人下水，最终导致了全员覆没的结局。</p>
+      <p style="margin-top: 10px; font-weight: 700; color: var(--danger-red);">结论：在绝对理性的恶性博弈下，存活概率为 0。</p>
+    </div>
+  </section>
+
+  <footer>
+    <span>&#9670;</span> 五个囚犯 — 经典逻辑博弈 <span>&#9670;</span>
+  </footer>
+</div>
+
+<script>
+/**
+ * 初始化页面交互。
+ */
+(function() {
+  // 主题切换
+  var themeToggle = document.getElementById('themeToggle');
+  themeToggle.addEventListener('click', function() {
+    var isLight = document.documentElement.getAttribute('data-theme') === 'light';
+    var newTheme = isLight ? 'dark' : 'light';
+    document.documentElement.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+  });
+  
+  var savedTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+  document.documentElement.setAttribute('data-theme', savedTheme);
+
+  // 滚动显现
+  var reveals = document.querySelectorAll('.reveal');
+  var observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1 });
+
+  reveals.forEach(function(el) { observer.observe(el); });
+})();
+</script>
+</body>
+</html>

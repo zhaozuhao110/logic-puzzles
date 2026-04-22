@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>舀酒难题 — 经典逻辑推理</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Noto+Serif+SC:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0b0910;
+  --surface:#14111a;
+  --card:#1a1621;
+  --card-soft:#221d2c;
+  --accent:#c38f3d;
+  --accent-bright:#e3b25b;
+  --accent-dim:#7b5721;
+  --wine:#7a1732;
+  --wine-bright:#b8204a;
+  --wine-soft:rgba(184,32,74,0.18);
+  --cream:#e8ddcf;
+  --cream-dim:#9a9084;
+  --line:rgba(195,143,61,0.14);
+  --line-strong:rgba(195,143,61,0.3);
+  --good:#4d9962;
+}
+[data-theme="light"]{
+  --bg:#f8f5ef;
+  --surface:#ffffff;
+  --card:#ffffff;
+  --card-soft:#f3efe8;
+  --accent:#b07f34;
+  --accent-bright:#c89442;
+  --accent-dim:#805f2a;
+  --wine:#9b2447;
+  --wine-bright:#c7355c;
+  --wine-soft:rgba(199,53,92,0.12);
+  --cream:#211b16;
+  --cream-dim:#655d54;
+  --line:rgba(176,127,52,0.18);
+  --line-strong:rgba(176,127,52,0.34);
+}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Noto Serif SC',serif;
+  background:var(--bg);
+  color:var(--cream);
+  min-height:100vh;
+  overflow-x:hidden;
+  line-height:1.85;
+}
+.bg{
+  position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse 60% 35% at 50% 0%,rgba(195,143,61,0.06),transparent),
+    radial-gradient(ellipse 40% 28% at 20% 80%,rgba(122,23,50,0.08),transparent),
+    var(--bg);
+}
+.bg::before{
+  content:'';position:absolute;inset:0;
+  background:url("data:image/svg+xml,%3Csvg viewBox='0 0 240 240' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity:0.025;
+}
+.container{position:relative;z-index:2;max-width:980px;margin:0 auto;padding:0 24px}
+
+.back-link,.theme-toggle-sub{
+  position:fixed;top:28px;z-index:100;
+  display:flex;align-items:center;justify-content:center;
+  text-decoration:none;transition:all 0.3s cubic-bezier(0.4,0,0.2,1);
+  background:rgba(0,0,0,0.35);backdrop-filter:blur(12px);
+  border-radius:40px;border:1px solid var(--line);
+  box-shadow:0 4px 20px rgba(0,0,0,0.2);
+  color:var(--cream-dim);
+}
+.back-link{left:28px;padding:10px 18px;gap:10px;font-size:0.85rem;letter-spacing:0.1em}
+.theme-toggle-sub{right:28px;width:44px;height:44px;cursor:pointer;padding:0}
+.back-link:hover,.theme-toggle-sub:hover{
+  color:var(--cream);border-color:var(--line-strong);
+  background:rgba(0,0,0,0.55);
+}
+.back-link:hover{transform:translateX(-4px)}
+.theme-toggle-sub:hover{transform:rotate(15deg)}
+.back-link svg,.theme-toggle-sub svg{width:18px;height:18px;stroke:currentColor;fill:none;transition:transform 0.3s}
+.theme-toggle-sub svg{fill:currentColor;stroke:none}
+.back-link:hover svg{transform:translateX(-3px)}
+.theme-toggle-sub .sun-icon{display:none}
+[data-theme="light"] .theme-toggle-sub .sun-icon{display:block}
+[data-theme="light"] .theme-toggle-sub .moon-icon{display:none}
+
+.hero{
+  min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;padding:40px 0 32px;
+}
+.hero-icon{
+  width:82px;height:82px;margin-bottom:24px;border-radius:50%;
+  border:1px solid var(--line-strong);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--accent);background:radial-gradient(circle at 35% 30%,rgba(195,143,61,0.13),transparent);
+  box-shadow:0 0 28px rgba(195,143,61,0.08);
+}
+.hero-icon svg{width:46px;height:46px;stroke:currentColor;fill:none}
+.hero h1{
+  font-family:'Playfair Display','Noto Serif SC',serif;
+  font-size:clamp(2.1rem,5.8vw,4rem);font-weight:900;
+  background:linear-gradient(135deg,var(--accent-bright),var(--accent),var(--accent-dim));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  letter-spacing:0.06em;line-height:1.2;margin-bottom:14px;
+}
+.subtitle{
+  font-size:clamp(0.9rem,2vw,1.05rem);
+  color:var(--cream-dim);font-weight:300;letter-spacing:0.22em;margin-bottom:32px;
+}
+.hero-question{
+  max-width:660px;text-align:left;
+  background:var(--card);border:1px solid var(--line);border-radius:10px;
+  padding:26px 30px;color:var(--cream-dim);box-shadow:0 10px 30px rgba(0,0,0,0.12);
+}
+.hero-question strong{color:var(--accent);font-weight:700}
+.scroll-cue{
+  margin-top:34px;display:flex;flex-direction:column;align-items:center;gap:8px;
+  color:var(--accent-dim);font-size:0.82rem;letter-spacing:0.12em;
+  animation:bob 2.4s ease-in-out infinite;
+}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(6px)}}
+
+section{padding:72px 0}
+.label{
+  display:inline-block;font-family:'Playfair Display',serif;
+  font-size:0.74rem;letter-spacing:0.28em;text-transform:uppercase;
+  color:var(--accent-dim);margin-bottom:12px;border:1px solid var(--line);
+  padding:4px 14px;border-radius:2px;
+}
+.heading{
+  font-family:'Playfair Display','Noto Serif SC',serif;
+  font-size:clamp(1.55rem,3.6vw,2.2rem);
+  color:var(--cream);font-weight:700;line-height:1.3;margin-bottom:12px;
+}
+.desc{max-width:720px;color:var(--cream-dim);font-size:0.93rem;font-weight:300;margin-bottom:34px}
+
+.sim-card{
+  background:var(--card);border:1px solid var(--line);border-radius:14px;
+  padding:28px 30px;box-shadow:0 12px 32px rgba(0,0,0,0.12);
+}
+.sim-top{
+  display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap;
+  margin-bottom:22px;
+}
+.sim-title h3{font-size:1.06rem;color:var(--accent);margin-bottom:6px}
+.sim-title p{font-size:0.88rem;color:var(--cream-dim)}
+.sim-controls{display:flex;gap:10px;flex-wrap:wrap}
+.sim-btn{
+  background:transparent;border:1px solid var(--line);
+  color:var(--cream-dim);padding:9px 18px;border-radius:999px;
+  font-family:'Noto Serif SC',serif;font-size:0.84rem;cursor:pointer;
+  transition:all 0.25s;
+}
+.sim-btn:hover{border-color:var(--line-strong);color:var(--accent)}
+.sim-btn.primary{background:rgba(195,143,61,0.1);border-color:var(--accent);color:var(--accent-bright)}
+.sim-btn:disabled{opacity:0.3;cursor:not-allowed}
+.play-status{
+  margin-top:12px;font-size:0.8rem;color:var(--cream-dim);
+}
+.play-status.playing{color:var(--accent-bright)}
+.flow-strip{
+  display:grid;grid-template-columns:1fr auto 1fr;gap:14px;align-items:center;
+  margin:18px 0 20px;padding:14px 16px;
+  background:rgba(195,143,61,0.06);border:1px solid var(--line);border-radius:12px;
+}
+.flow-node{
+  padding:10px 14px;border:1px solid var(--line);border-radius:999px;
+  text-align:center;font-size:0.84rem;color:var(--cream-dim);background:rgba(255,255,255,0.02);
+  transition:all 0.28s;
+}
+.flow-node.active{
+  border-color:var(--accent);color:var(--accent-bright);
+  background:rgba(195,143,61,0.1);box-shadow:0 0 0 1px rgba(195,143,61,0.1);
+}
+.flow-node.dim{opacity:0.5}
+.flow-arrow{
+  display:flex;flex-direction:column;align-items:center;gap:6px;
+  color:var(--accent-dim);min-width:96px;
+}
+.flow-arrow-icon{
+  font-size:1.4rem;line-height:1;opacity:0.55;transition:transform 0.35s,opacity 0.35s,color 0.35s;
+}
+.flow-arrow-icon.active{opacity:1;color:var(--accent-bright);transform:translateX(4px)}
+.flow-arrow-label{font-size:0.76rem;letter-spacing:0.08em;color:var(--cream-dim)}
+
+.liquid-stage{
+  display:grid;grid-template-columns:1fr auto 1fr;gap:18px;align-items:end;
+  margin-bottom:22px;
+}
+.ladle{
+  background:var(--card-soft);border:1px solid var(--line);
+  border-radius:14px;padding:18px 16px 20px;text-align:center;
+  transition:border-color 0.28s,transform 0.28s,box-shadow 0.28s;
+}
+.ladle.active-source{
+  border-color:var(--accent);transform:translateY(-3px);
+  box-shadow:0 0 0 1px rgba(195,143,61,0.1);
+}
+.ladle.active-target{
+  border-color:rgba(77,153,98,0.35);transform:translateY(-3px);
+  box-shadow:0 0 0 1px rgba(77,153,98,0.1);
+}
+.ladle h4{font-size:0.96rem;color:var(--accent);margin-bottom:12px}
+.ladle-meta{font-size:0.82rem;color:var(--cream-dim);margin-top:10px}
+.ladle-vessel{
+  width:120px;height:240px;margin:0 auto;position:relative;
+  border:2px solid var(--line-strong);border-top:none;border-radius:0 0 34px 34px;
+  background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0));
+  overflow:hidden;
+}
+.ladle-vessel::before{
+  content:'';position:absolute;top:-12px;left:50%;transform:translateX(-50%);
+  width:60px;height:18px;border:2px solid var(--line-strong);border-bottom:none;border-radius:28px 28px 0 0;
+}
+.ladle-scale{
+  position:absolute;inset:10px 8px 12px auto;width:28px;display:flex;flex-direction:column;justify-content:space-between;
+  color:var(--cream-dim);font-size:0.7rem;text-align:right;pointer-events:none;
+}
+.ladle-fill{
+  position:absolute;left:0;right:0;bottom:0;
+  background:linear-gradient(180deg,var(--wine-bright),var(--wine));
+  transition:height 0.55s cubic-bezier(0.4,0,0.2,1);
+}
+.ladle-fill::before{
+  content:'';position:absolute;left:0;right:0;top:0;height:10px;
+  background:rgba(255,255,255,0.18);
+}
+.ladle-amount{
+  font-family:'Playfair Display',serif;font-size:2rem;line-height:1;color:var(--wine-bright);margin-top:14px;
+}
+.target-tag{
+  display:inline-flex;align-items:center;gap:8px;margin-top:10px;
+  padding:6px 12px;border-radius:999px;border:1px solid var(--line);
+  font-size:0.8rem;color:var(--cream-dim);
+}
+.target-tag.done{border-color:rgba(77,153,98,0.35);color:var(--good);background:rgba(77,153,98,0.08)}
+.pour-arrow{
+  align-self:center;color:var(--accent-dim);font-size:1.6rem;opacity:0.7;padding-bottom:72px;
+}
+
+.step-focus{
+  background:rgba(195,143,61,0.07);border:1px solid var(--line);
+  border-radius:10px;padding:16px 18px;margin-bottom:20px;
+}
+.step-focus .step-no{font-size:0.75rem;letter-spacing:0.14em;color:var(--accent-dim);margin-bottom:6px}
+.step-focus h4{font-size:1rem;color:var(--accent);margin-bottom:8px}
+.step-focus p{font-size:0.88rem;color:var(--cream-dim)}
+
+.progress-row{
+  display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px;
+}
+.progress-dot{
+  width:28px;height:28px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  border:1px solid var(--line);color:var(--cream-dim);font-size:0.76rem;
+  background:transparent;transition:all 0.25s;
+}
+.progress-dot.done{border-color:rgba(77,153,98,0.35);color:var(--good);background:rgba(77,153,98,0.08)}
+.progress-dot.active{border-color:var(--accent);color:var(--accent-bright);background:rgba(195,143,61,0.1)}
+
+.step-list{
+  display:grid;gap:12px;margin-top:22px;
+}
+.step-item{
+  background:var(--card-soft);border:1px solid var(--line);border-radius:10px;
+  padding:16px 18px;transition:all 0.25s;
+}
+.step-item.active{border-color:var(--accent);box-shadow:0 0 0 1px rgba(195,143,61,0.1)}
+.step-item h4{font-size:0.95rem;color:var(--accent);margin-bottom:6px}
+.step-item p{font-size:0.84rem;color:var(--cream-dim)}
+.step-state{margin-top:8px;font-size:0.78rem;color:var(--cream-dim)}
+
+.insight{
+  background:linear-gradient(135deg,rgba(195,143,61,0.08),rgba(122,23,50,0.06));
+  border:1px solid var(--line);border-radius:10px;padding:28px 30px;margin-top:28px;
+}
+.insight h3{
+  font-family:'Playfair Display',serif;
+  color:var(--accent);font-size:1.06rem;margin-bottom:12px;
+}
+.insight p{font-size:0.9rem;color:var(--cream-dim)}
+.insight strong{color:var(--cream)}
+
+footer{
+  text-align:center;padding:48px 0 28px;color:rgba(154,144,132,0.35);
+  font-size:0.78rem;border-top:1px solid rgba(195,143,61,0.08);
+}
+footer span{color:var(--accent-dim)}
+
+.reveal{opacity:0;transform:translateY(22px);transition:opacity 0.7s,transform 0.7s}
+.reveal.visible{opacity:1;transform:translateY(0)}
+
+@media(max-width:760px){
+  .flow-strip{grid-template-columns:1fr;gap:10px}
+  .flow-arrow-icon.active{transform:none}
+  .liquid-stage{grid-template-columns:1fr;gap:14px}
+  .pour-arrow{display:none}
+}
+@media(max-width:640px){
+  .back-link{top:16px;left:16px;padding:8px 14px;font-size:0.75rem}
+  .theme-toggle-sub{top:16px;right:16px;width:36px;height:36px}
+  .hero-question,.sim-card,.insight{padding:20px 18px}
+  .ladle-vessel{width:102px;height:210px}
+}
+</style>
+</head>
+<body>
+<div class="bg"></div>
+
+<a href="../index.html" class="back-link">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+  <span>返回首页</span>
+</a>
+<button class="theme-toggle-sub" id="themeToggle" title="切换明暗模式">
+  <svg class="moon-icon" viewBox="0 0 24 24"><path d="M12.1,22c-4.9,0-9-3.8-9.1-8.7c0-3.1,1.5-6.1,4.1-8c0.2-0.1,0.5-0.1,0.7,0.1c0.2,0.2,0.2,0.5,0.1,0.7c-0.5,0.9-0.7,1.8-0.7,2.8c0,3.5,2.8,6.3,6.3,6.3c1,0,1.9-0.2,2.8-0.7c0.2-0.1,0.5-0.1,0.7,0.1c0.2,0.2,0.2,0.5,0.1,0.7C15.1,20.5,13.6,22,12.1,22z"/></svg>
+  <svg class="sun-icon" viewBox="0 0 24 24"><path d="M12,18c-3.3,0-6-2.7-6-6s2.7-6,6-6s6,2.7,6,6S15.3,18,12,18z M12,8c-2.2,0-4,1.8-4,4s1.8,4,4,4s4-1.8,4-4S14.2,8,12,8z M11,1h2v3h-2V1z M11,20h2v3h-2V20z M3.5,4.9l2.1-2.1l1.4,1.4L4.9,6.3L3.5,4.9z M17,18.4l2.1-2.1l1.4,1.4l-2.1,2.1L17,18.4z M1,11h3v2H1V11z M20,11h3v2h-3V11z M4.9,17.7l2.1,2.1l-1.4,1.4l-2.1-2.1L4.9,17.7z M18.4,5.6l2.1-2.1l1.4,1.4l-2.1,2.1L18.4,5.6z"/></svg>
+</button>
+
+<div class="container">
+  <section class="hero">
+    <div class="hero-icon">
+      <svg viewBox="0 0 24 24" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M7 4h10"></path>
+        <path d="M9 4v6"></path>
+        <path d="M15 4v10"></path>
+        <path d="M5 10c0 5 3 10 7 10s7-5 7-10"></path>
+        <path d="M7 14h10"></path>
+      </svg>
+    </div>
+    <h1>舀酒难题</h1>
+    <p class="subtitle">THE WINE LADLE PUZZLE</p>
+    <div class="hero-question">
+      店里只有两个舀酒的勺子，容量分别是 <strong>7 两</strong> 和 <strong>11 两</strong>。客人却偏要买 <strong>2 两酒</strong>。<br><br>
+      不允许刻度作弊，老板娘只能在酒缸里舀酒、倒空、再把两个勺子互相倒来倒去。<br><br>
+      问题是：<strong>怎样才能准确量出 2 两？</strong>
+    </div>
+    <div class="scroll-cue">
+      <span>看老板娘如何倒酒</span>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 5v14M5 12l7 7 7-7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+  </section>
+
+  <section id="solve">
+    <div class="reveal">
+      <span class="label">Simulation</span>
+      <h2 class="heading">倒来倒去，最后剩下 2 两</h2>
+      <p class="desc">核心思路不是一次到位，而是不断制造“余数”。先用两个量勺得到 3、10、6 这样的中间状态，最后再利用容量差把 2 两逼出来。</p>
+    </div>
+
+    <div class="sim-card reveal">
+      <div class="sim-top">
+        <div class="sim-title">
+          <h3>交互演示</h3>
+          <p>点击下一步，可以看到每一次装满、倒空与互倒之后，两个量勺里的酒量如何变化。</p>
+        </div>
+        <div class="sim-controls">
+          <button class="sim-btn" id="prevBtn">上一步</button>
+          <button class="sim-btn primary" id="nextBtn">下一步</button>
+          <button class="sim-btn" id="playBtn">自动播放</button>
+          <button class="sim-btn" id="resetBtn">重置</button>
+        </div>
+      </div>
+      <div class="play-status" id="playStatus">播放状态：手动浏览</div>
+
+      <div class="flow-strip">
+        <div class="flow-node" id="flowSource">酒缸</div>
+        <div class="flow-arrow">
+          <div class="flow-arrow-icon" id="flowArrow">→</div>
+          <div class="flow-arrow-label" id="flowLabel">等待操作</div>
+        </div>
+        <div class="flow-node" id="flowTarget">量勺</div>
+      </div>
+
+      <div class="step-focus">
+        <div class="step-no" id="stepNo">步骤 0 / 14</div>
+        <h4 id="stepTitle">初始状态</h4>
+        <p id="stepDesc">两个量勺都为空，从这里开始逐步制造目标酒量。</p>
+      </div>
+
+      <div class="progress-row" id="progressRow"></div>
+
+      <div class="liquid-stage">
+        <div class="ladle" id="ladle7">
+          <h4>7 两勺</h4>
+          <div class="ladle-vessel">
+            <div class="ladle-fill" id="fill7" style="height:0%"></div>
+            <div class="ladle-scale">
+              <span>7</span>
+              <span>5</span>
+              <span>3</span>
+              <span>1</span>
+            </div>
+          </div>
+          <div class="ladle-amount"><span id="amount7">0</span> 两</div>
+          <div class="ladle-meta">当前 7 两勺中的酒量</div>
+          <div class="target-tag" id="target7">目标未达成</div>
+        </div>
+
+        <div class="pour-arrow">↔</div>
+
+        <div class="ladle" id="ladle11">
+          <h4>11 两勺</h4>
+          <div class="ladle-vessel">
+            <div class="ladle-fill" id="fill11" style="height:0%"></div>
+            <div class="ladle-scale">
+              <span>11</span>
+              <span>8</span>
+              <span>5</span>
+              <span>2</span>
+            </div>
+          </div>
+          <div class="ladle-amount"><span id="amount11">0</span> 两</div>
+          <div class="ladle-meta">当前 11 两勺中的酒量</div>
+          <div class="target-tag" id="target11">目标未达成</div>
+        </div>
+      </div>
+
+      <div class="step-list" id="stepList"></div>
+    </div>
+
+    <div class="insight reveal">
+      <h3>为什么这招一定能成功？</h3>
+      <p><strong>7 和 11 互质</strong>，也就是它们的最大公约数是 1。只要允许“装满、倒空、互倒”，就能一步步制造出 1 两，再继续组合出 2 两。这个过程本质上就是欧几里得算法在量具问题中的应用。老板娘不是在碰运气，而是在利用 <strong>容量差不断地产生新的余数</strong>。</p>
+    </div>
+  </section>
+
+  <footer><span>◆</span> 舀酒难题 — 经典逻辑推理 <span>◆</span></footer>
+</div>
+
+<script>
+var steps = [
+  { amount7: 0, amount11: 0, title: '初始状态', desc: '两个量勺都为空，从这里开始。', source: 'cask', target: 'wait', action: '等待操作' },
+  { amount7: 7, amount11: 0, title: '装满 7 两勺', desc: '先从酒缸里把 7 两勺装满。', source: 'cask', target: '7', action: '从酒缸装满 7 两勺' },
+  { amount7: 0, amount11: 7, title: '7 倒入 11', desc: '把 7 两勺中的酒全部倒进 11 两勺。', source: '7', target: '11', action: '7 两勺倒入 11 两勺' },
+  { amount7: 7, amount11: 7, title: '再次装满 7 两勺', desc: '11 两勺里已有 7 两，此时再装满 7 两勺。', source: 'cask', target: '7', action: '再次装满 7 两勺' },
+  { amount7: 3, amount11: 11, title: '继续倒入直到 11 满', desc: '11 两勺还差 4 两就满，所以从 7 两勺倒入 4 两，7 两勺里剩下 3 两。', source: '7', target: '11', action: '7 两勺继续倒入 11 两勺' },
+  { amount7: 3, amount11: 0, title: '倒空 11 两勺', desc: '把 11 两勺清空，保留 7 两勺里的 3 两。', source: '11', target: 'drain', action: '倒空 11 两勺' },
+  { amount7: 0, amount11: 3, title: '把 3 两转移到 11 勺', desc: '把 7 两勺里剩下的 3 两倒入 11 两勺。', source: '7', target: '11', action: '7 两勺把 3 两转给 11 两勺' },
+  { amount7: 7, amount11: 3, title: '再装满 7 两勺', desc: '现在状态变成 7 两勺满、11 两勺中有 3 两。', source: 'cask', target: '7', action: '再装满 7 两勺' },
+  { amount7: 0, amount11: 10, title: '全部倒进 11 勺', desc: '11 两勺还能再装 8 两，因此 7 两勺全部倒进去后得到 10 两。', source: '7', target: '11', action: '7 两勺全部倒入 11 两勺' },
+  { amount7: 7, amount11: 10, title: '再次装满 7 两勺', desc: '这一步是为了继续制造新的余数。', source: 'cask', target: '7', action: '再次装满 7 两勺' },
+  { amount7: 6, amount11: 11, title: '倒入直到 11 满', desc: '11 两勺只差 1 两，所以从 7 两勺倒 1 两过去，7 两勺里还剩 6 两。', source: '7', target: '11', action: '7 两勺向 11 两勺补满' },
+  { amount7: 6, amount11: 0, title: '倒空 11 两勺', desc: '清空 11 两勺，保留 7 两勺里的 6 两。', source: '11', target: 'drain', action: '倒空 11 两勺' },
+  { amount7: 0, amount11: 6, title: '把 6 两转移到 11 勺', desc: '将 7 两勺中的 6 两全部倒入 11 两勺。', source: '7', target: '11', action: '7 两勺把 6 两转给 11 两勺' },
+  { amount7: 7, amount11: 6, title: '再次装满 7 两勺', desc: '此时 11 两勺中已有 6 两，再装满 7 两勺。', source: 'cask', target: '7', action: '再次装满 7 两勺' },
+  { amount7: 2, amount11: 11, title: '最后一次倒入，量出 2 两', desc: '11 两勺只差 5 两就满，因此从 7 两勺倒入 5 两后，7 两勺里正好剩下 2 两。', source: '7', target: '11', action: '7 两勺最后一次倒入 11 两勺' }
+];
+
+var currentStep = 0;
+var fill7 = document.getElementById('fill7');
+var fill11 = document.getElementById('fill11');
+var amount7 = document.getElementById('amount7');
+var amount11 = document.getElementById('amount11');
+var stepNo = document.getElementById('stepNo');
+var stepTitle = document.getElementById('stepTitle');
+var stepDesc = document.getElementById('stepDesc');
+var stepList = document.getElementById('stepList');
+var target7 = document.getElementById('target7');
+var target11 = document.getElementById('target11');
+var progressRow = document.getElementById('progressRow');
+var prevBtn = document.getElementById('prevBtn');
+var nextBtn = document.getElementById('nextBtn');
+var playBtn = document.getElementById('playBtn');
+var resetBtn = document.getElementById('resetBtn');
+var playStatus = document.getElementById('playStatus');
+var flowSource = document.getElementById('flowSource');
+var flowTarget = document.getElementById('flowTarget');
+var flowArrow = document.getElementById('flowArrow');
+var flowLabel = document.getElementById('flowLabel');
+var ladle7 = document.getElementById('ladle7');
+var ladle11 = document.getElementById('ladle11');
+var autoPlayTimer = null;
+
+/**
+ * 根据当前步骤刷新两个量勺的液面高度与说明文本。
+ */
+function renderStep() {
+  var step = steps[currentStep];
+  fill7.style.height = (step.amount7 / 7 * 100) + '%';
+  fill11.style.height = (step.amount11 / 11 * 100) + '%';
+  amount7.textContent = step.amount7;
+  amount11.textContent = step.amount11;
+  stepNo.textContent = '步骤 ' + currentStep + ' / ' + (steps.length - 1);
+  stepTitle.textContent = step.title;
+  stepDesc.textContent = step.desc;
+
+  target7.textContent = step.amount7 === 2 ? '7 两勺中已量出 2 两' : '目标未达成';
+  target11.textContent = step.amount11 === 2 ? '11 两勺中已量出 2 两' : '目标未达成';
+  target7.classList.toggle('done', step.amount7 === 2);
+  target11.classList.toggle('done', step.amount11 === 2);
+  renderFlow(step);
+
+  prevBtn.disabled = currentStep === 0;
+  nextBtn.disabled = currentStep === steps.length - 1;
+  if (playBtn) {
+    playBtn.textContent = autoPlayTimer ? '暂停播放' : '自动播放';
+  }
+
+  Array.prototype.forEach.call(progressRow.children, function(dot, index) {
+    dot.classList.toggle('done', index < currentStep);
+    dot.classList.toggle('active', index === currentStep);
+  });
+
+  Array.prototype.forEach.call(stepList.children, function(item, index) {
+    item.classList.toggle('active', index === currentStep);
+  });
+}
+
+/**
+ * 将步骤中的来源和去向转成界面文案，并高亮参与动作的量勺。
+ */
+function renderFlow(step) {
+  var labels = {
+    cask: '酒缸',
+    '7': '7 两勺',
+    '11': '11 两勺',
+    drain: '倒空',
+    wait: '等待'
+  };
+  var source = step.source || 'wait';
+  var target = step.target || 'wait';
+  var activeFlow = source !== 'wait' && target !== 'wait';
+
+  flowSource.textContent = labels[source];
+  flowTarget.textContent = labels[target];
+  flowLabel.textContent = step.action || '等待操作';
+  flowArrow.textContent = target === 'drain' ? '↓' : '→';
+  flowArrow.classList.toggle('active', activeFlow);
+
+  flowSource.classList.toggle('active', source !== 'wait');
+  flowTarget.classList.toggle('active', target !== 'wait');
+  flowSource.classList.toggle('dim', source === 'wait');
+  flowTarget.classList.toggle('dim', target === 'wait');
+
+  ladle7.classList.toggle('active-source', source === '7');
+  ladle7.classList.toggle('active-target', target === '7');
+  ladle11.classList.toggle('active-source', source === '11');
+  ladle11.classList.toggle('active-target', target === '11');
+}
+
+/**
+ * 刷新自动播放状态文案。
+ */
+function renderPlayStatus() {
+  if (!playStatus) return;
+  if (autoPlayTimer) {
+    playStatus.textContent = '播放状态：自动播放中';
+    playStatus.classList.add('playing');
+    return;
+  }
+  if (currentStep === steps.length - 1) {
+    playStatus.textContent = '播放状态：已到终点，可重置后重新播放';
+    playStatus.classList.remove('playing');
+    return;
+  }
+  playStatus.textContent = '播放状态：手动浏览';
+  playStatus.classList.remove('playing');
+}
+
+/**
+ * 初始化步骤进度点和完整步骤列表。
+ */
+function buildStepList() {
+  steps.forEach(function(step, index) {
+    var dot = document.createElement('div');
+    dot.className = 'progress-dot';
+    dot.textContent = index;
+    dot.addEventListener('click', function() {
+      stopAutoPlay();
+      currentStep = index;
+      renderStep();
+      renderPlayStatus();
+    });
+    progressRow.appendChild(dot);
+
+    var item = document.createElement('div');
+    item.className = 'step-item';
+    item.innerHTML =
+      '<h4>步骤 ' + index + ' · ' + escapeHTML(step.title) + '</h4>' +
+      '<p>' + escapeHTML(step.desc) + '</p>' +
+      '<div class="step-state">状态：7 两勺 = ' + step.amount7 + '，11 两勺 = ' + step.amount11 + '</div>';
+    item.addEventListener('click', function() {
+      stopAutoPlay();
+      currentStep = index;
+      renderStep();
+      renderPlayStatus();
+    });
+    stepList.appendChild(item);
+  });
+}
+
+/**
+ * 转义文本，避免步骤描述插入 HTML。
+ */
+function escapeHTML(text) {
+  var div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+/**
+ * 停止自动播放并清理定时器。
+ */
+function stopAutoPlay() {
+  if (!autoPlayTimer) return;
+  clearInterval(autoPlayTimer);
+  autoPlayTimer = null;
+}
+
+/**
+ * 开始自动播放，逐步推进整个量酒过程。
+ */
+function startAutoPlay() {
+  stopAutoPlay();
+  autoPlayTimer = window.setInterval(function() {
+    if (currentStep >= steps.length - 1) {
+      stopAutoPlay();
+      renderStep();
+      renderPlayStatus();
+      return;
+    }
+    currentStep++;
+    renderStep();
+    renderPlayStatus();
+  }, 1400);
+}
+
+/**
+ * 绑定翻页和重置按钮事件。
+ */
+function bindSimulation() {
+  prevBtn.addEventListener('click', function() {
+    stopAutoPlay();
+    if (currentStep > 0) {
+      currentStep--;
+      renderStep();
+      renderPlayStatus();
+    }
+  });
+
+  nextBtn.addEventListener('click', function() {
+    stopAutoPlay();
+    if (currentStep < steps.length - 1) {
+      currentStep++;
+      renderStep();
+      renderPlayStatus();
+    }
+  });
+
+  playBtn.addEventListener('click', function() {
+    if (autoPlayTimer) {
+      stopAutoPlay();
+      renderStep();
+      renderPlayStatus();
+      return;
+    }
+    if (currentStep >= steps.length - 1) {
+      currentStep = 0;
+      renderStep();
+    }
+    startAutoPlay();
+    renderStep();
+    renderPlayStatus();
+  });
+
+  resetBtn.addEventListener('click', function() {
+    stopAutoPlay();
+    currentStep = 0;
+    renderStep();
+    renderPlayStatus();
+  });
+}
+
+/**
+ * 切换明暗主题并持久化用户选择。
+ */
+function bindThemeToggle() {
+  var themeToggle = document.getElementById('themeToggle');
+  if (!themeToggle) return;
+  themeToggle.addEventListener('click', function() {
+    var isLight = document.documentElement.getAttribute('data-theme') === 'light';
+    var newTheme = isLight ? 'dark' : 'light';
+    document.documentElement.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+  });
+  var savedTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+  document.documentElement.setAttribute('data-theme', savedTheme);
+}
+
+/**
+ * 监听滚动进入视口，触发渐入动画。
+ */
+function bindRevealAnimations() {
+  var reveals = document.querySelectorAll('.reveal');
+  var observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.12 });
+
+  reveals.forEach(function(item) {
+    observer.observe(item);
+  });
+}
+
+/**
+ * 初始化页面交互。
+ */
+(function() {
+  buildStepList();
+  bindSimulation();
+  bindThemeToggle();
+  bindRevealAnimations();
+  renderStep();
+  renderPlayStatus();
+})();
+</script>
+</body>
+</html>

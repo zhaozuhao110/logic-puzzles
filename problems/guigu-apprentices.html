@@ -1,0 +1,1309 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>鬼谷考徒 — 经典逻辑推理</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Noto+Serif+SC:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0b0a0f;
+  --surface:#14131b;
+  --card:#1a1822;
+  --card-soft:#201d2b;
+  --accent:#c89a42;
+  --accent-bright:#e1b358;
+  --accent-dim:#7d5c25;
+  --cream:#e6ddcf;
+  --cream-dim:#9b9388;
+  --ink:#8b4c2d;
+  --line:rgba(200,154,66,0.14);
+  --line-strong:rgba(200,154,66,0.32);
+  --good:#4f9d68;
+  --bad:#a04a4a;
+  --violet:#7c68c3;
+}
+[data-theme="light"]{
+  --bg:#f8f6f1;
+  --surface:#ffffff;
+  --card:#ffffff;
+  --card-soft:#f5f2ea;
+  --accent:#b28335;
+  --accent-bright:#c89a42;
+  --accent-dim:#826228;
+  --cream:#1f1a16;
+  --cream-dim:#665e56;
+  --ink:#7b4b30;
+  --line:rgba(178,131,53,0.18);
+  --line-strong:rgba(178,131,53,0.34);
+}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Noto Serif SC',serif;
+  background:var(--bg);
+  color:var(--cream);
+  min-height:100vh;
+  overflow-x:hidden;
+  line-height:1.85;
+}
+.bg{
+  position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse 60% 40% at 50% 0%,rgba(200,154,66,0.06),transparent),
+    radial-gradient(ellipse 45% 30% at 20% 80%,rgba(124,104,195,0.05),transparent),
+    var(--bg);
+}
+.bg::before{
+  content:'';position:absolute;inset:0;
+  background:url("data:image/svg+xml,%3Csvg viewBox='0 0 240 240' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity:0.025;
+}
+.container{position:relative;z-index:2;max-width:960px;margin:0 auto;padding:0 24px}
+
+.back-link,.theme-toggle-sub{
+  position:fixed;top:28px;z-index:100;
+  display:flex;align-items:center;justify-content:center;
+  text-decoration:none;transition:all 0.3s cubic-bezier(0.4,0,0.2,1);
+  background:rgba(0,0,0,0.35);backdrop-filter:blur(12px);
+  border-radius:40px;border:1px solid var(--line);
+  box-shadow:0 4px 20px rgba(0,0,0,0.2);
+  color:var(--cream-dim);
+}
+.back-link{left:28px;padding:10px 18px;gap:10px;font-size:0.85rem;letter-spacing:0.1em}
+.theme-toggle-sub{right:28px;width:44px;height:44px;cursor:pointer;padding:0}
+.back-link:hover,.theme-toggle-sub:hover{
+  color:var(--cream);border-color:var(--line-strong);
+  background:rgba(0,0,0,0.55);
+}
+.back-link:hover{transform:translateX(-4px)}
+.theme-toggle-sub:hover{transform:rotate(15deg)}
+.back-link svg,.theme-toggle-sub svg{width:18px;height:18px;stroke:currentColor;fill:none;transition:transform 0.3s}
+.theme-toggle-sub svg{fill:currentColor;stroke:none}
+.back-link:hover svg{transform:translateX(-3px)}
+.theme-toggle-sub .sun-icon{display:none}
+[data-theme="light"] .theme-toggle-sub .sun-icon{display:block}
+[data-theme="light"] .theme-toggle-sub .moon-icon{display:none}
+
+.hero{
+  min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;padding:40px 0 32px;
+}
+.hero-seal{
+  width:76px;height:76px;margin-bottom:26px;border-radius:50%;
+  border:1px solid var(--line-strong);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--accent);font-size:1.5rem;letter-spacing:0.08em;
+  background:radial-gradient(circle at 40% 35%,rgba(200,154,66,0.12),rgba(200,154,66,0.02));
+  box-shadow:0 0 24px rgba(200,154,66,0.08);
+}
+.hero h1{
+  font-family:'Playfair Display','Noto Serif SC',serif;
+  font-size:clamp(2.2rem,5.8vw,4rem);
+  font-weight:900;
+  background:linear-gradient(135deg,var(--accent-bright),var(--accent),var(--accent-dim));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  letter-spacing:0.06em;line-height:1.2;margin-bottom:14px;
+}
+.subtitle{
+  font-size:clamp(0.9rem,2vw,1.05rem);
+  color:var(--cream-dim);font-weight:300;letter-spacing:0.22em;margin-bottom:32px;
+}
+.hero-question{
+  max-width:640px;text-align:left;
+  background:var(--card);border:1px solid var(--line);
+  border-radius:8px;padding:26px 30px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.12);
+  color:var(--cream-dim);
+}
+.hero-question strong{color:var(--accent);font-weight:700}
+.scroll-cue{
+  margin-top:34px;display:flex;flex-direction:column;align-items:center;gap:8px;
+  color:var(--accent-dim);font-size:0.82rem;letter-spacing:0.12em;
+  animation:bob 2.4s ease-in-out infinite;
+}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(6px)}}
+
+section{padding:72px 0}
+.label{
+  display:inline-block;
+  font-family:'Playfair Display',serif;
+  font-size:0.74rem;letter-spacing:0.28em;text-transform:uppercase;
+  color:var(--accent-dim);margin-bottom:12px;border:1px solid var(--line);
+  padding:4px 14px;border-radius:2px;
+}
+.heading{
+  font-family:'Playfair Display','Noto Serif SC',serif;
+  font-size:clamp(1.55rem,3.6vw,2.2rem);
+  color:var(--cream);font-weight:700;line-height:1.3;margin-bottom:12px;
+}
+.desc{
+  max-width:720px;color:var(--cream-dim);font-size:0.93rem;font-weight:300;margin-bottom:34px;
+}
+
+.quote-board{
+  display:grid;gap:16px;margin-bottom:28px;
+}
+.quote-card{
+  background:var(--card);border:1px solid var(--line);
+  border-radius:8px;padding:18px 20px;
+}
+.quote-role{
+  display:inline-block;font-size:0.74rem;letter-spacing:0.16em;
+  color:var(--accent-dim);margin-bottom:8px;
+}
+.quote-card p{font-size:0.93rem;color:var(--cream-dim)}
+.quote-card strong{color:var(--accent-bright)}
+
+.step-nav{
+  display:flex;gap:10px;flex-wrap:wrap;margin-bottom:24px;
+}
+.step-btn{
+  background:transparent;border:1px solid var(--line);
+  color:var(--cream-dim);padding:10px 18px;border-radius:999px;
+  font-family:'Noto Serif SC',serif;font-size:0.88rem;cursor:pointer;
+  transition:all 0.25s;
+}
+.step-btn:hover{border-color:var(--line-strong);color:var(--accent)}
+.step-btn.active{background:rgba(200,154,66,0.1);border-color:var(--accent);color:var(--accent-bright)}
+
+.step-panel{
+  display:none;
+  background:var(--card);border:1px solid var(--line);
+  border-radius:10px;padding:28px 30px;
+  animation:fadeUp 0.45s ease;
+}
+.step-panel.active{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.step-panel h3{font-size:1.08rem;color:var(--accent);margin-bottom:12px}
+.step-panel p{font-size:0.92rem;color:var(--cream-dim);margin-bottom:10px}
+.step-panel strong{color:var(--cream)}
+.logic-note{
+  margin-top:16px;padding:14px 16px;border-left:3px solid var(--accent-dim);
+  background:rgba(200,154,66,0.06);border-radius:0 6px 6px 0;
+  color:var(--cream-dim);font-size:0.9rem;
+}
+
+.factor-grid,.sum-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  gap:14px;margin-top:20px;
+}
+.mini-card{
+  background:var(--card-soft);border:1px solid var(--line);
+  border-radius:8px;padding:16px 18px;min-height:96px;
+}
+.mini-card h4{font-size:0.94rem;color:var(--accent-bright);margin-bottom:8px}
+.mini-card p{font-size:0.86rem;color:var(--cream-dim)}
+.mini-card.good{border-color:rgba(79,157,104,0.32)}
+.mini-card.bad{border-color:rgba(160,74,74,0.3)}
+
+.playground{
+  margin-top:34px;
+  background:var(--card);border:1px solid var(--line);
+  border-radius:12px;padding:28px 30px;
+  box-shadow:0 12px 32px rgba(0,0,0,0.1);
+}
+.playground-head{margin-bottom:22px}
+.playground-head h3{
+  font-family:'Playfair Display','Noto Serif SC',serif;
+  font-size:1.18rem;color:var(--accent);margin-bottom:8px;
+}
+.playground-head p{font-size:0.9rem;color:var(--cream-dim)}
+.playground-nav{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:22px}
+.play-btn{
+  background:transparent;border:1px solid var(--line);
+  color:var(--cream-dim);padding:10px 16px;border-radius:999px;
+  font-family:'Noto Serif SC',serif;font-size:0.85rem;cursor:pointer;
+  transition:all 0.25s;
+}
+.play-btn:hover{border-color:var(--line-strong);color:var(--accent)}
+.play-btn.active{background:rgba(200,154,66,0.1);border-color:var(--accent);color:var(--accent-bright)}
+.stats-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+  gap:14px;margin-bottom:24px;
+}
+.stat-card{
+  background:var(--card-soft);border:1px solid var(--line);
+  border-radius:10px;padding:16px 18px;
+}
+.stat-card.active{border-color:var(--accent);box-shadow:0 0 0 1px rgba(200,154,66,0.08)}
+.stat-label{font-size:0.76rem;letter-spacing:0.12em;color:var(--accent-dim);margin-bottom:8px}
+.stat-value{
+  font-family:'Playfair Display',serif;
+  font-size:1.8rem;line-height:1;color:var(--accent-bright);margin-bottom:6px;
+}
+.stat-card p{font-size:0.82rem;color:var(--cream-dim)}
+.playground-grid{
+  display:grid;grid-template-columns:1.15fr 0.95fr;gap:18px;
+}
+.board{
+  background:var(--card-soft);border:1px solid var(--line);
+  border-radius:10px;padding:18px 18px 20px;
+}
+.board h4{
+  font-size:0.95rem;color:var(--accent);margin-bottom:6px;
+}
+.board-desc{
+  font-size:0.82rem;color:var(--cream-dim);margin-bottom:14px;
+}
+.pair-list,.factor-list,.tag-list{
+  display:grid;gap:10px;
+}
+.pair-list{grid-template-columns:repeat(auto-fit,minmax(110px,1fr))}
+.pair-chip,.factor-chip,.tag-chip{
+  border:1px solid var(--line);border-radius:999px;
+  padding:8px 12px;font-size:0.82rem;text-align:center;
+  transition:all 0.25s;background:rgba(255,255,255,0.01);
+}
+.pair-chip.alive,.factor-chip.alive{
+  border-color:rgba(79,157,104,0.38);color:var(--good);
+  background:rgba(79,157,104,0.08);
+}
+.pair-chip.dead,.factor-chip.dead{
+  border-color:rgba(160,74,74,0.28);color:rgba(160,74,74,0.95);
+  background:rgba(160,74,74,0.08);opacity:0.75;
+}
+.pair-chip.focus,.factor-chip.focus{
+  border-color:var(--accent);color:var(--accent-bright);
+  box-shadow:0 0 0 1px rgba(200,154,66,0.12);
+}
+.tag-list{grid-template-columns:repeat(auto-fit,minmax(72px,1fr));margin-top:14px}
+.tag-chip{
+  border-radius:18px;padding:6px 10px;font-size:0.76rem;color:var(--cream-dim);
+}
+.tag-chip.good{border-color:rgba(79,157,104,0.32);color:var(--good);background:rgba(79,157,104,0.08)}
+.stage-note{
+  margin-top:18px;padding:14px 16px;border-left:3px solid var(--accent);
+  background:rgba(200,154,66,0.06);border-radius:0 6px 6px 0;
+  font-size:0.88rem;color:var(--cream-dim);
+}
+.stage-note strong{color:var(--cream)}
+
+.matrix-board{
+  margin-top:26px;
+  background:var(--card);border:1px solid var(--line);
+  border-radius:12px;padding:28px 30px;
+}
+.matrix-board h3{
+  font-family:'Playfair Display','Noto Serif SC',serif;
+  font-size:1.18rem;color:var(--accent);margin-bottom:8px;
+}
+.matrix-board p{
+  font-size:0.9rem;color:var(--cream-dim);margin-bottom:18px;
+}
+.matrix-wrap{
+  position:relative;
+  background:var(--card-soft);border:1px solid var(--line);
+  border-radius:10px;padding:14px;
+}
+.matrix-canvas{
+  width:100%;display:block;border-radius:8px;
+  background:
+    linear-gradient(180deg,rgba(255,255,255,0.015),rgba(255,255,255,0)),
+    rgba(0,0,0,0.06);
+}
+.matrix-tooltip{
+  position:absolute;left:0;top:0;pointer-events:none;
+  transform:translate(-50%,-120%);
+  background:rgba(10,10,14,0.92);color:var(--cream);
+  border:1px solid var(--line-strong);border-radius:8px;
+  padding:8px 10px;font-size:0.78rem;line-height:1.5;
+  white-space:nowrap;opacity:0;transition:opacity 0.18s;
+  box-shadow:0 8px 18px rgba(0,0,0,0.22);
+}
+.matrix-tooltip.show{opacity:1}
+.matrix-legend{
+  margin-top:14px;display:flex;gap:10px;flex-wrap:wrap;
+}
+.legend-item{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:6px 10px;border:1px solid var(--line);border-radius:999px;
+  font-size:0.8rem;color:var(--cream-dim);
+}
+.legend-dot{
+  width:10px;height:10px;border-radius:50%;
+  display:inline-block;
+}
+.legend-dot.final{background:var(--accent-bright)}
+.legend-dot.alive{background:rgba(79,157,104,0.95)}
+.legend-dot.dead{background:rgba(160,74,74,0.85)}
+.legend-dot.axis{background:rgba(200,154,66,0.55)}
+.detail-card{
+  margin-top:18px;
+  background:var(--card-soft);border:1px solid var(--line);
+  border-radius:10px;padding:20px 22px;
+}
+.detail-head{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
+  margin-bottom:10px;
+}
+.detail-title{
+  font-size:1rem;color:var(--accent);font-weight:700;
+}
+.detail-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:6px 10px;border-radius:999px;font-size:0.78rem;
+  border:1px solid var(--line);color:var(--cream-dim);
+}
+.detail-badge.alive{border-color:rgba(79,157,104,0.35);color:var(--good);background:rgba(79,157,104,0.08)}
+.detail-badge.dead{border-color:rgba(160,74,74,0.28);color:var(--bad);background:rgba(160,74,74,0.08)}
+.detail-summary{
+  font-size:0.92rem;color:var(--cream-dim);margin-bottom:10px;
+}
+.detail-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:14px;
+}
+.detail-item{
+  background:rgba(255,255,255,0.02);border:1px solid var(--line);
+  border-radius:8px;padding:12px 14px;
+}
+.detail-item .k{display:block;font-size:0.74rem;letter-spacing:0.1em;color:var(--accent-dim);margin-bottom:6px}
+.detail-item .v{display:block;font-size:0.95rem;color:var(--cream)}
+.detail-reason{
+  font-size:0.88rem;color:var(--cream-dim);
+  padding:14px 16px;border-left:3px solid var(--accent-dim);
+  background:rgba(200,154,66,0.06);border-radius:0 6px 6px 0;
+}
+.detail-reason strong{color:var(--cream)}
+.relation-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px;
+}
+.relation-card{
+  background:rgba(255,255,255,0.02);border:1px solid var(--line);
+  border-radius:10px;padding:16px 16px 18px;
+}
+.relation-card h4{
+  font-size:0.94rem;color:var(--accent);margin-bottom:6px;
+}
+.relation-card p{
+  font-size:0.82rem;color:var(--cream-dim);margin-bottom:12px;
+}
+.relation-list{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(88px,1fr));gap:10px;
+}
+.relation-chip{
+  border:1px solid var(--line);border-radius:999px;
+  padding:8px 10px;text-align:center;font-size:0.8rem;
+  color:var(--cream-dim);background:rgba(255,255,255,0.01);
+}
+.relation-chip.alive{
+  border-color:rgba(79,157,104,0.35);color:var(--good);background:rgba(79,157,104,0.08);
+}
+.relation-chip.dead{
+  border-color:rgba(160,74,74,0.28);color:var(--bad);background:rgba(160,74,74,0.08);
+}
+.relation-chip.focus{
+  border-color:var(--accent);color:var(--accent-bright);
+  box-shadow:0 0 0 1px rgba(200,154,66,0.12);
+}
+
+.reason-map{
+  margin-top:34px;
+  display:grid;gap:18px;
+}
+.reason-row{
+  display:grid;grid-template-columns:88px 1fr;gap:16px;align-items:start;
+}
+.reason-index{
+  width:88px;height:88px;border-radius:50%;
+  border:1px solid var(--line-strong);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--accent);font-family:'Playfair Display',serif;font-size:1.2rem;
+  background:radial-gradient(circle at 35% 30%,rgba(200,154,66,0.12),transparent);
+}
+.reason-card{
+  background:var(--card);border:1px solid var(--line);border-radius:10px;padding:22px 24px;
+}
+.reason-card h3{font-size:1rem;color:var(--accent);margin-bottom:8px}
+.reason-card p{font-size:0.91rem;color:var(--cream-dim)}
+.reason-card strong{color:var(--cream)}
+
+.answer-card,.insight{
+  background:linear-gradient(135deg,rgba(200,154,66,0.08),rgba(124,104,195,0.05));
+  border:1px solid var(--line);
+  border-radius:10px;padding:28px 30px;
+}
+.answer-card h3,.insight h3{
+  font-family:'Playfair Display',serif;
+  color:var(--accent);font-size:1.08rem;margin-bottom:12px;
+}
+.answer-value{
+  display:inline-flex;align-items:center;gap:10px;
+  margin-top:10px;padding:8px 14px;border-radius:999px;
+  background:rgba(79,157,104,0.12);border:1px solid rgba(79,157,104,0.3);
+  color:var(--good);font-size:1rem;font-weight:700;
+}
+.insight{margin-top:26px}
+.insight p{font-size:0.9rem;color:var(--cream-dim)}
+
+footer{
+  text-align:center;padding:48px 0 28px;
+  color:rgba(155,147,136,0.35);font-size:0.78rem;
+  border-top:1px solid rgba(200,154,66,0.08);
+}
+footer span{color:var(--accent-dim)}
+
+.reveal{opacity:0;transform:translateY(22px);transition:opacity 0.7s,transform 0.7s}
+.reveal.visible{opacity:1;transform:translateY(0)}
+
+@media(max-width:640px){
+  .back-link{top:16px;left:16px;padding:8px 14px;font-size:0.75rem}
+  .theme-toggle-sub{top:16px;right:16px;width:36px;height:36px}
+  .hero-question,.step-panel,.reason-card,.answer-card,.insight{padding:20px 18px}
+  .playground{padding:20px 18px}
+  .playground-grid{grid-template-columns:1fr}
+  .relation-grid{grid-template-columns:1fr}
+  .reason-row{grid-template-columns:1fr}
+  .reason-index{width:58px;height:58px;font-size:1rem}
+}
+</style>
+</head>
+<body>
+<div class="bg"></div>
+
+<a href="../index.html" class="back-link">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+  <span>返回首页</span>
+</a>
+<button class="theme-toggle-sub" id="themeToggle" title="切换明暗模式">
+  <svg class="moon-icon" viewBox="0 0 24 24"><path d="M12.1,22c-4.9,0-9-3.8-9.1-8.7c0-3.1,1.5-6.1,4.1-8c0.2-0.1,0.5-0.1,0.7,0.1c0.2,0.2,0.2,0.5,0.1,0.7c-0.5,0.9-0.7,1.8-0.7,2.8c0,3.5,2.8,6.3,6.3,6.3c1,0,1.9-0.2,2.8-0.7c0.2-0.1,0.5-0.1,0.7,0.1c0.2,0.2,0.2,0.5,0.1,0.7C15.1,20.5,13.6,22,12.1,22z"/></svg>
+  <svg class="sun-icon" viewBox="0 0 24 24"><path d="M12,18c-3.3,0-6-2.7-6-6s2.7-6,6-6s6,2.7,6,6S15.3,18,12,18z M12,8c-2.2,0-4,1.8-4,4s1.8,4,4,4s4-1.8,4-4S14.2,8,12,8z M11,1h2v3h-2V1z M11,20h2v3h-2V20z M3.5,4.9l2.1-2.1l1.4,1.4L4.9,6.3L3.5,4.9z M17,18.4l2.1-2.1l1.4,1.4l-2.1,2.1L17,18.4z M1,11h3v2H1V11z M20,11h3v2h-3V11z M4.9,17.7l2.1,2.1l-1.4,1.4l-2.1-2.1L4.9,17.7z M18.4,5.6l2.1-2.1l1.4,1.4l-2.1,2.1L18.4,5.6z"/></svg>
+</button>
+
+<div class="container">
+  <section class="hero">
+    <div class="hero-seal">鬼谷</div>
+    <h1>鬼谷考徒</h1>
+    <p class="subtitle">SUM AND PRODUCT PUZZLE</p>
+    <div class="hero-question">
+      孙膑知道两个不同整数的<strong>积</strong>，庞涓知道它们的<strong>和</strong>。鬼谷子只透露这两个数都在 <strong>2 到 99</strong> 之间。<br><br>
+      庞涓先说：<strong>“我虽然不能确定这两个数，但我肯定你也不知道。”</strong><br>
+      孙膑接着说：<strong>“我本来确实不知道，但听你这么一说，我现在知道了。”</strong><br>
+      庞涓最后说：<strong>“既然你这么说，我现在也知道了。”</strong>
+    </div>
+    <div class="scroll-cue">
+      <span>顺着对白推理</span>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 5v14M5 12l7 7 7-7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+  </section>
+
+  <section id="solve">
+    <div class="reveal">
+      <span class="label">Dialogue</span>
+      <h2 class="heading">三句话，层层缩小候选</h2>
+      <p class="desc">这题的关键不在于“和是多少、积是多少”，而在于双方如何根据对方的知识状态继续排除可能性。每一句对白，都是一次新的筛选条件。</p>
+    </div>
+
+    <div class="quote-board reveal">
+      <div class="quote-card">
+        <span class="quote-role">庞涓 / 已知和</span>
+        <p>我不能确定，但我<strong>肯定</strong>你也不知道。</p>
+      </div>
+      <div class="quote-card">
+        <span class="quote-role">孙膑 / 已知积</span>
+        <p>原本不知道，但听完你这句话后，<strong>现在知道</strong>了。</p>
+      </div>
+      <div class="quote-card">
+        <span class="quote-role">庞涓 / 再次发言</span>
+        <p>既然你已经知道，那我也<strong>立刻知道</strong>了。</p>
+      </div>
+    </div>
+
+    <div class="reveal">
+      <div class="step-nav" id="stepNav">
+        <button class="step-btn active" data-step="0">第一句</button>
+        <button class="step-btn" data-step="1">第二句</button>
+        <button class="step-btn" data-step="2">第三句</button>
+      </div>
+
+      <div class="step-panel active" data-panel="0">
+        <h3>庞涓为什么敢说“你肯定不知道”？</h3>
+        <p>如果庞涓拿到的和为 <strong>S</strong>，那么把它拆成若干对不同整数时，<strong>每一对对应的积都必须不是唯一分解</strong>。否则一旦其中某一对乘积只有一种拆法，孙膑拿到那个积后就会立刻知道答案，庞涓就不敢说“我肯定你不知道”。</p>
+        <p>这意味着庞涓手里的和，不能允许出现类似 <strong>2 + 质数</strong> 的拆法。因为若一对数是 <strong>2</strong> 和某个质数 <strong>p</strong>，乘积 <strong>2p</strong> 在范围内通常只有这一种有效分解，孙膑会马上知道。</p>
+        <div class="logic-note">所以，庞涓的第一句话不是废话，而是在告诉我们：<strong>他的和属于一批“所有拆分都足够模糊”的安全和数</strong>。</div>
+      </div>
+
+      <div class="step-panel" data-panel="1">
+        <h3>孙膑为什么听完第一句就能确定？</h3>
+        <p>既然孙膑现在能确定，那他手里的积在所有因式拆分中，<strong>只能有一对数对应到“安全和数”</strong>。经典解恰好落在积 <strong>52</strong> 上，因为 52 只有两种有效拆分：</p>
+        <div class="factor-grid">
+          <div class="mini-card bad">
+            <h4>2 × 26</h4>
+            <p>对应的和是 <strong>28</strong>。但 28 可以拆成 <strong>5 + 23</strong>，而 23 是质数，这会让某些积变成唯一分解，所以庞涓若拿到 28，不能说“我肯定你不知道”。</p>
+          </div>
+          <div class="mini-card good">
+            <h4>4 × 13</h4>
+            <p>对应的和是 <strong>17</strong>。17 的所有拆分都不会让孙膑一眼确定，因此庞涓完全有资格说出第一句话。</p>
+          </div>
+        </div>
+        <div class="logic-note">于是孙膑一听就明白：如果积是 52，唯一还能成立的拆分只能是 <strong>4 和 13</strong>。</div>
+      </div>
+
+      <div class="step-panel" data-panel="2">
+        <h3>庞涓为什么随后也能反推出结果？</h3>
+        <p>庞涓知道自己的和是 <strong>17</strong>，因此他会枚举所有可能：</p>
+        <div class="sum-grid">
+          <div class="mini-card"><h4>2 + 15</h4><p>积为 30，孙膑听完第一句后仍无法唯一锁定。</p></div>
+          <div class="mini-card"><h4>3 + 14</h4><p>积为 42，依旧有多种符合条件的拆法。</p></div>
+          <div class="mini-card good"><h4>4 + 13</h4><p>积为 52，孙膑会在第二句立刻确定。</p></div>
+          <div class="mini-card"><h4>5 + 12</h4><p>积为 60，信息仍不够唯一。</p></div>
+          <div class="mini-card"><h4>6 + 11</h4><p>积为 66，孙膑仍会犹豫。</p></div>
+          <div class="mini-card"><h4>7 + 10</h4><p>积为 70，同样不唯一。</p></div>
+          <div class="mini-card"><h4>8 + 9</h4><p>积为 72，也还不能一锤定音。</p></div>
+        </div>
+        <div class="logic-note">所以在和为 17 的所有候选里，<strong>只有 4 + 13</strong> 会让孙膑在第二句直接说“我知道了”。庞涓自然也就能反推出答案。</div>
+      </div>
+    </div>
+
+    <div class="playground reveal">
+      <div class="playground-head">
+        <h3>推理沙盘</h3>
+        <p>下面这个增强视图把“候选集”真正算出来。点不同阶段，可以看到总候选数如何从 <strong>4753</strong> 对缩到最后只剩 <strong>1</strong> 对。</p>
+      </div>
+
+      <div class="playground-nav" id="playgroundNav">
+        <button class="play-btn active" data-stage="0">初始状态</button>
+        <button class="play-btn" data-stage="1">庞涓第一句后</button>
+        <button class="play-btn" data-stage="2">孙膑第二句后</button>
+        <button class="play-btn" data-stage="3">庞涓第三句后</button>
+      </div>
+
+      <div class="stats-grid" id="statsGrid">
+        <div class="stat-card active" data-stat-stage="0">
+          <div class="stat-label">全部候选</div>
+          <div class="stat-value" id="count0">-</div>
+          <p>2 到 99 的不同整数对</p>
+        </div>
+        <div class="stat-card" data-stat-stage="1">
+          <div class="stat-label">第一句后</div>
+          <div class="stat-value" id="count1">-</div>
+          <p>只保留“安全和数”</p>
+        </div>
+        <div class="stat-card" data-stat-stage="2">
+          <div class="stat-label">第二句后</div>
+          <div class="stat-value" id="count2">-</div>
+          <p>积只能对应一个安全和</p>
+        </div>
+        <div class="stat-card" data-stat-stage="3">
+          <div class="stat-label">第三句后</div>
+          <div class="stat-value" id="count3">-</div>
+          <p>和只能对应一个幸存候选</p>
+        </div>
+      </div>
+
+      <div class="playground-grid">
+        <div class="board">
+          <h4>和为 17 的所有拆分</h4>
+          <p class="board-desc">庞涓若拿到和 17，他只能在这些候选中继续观察孙膑会不会突然确定。</p>
+          <div class="pair-list" id="sum17List"></div>
+        </div>
+
+        <div class="board">
+          <h4>积为 52 的所有分解</h4>
+          <p class="board-desc">孙膑若拿到积 52，需要判断哪一种分解还和庞涓的第一句话相容。</p>
+          <div class="factor-list" id="product52List"></div>
+          <div class="tag-list" id="safeSumList"></div>
+        </div>
+      </div>
+
+      <div class="stage-note" id="stageNote">正在载入候选集...</div>
+    </div>
+
+    <div class="matrix-board reveal">
+      <h3>全候选矩阵</h3>
+      <p>横轴是较小的数，纵轴是较大的数。每个点代表一组候选 `(a, b)`。切换上面的阶段按钮后，这里会同步显示哪一些候选仍然活着，哪一些已经被对白淘汰。</p>
+      <div class="matrix-wrap">
+        <canvas class="matrix-canvas" id="candidateMatrix"></canvas>
+        <div class="matrix-tooltip" id="matrixTooltip"></div>
+      </div>
+      <div class="matrix-legend">
+        <div class="legend-item"><span class="legend-dot axis"></span><span>坐标参考线</span></div>
+        <div class="legend-item"><span class="legend-dot alive"></span><span>当前阶段仍存活</span></div>
+        <div class="legend-item"><span class="legend-dot dead"></span><span>当前阶段已淘汰</span></div>
+        <div class="legend-item"><span class="legend-dot final"></span><span>最终答案 4,13</span></div>
+      </div>
+      <div class="detail-card" id="matrixDetail">
+        <div class="detail-head">
+          <div class="detail-title" id="detailTitle">候选详情</div>
+          <div class="detail-badge" id="detailBadge">未选择</div>
+        </div>
+        <div class="detail-summary" id="detailSummary">点击矩阵中的任一点，可以查看这组候选为什么会被留下，或者在哪一轮对白中被淘汰。</div>
+        <div class="detail-grid">
+          <div class="detail-item">
+            <span class="k">数对</span>
+            <span class="v" id="detailPair">-</span>
+          </div>
+          <div class="detail-item">
+            <span class="k">和</span>
+            <span class="v" id="detailSum">-</span>
+          </div>
+          <div class="detail-item">
+            <span class="k">积</span>
+            <span class="v" id="detailProduct">-</span>
+          </div>
+          <div class="detail-item">
+            <span class="k">命运</span>
+            <span class="v" id="detailStage">-</span>
+          </div>
+        </div>
+        <div class="detail-reason" id="detailReason">当前还没有选中任何候选点。</div>
+        <div class="relation-grid">
+          <div class="relation-card">
+            <h4 id="sumGroupTitle">同和候选</h4>
+            <p id="sumGroupDesc">这里会显示与当前选中候选拥有相同和的全部数对。</p>
+            <div class="relation-list" id="sumGroupList"></div>
+          </div>
+          <div class="relation-card">
+            <h4 id="productGroupTitle">同积候选</h4>
+            <p id="productGroupDesc">这里会显示与当前选中候选拥有相同积的全部数对。</p>
+            <div class="relation-list" id="productGroupList"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="reason-map reveal">
+      <div class="reason-row">
+        <div class="reason-index">01</div>
+        <div class="reason-card">
+          <h3>第一层筛选：和必须足够“安全”</h3>
+          <p>庞涓的第一句话把一大批和排除掉了。只要某个和能拆出一对 <strong>2 + 质数</strong>，它就不安全，因为那样得到的积会被孙膑一眼识破。</p>
+        </div>
+      </div>
+      <div class="reason-row">
+        <div class="reason-index">02</div>
+        <div class="reason-card">
+          <h3>第二层筛选：积只对应一个安全和</h3>
+          <p>孙膑听完就知道，说明他手里的积虽然原来有多种分解，但在“庞涓敢说第一句”的前提下，<strong>只剩唯一候选</strong>。积 52 正好满足这一点。</p>
+        </div>
+      </div>
+      <div class="reason-row">
+        <div class="reason-index">03</div>
+        <div class="reason-card">
+          <h3>第三层筛选：和 17 中只有一对会触发第二句</h3>
+          <p>庞涓反过来检查所有和为 17 的拆分，发现只有 <strong>4 + 13</strong> 能让孙膑在第二句立刻确定，因此最后他也得到了同样的结论。</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="answer-card reveal">
+      <h3>最终答案</h3>
+      <p>这两个数是 <strong>4</strong> 和 <strong>13</strong>。</p>
+      <p>对应关系为：庞涓拿到的和是 <strong>17</strong>，孙膑拿到的积是 <strong>52</strong>。三轮对白所携带的信息，恰好把所有候选一步步压缩到这一组。</p>
+      <div class="answer-value">唯一解：4 与 13</div>
+    </div>
+
+    <div class="insight reveal">
+      <h3>这题真正考的是什么？</h3>
+      <p>这不是普通的列式题，而是<strong>“关于知识的知识”</strong>。你不是直接从和与积反推数字，而是不断利用“对方知道什么、对方为什么能这么说”来更新自己的信息集。逻辑上，这类题考查的是<strong>公共知识、候选集收缩、以及元推理</strong>。</p>
+    </div>
+  </section>
+
+  <footer><span>◆</span> 鬼谷考徒 — 经典逻辑推理 <span>◆</span></footer>
+</div>
+
+<script>
+/**
+ * 切换明暗主题并持久化用户选择。
+ */
+function bindThemeToggle() {
+  var themeToggle = document.getElementById('themeToggle');
+  if (!themeToggle) return;
+  themeToggle.addEventListener('click', function() {
+    var isLight = document.documentElement.getAttribute('data-theme') === 'light';
+    var newTheme = isLight ? 'dark' : 'light';
+    document.documentElement.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+  });
+  var savedTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+  document.documentElement.setAttribute('data-theme', savedTheme);
+}
+
+/**
+ * 绑定对白步骤切换，让读者按三句话逐步查看推理。
+ */
+function bindStepPanels() {
+  var nav = document.getElementById('stepNav');
+  if (!nav) return;
+  var buttons = nav.querySelectorAll('.step-btn');
+  var panels = document.querySelectorAll('.step-panel');
+
+  nav.addEventListener('click', function(event) {
+    var button = event.target.closest('.step-btn');
+    if (!button) return;
+    var step = button.getAttribute('data-step');
+
+    buttons.forEach(function(item) {
+      item.classList.toggle('active', item === button);
+    });
+    panels.forEach(function(panel) {
+      panel.classList.toggle('active', panel.getAttribute('data-panel') === step);
+    });
+  });
+}
+
+/**
+ * 枚举题目中的所有候选对，并按对白顺序计算每一步剩余集合。
+ */
+function buildPuzzleState() {
+  var pairs = [];
+  var sumMap = {};
+  var productMap = {};
+  var a;
+  var b;
+
+  /**
+   * 记录某个键对应的候选列表。
+   */
+  function pushMap(map, key, value) {
+    if (!map[key]) map[key] = [];
+    map[key].push(value);
+  }
+
+  for (a = 2; a < 100; a++) {
+    for (b = a + 1; b < 100; b++) {
+      var pair = { a: a, b: b, key: a + '-' + b, sum: a + b, product: a * b };
+      pairs.push(pair);
+      pushMap(sumMap, pair.sum, pair);
+      pushMap(productMap, pair.product, pair);
+    }
+  }
+
+  var safeSums = {};
+  Object.keys(sumMap).forEach(function(sumKey) {
+    var group = sumMap[sumKey];
+    var isSafe = group.length > 1 && group.every(function(pair) {
+      return (productMap[pair.product] || []).length > 1;
+    });
+    if (isSafe) safeSums[sumKey] = true;
+  });
+
+  var step1 = pairs.filter(function(pair) {
+    return !!safeSums[pair.sum];
+  });
+
+  var step2 = [];
+  Object.keys(productMap).forEach(function(productKey) {
+    var candidates = productMap[productKey].filter(function(pair) {
+      return !!safeSums[pair.sum];
+    });
+    if (candidates.length === 1) step2.push(candidates[0]);
+  });
+
+  var step2Map = {};
+  step2.forEach(function(pair) {
+    step2Map[pair.key] = true;
+  });
+
+  var step3 = [];
+  Object.keys(sumMap).forEach(function(sumKey) {
+    var candidates = sumMap[sumKey].filter(function(pair) {
+      return !!step2Map[pair.key];
+    });
+    if (candidates.length === 1) step3.push(candidates[0]);
+  });
+
+  return {
+    pairs: pairs,
+    safeSums: safeSums,
+    sumMap: sumMap,
+    productMap: productMap,
+    stepPairs: [pairs, step1, step2, step3]
+  };
+}
+
+/**
+ * 在页面中广播当前推理阶段，供其他可视化模块联动。
+ */
+function emitStageChange(stage, state) {
+  document.dispatchEvent(new CustomEvent('guigu-stage-change', {
+    detail: {
+      stage: stage,
+      state: state
+    }
+  }));
+}
+
+/**
+ * 根据当前阶段刷新候选集可视化。
+ */
+function bindInferencePlayground() {
+  var nav = document.getElementById('playgroundNav');
+  if (!nav) return;
+
+  var state = buildPuzzleState();
+  var stageButtons = nav.querySelectorAll('.play-btn');
+  var statCards = document.querySelectorAll('.stat-card');
+  var countIds = ['count0', 'count1', 'count2', 'count3'];
+  var stageNote = document.getElementById('stageNote');
+  var sum17List = document.getElementById('sum17List');
+  var product52List = document.getElementById('product52List');
+  var safeSumList = document.getElementById('safeSumList');
+  var stageTexts = [
+    '初始状态下，一共有 <strong>4753</strong> 对不同整数可选，此时任何人都无法直接锁定答案。',
+    '庞涓说完第一句后，只允许保留那些“所有拆分都不会让积唯一”的和，候选数锐减到 <strong>145</strong> 对。',
+    '孙膑说“我知道了”后，说明他的积只剩 <strong>一个</strong> 仍和安全和数相容的分解，于是候选数进一步缩到 <strong>86</strong> 对。',
+    '庞涓再回看自己的和时，发现只有 <strong>一对</strong> 数会导致孙膑第二句成立，因此最终唯一解锁定为 <strong>4 和 13</strong>。'
+  ];
+  var sum17Pairs = [
+    { a: 2, b: 15 }, { a: 3, b: 14 }, { a: 4, b: 13 }, { a: 5, b: 12 },
+    { a: 6, b: 11 }, { a: 7, b: 10 }, { a: 8, b: 9 }
+  ];
+  var product52Pairs = [
+    { a: 2, b: 26, sum: 28 },
+    { a: 4, b: 13, sum: 17 }
+  ];
+  var currentStage = 0;
+
+  countIds.forEach(function(id, index) {
+    var target = document.getElementById(id);
+    if (target) target.textContent = state.stepPairs[index].length;
+  });
+
+  Object.keys(state.safeSums).forEach(function(sumKey) {
+    var tag = document.createElement('div');
+    tag.className = 'tag-chip good';
+    tag.textContent = '和 ' + sumKey;
+    safeSumList.appendChild(tag);
+  });
+
+  /**
+   * 判断某一对数字在当前阶段是否仍然存活。
+   */
+  function isAliveAtStage(pair, stage) {
+    return state.stepPairs[stage].some(function(item) {
+      return item.a === pair.a && item.b === pair.b;
+    });
+  }
+
+  /**
+   * 重绘和为 17 的拆分列表与积为 52 的分解列表。
+   */
+  function renderBoards(stage) {
+    sum17List.innerHTML = '';
+    product52List.innerHTML = '';
+
+    sum17Pairs.forEach(function(pair) {
+      var chip = document.createElement('div');
+      var alive = isAliveAtStage(pair, stage);
+      chip.className = 'pair-chip ' + (alive ? 'alive' : 'dead') + ((pair.a === 4 && pair.b === 13) ? ' focus' : '');
+      chip.textContent = pair.a + ' + ' + pair.b;
+      sum17List.appendChild(chip);
+    });
+
+    product52Pairs.forEach(function(pair) {
+      var chip = document.createElement('div');
+      var alive = isAliveAtStage(pair, stage);
+      chip.className = 'factor-chip ' + (alive ? 'alive' : 'dead') + ((pair.a === 4 && pair.b === 13) ? ' focus' : '');
+      chip.textContent = pair.a + ' × ' + pair.b + '  (和 ' + pair.sum + ')';
+      product52List.appendChild(chip);
+    });
+  }
+
+  /**
+   * 切换当前观察阶段，并同步高亮说明文本。
+   */
+  function updateStage(stage) {
+    currentStage = stage;
+    stageButtons.forEach(function(button) {
+      button.classList.toggle('active', Number(button.getAttribute('data-stage')) === stage);
+    });
+    statCards.forEach(function(card) {
+      card.classList.toggle('active', Number(card.getAttribute('data-stat-stage')) === stage);
+    });
+    stageNote.innerHTML = stageTexts[stage];
+    renderBoards(stage);
+    emitStageChange(stage, state);
+  }
+
+  nav.addEventListener('click', function(event) {
+    var button = event.target.closest('.play-btn');
+    if (!button) return;
+    updateStage(Number(button.getAttribute('data-stage')));
+  });
+
+  updateStage(currentStage);
+}
+
+/**
+ * 绘制全候选矩阵，并在鼠标悬停时显示对应数对。
+ */
+function bindCandidateMatrix() {
+  var canvas = document.getElementById('candidateMatrix');
+  var tooltip = document.getElementById('matrixTooltip');
+  var detailTitle = document.getElementById('detailTitle');
+  var detailBadge = document.getElementById('detailBadge');
+  var detailSummary = document.getElementById('detailSummary');
+  var detailPair = document.getElementById('detailPair');
+  var detailSum = document.getElementById('detailSum');
+  var detailProduct = document.getElementById('detailProduct');
+  var detailStage = document.getElementById('detailStage');
+  var detailReason = document.getElementById('detailReason');
+  var sumGroupTitle = document.getElementById('sumGroupTitle');
+  var sumGroupDesc = document.getElementById('sumGroupDesc');
+  var sumGroupList = document.getElementById('sumGroupList');
+  var productGroupTitle = document.getElementById('productGroupTitle');
+  var productGroupDesc = document.getElementById('productGroupDesc');
+  var productGroupList = document.getElementById('productGroupList');
+  if (!canvas || !tooltip) return;
+
+  var ctx = canvas.getContext('2d');
+  var stage = 0;
+  var state = buildPuzzleState();
+  var plottedPoints = [];
+  var selectedKey = '4-13';
+  var rangeMin = 2;
+  var rangeMax = 99;
+  var padding = { top: 24, right: 18, bottom: 34, left: 38 };
+
+  /**
+   * 判断某个点在当前阶段是否仍然存活。
+   */
+  function isAlive(pair, activeStage) {
+    return state.stepPairs[activeStage].some(function(item) {
+      return item.key === pair.key;
+    });
+  }
+
+  /**
+   * 判断某个候选第一次在哪一阶段被淘汰。
+   */
+  function getEliminationStage(pair) {
+    var index;
+    for (index = 0; index < state.stepPairs.length; index++) {
+      if (!isAlive(pair, index)) return index;
+    }
+    return -1;
+  }
+
+  /**
+   * 生成某个候选在当前题目中的命运说明。
+   */
+  function getPairReason(pair) {
+    var eliminationStage = getEliminationStage(pair);
+
+    if (pair.a === 4 && pair.b === 13) {
+      return {
+        label: '最终幸存',
+        alive: true,
+        summary: '这组数穿过了三轮对白的全部筛选，是全局唯一幸存候选。',
+        stageText: '直到第三句后仍存活',
+        reason: '它的和是 <strong>17</strong>，属于庞涓第一句允许的安全和数；它的积是 <strong>52</strong>，在“安全和数”约束下只剩 <strong>4 × 13</strong> 一个可能；回到和 17 时，也只有这组数会让孙膑在第二句直接确定。'
+      };
+    }
+
+    if (eliminationStage === 1) {
+      return {
+        label: '第一轮淘汰',
+        alive: false,
+        summary: '它在庞涓第一句后就被排除了。',
+        stageText: '庞涓第一句后淘汰',
+        reason: '这组数的和是 <strong>' + pair.sum + '</strong>，但这个和并不“安全”。也就是说，和为 ' + pair.sum + ' 的某种拆分会让孙膑直接从积唯一锁定答案，因此庞涓若真拿到这个和，就不敢说“我肯定你也不知道”。'
+      };
+    }
+
+    if (eliminationStage === 2) {
+      return {
+        label: '第二轮淘汰',
+        alive: false,
+        summary: '它通过了第一句，但没能通过孙膑的反推。',
+        stageText: '孙膑第二句后淘汰',
+        reason: '这组数的和 <strong>' + pair.sum + '</strong> 确实是安全和数，但它对应的积 <strong>' + pair.product + '</strong> 在安全和数约束下仍有不止一种分解，因此孙膑听完第一句后仍不能唯一确定。既然孙膑却说“我知道了”，这组候选就被排除。'
+      };
+    }
+
+    if (eliminationStage === 3) {
+      return {
+        label: '第三轮淘汰',
+        alive: false,
+        summary: '它甚至通过了孙膑第二句，但最终没过庞涓的回看。',
+        stageText: '庞涓第三句后淘汰',
+        reason: '这组数对应的积 <strong>' + pair.product + '</strong> 的确能让孙膑在第二句确定，但它的和 <strong>' + pair.sum + '</strong> 下面仍有多组候选同样满足这一点。既然庞涓最后也能唯一确定答案，这组数就不能是最终解。'
+      };
+    }
+
+    return {
+      label: '当前存活',
+      alive: true,
+      summary: '在当前阶段，这组候选仍然没有被对白排除。',
+      stageText: '当前阶段仍存活',
+      reason: '随着后续对白继续增加信息，这组候选还有可能在更后面的阶段被淘汰。'
+    };
+  }
+
+  /**
+   * 将逻辑坐标映射为画布像素坐标。
+   */
+  function mapPoint(valueA, valueB, width, height) {
+    var innerWidth = width - padding.left - padding.right;
+    var innerHeight = height - padding.top - padding.bottom;
+    return {
+      x: padding.left + ((valueA - rangeMin) / (rangeMax - rangeMin)) * innerWidth,
+      y: height - padding.bottom - ((valueB - rangeMin) / (rangeMax - rangeMin)) * innerHeight
+    };
+  }
+
+  /**
+   * 绘制坐标参考线与轴标签。
+   */
+  function drawAxes(width, height) {
+    var ticks = [2, 20, 40, 60, 80, 99];
+
+    ctx.save();
+    ctx.strokeStyle = 'rgba(200,154,66,0.12)';
+    ctx.lineWidth = 1;
+    ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--cream-dim');
+    ctx.font = '12px Noto Serif SC';
+
+    ticks.forEach(function(tick) {
+      var axisPointX = mapPoint(tick, rangeMin, width, height);
+      var axisPointY = mapPoint(rangeMin, tick, width, height);
+
+      ctx.beginPath();
+      ctx.moveTo(axisPointX.x, padding.top);
+      ctx.lineTo(axisPointX.x, height - padding.bottom);
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.moveTo(padding.left, axisPointY.y);
+      ctx.lineTo(width - padding.right, axisPointY.y);
+      ctx.stroke();
+
+      ctx.fillText(String(tick), axisPointX.x - 9, height - 10);
+      ctx.fillText(String(tick), 6, axisPointY.y + 4);
+    });
+
+    ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--accent-dim');
+    ctx.fillText('较小的数 a', width / 2 - 28, height - 10);
+    ctx.save();
+    ctx.translate(14, height / 2 + 20);
+    ctx.rotate(-Math.PI / 2);
+    ctx.fillText('较大的数 b', 0, 0);
+    ctx.restore();
+    ctx.restore();
+  }
+
+  /**
+   * 按当前阶段重绘全部候选点。
+   */
+  function renderMatrix() {
+    var rect = canvas.getBoundingClientRect();
+    var cssWidth = Math.max(320, Math.floor(rect.width));
+    var cssHeight = Math.max(360, Math.floor(Math.min(rect.width * 0.78, 620)));
+    var ratio = window.devicePixelRatio || 1;
+    var styles = getComputedStyle(document.documentElement);
+    var aliveColor = styles.getPropertyValue('--good').trim() || '#4f9d68';
+    var deadColor = 'rgba(160,74,74,0.24)';
+    var finalColor = styles.getPropertyValue('--accent-bright').trim() || '#e1b358';
+
+    canvas.width = Math.floor(cssWidth * ratio);
+    canvas.height = Math.floor(cssHeight * ratio);
+    canvas.style.height = cssHeight + 'px';
+    ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+    ctx.clearRect(0, 0, cssWidth, cssHeight);
+    plottedPoints = [];
+
+    drawAxes(cssWidth, cssHeight);
+
+    state.pairs.forEach(function(pair) {
+      var point = mapPoint(pair.a, pair.b, cssWidth, cssHeight);
+      var alive = isAlive(pair, stage);
+      var isFinal = pair.a === 4 && pair.b === 13;
+      var isSelected = pair.key === selectedKey;
+      var radius = isSelected ? 4.2 : (isFinal ? 4.8 : (alive ? 2.25 : 1.55));
+
+      if (isSelected) {
+        ctx.beginPath();
+        ctx.arc(point.x, point.y, 8.5, 0, Math.PI * 2);
+        ctx.strokeStyle = finalColor;
+        ctx.lineWidth = 1.25;
+        ctx.globalAlpha = 0.9;
+        ctx.stroke();
+        ctx.globalAlpha = 1;
+      }
+
+      ctx.beginPath();
+      ctx.arc(point.x, point.y, radius, 0, Math.PI * 2);
+      ctx.fillStyle = isFinal ? finalColor : (alive ? aliveColor : deadColor);
+      ctx.globalAlpha = isFinal ? 1 : (alive ? 0.85 : 0.8);
+      ctx.fill();
+      ctx.globalAlpha = 1;
+
+      plottedPoints.push({
+        pair: pair,
+        x: point.x,
+        y: point.y,
+        radius: isSelected ? 10 : (isFinal ? 9 : 6)
+      });
+    });
+  }
+
+  /**
+   * 根据鼠标位置寻找最近的候选点。
+   */
+  function findPoint(clientX, clientY) {
+    var rect = canvas.getBoundingClientRect();
+    var x = clientX - rect.left;
+    var y = clientY - rect.top;
+    var found = null;
+
+    plottedPoints.forEach(function(item) {
+      var dx = item.x - x;
+      var dy = item.y - y;
+      if (dx * dx + dy * dy <= item.radius * item.radius) {
+        found = item;
+      }
+    });
+
+    return found ? { point: found, x: x, y: y } : null;
+  }
+
+  /**
+   * 显示当前悬停点的说明气泡。
+   */
+  function showTooltip(hit) {
+    var pair = hit.point.pair;
+    var alive = isAlive(pair, stage);
+    var stageLabels = ['初始状态', '第一句后', '第二句后', '第三句后'];
+    tooltip.innerHTML =
+      '候选：<strong>(' + pair.a + ', ' + pair.b + ')</strong><br>' +
+      '和：' + pair.sum + '，积：' + pair.product + '<br>' +
+      stageLabels[stage] + '：' + (alive ? '仍存活' : '已淘汰');
+    tooltip.style.left = hit.x + 'px';
+    tooltip.style.top = hit.y + 'px';
+    tooltip.classList.add('show');
+  }
+
+  /**
+   * 隐藏悬浮说明气泡。
+   */
+  function hideTooltip() {
+    tooltip.classList.remove('show');
+  }
+
+  /**
+   * 将当前选中候选的命运解释渲染到详情卡片。
+   */
+  function renderDetail() {
+    var selectedPair = state.pairs.find(function(item) {
+      return item.key === selectedKey;
+    });
+    if (!selectedPair) return;
+
+    var info = getPairReason(selectedPair);
+    var aliveNow = isAlive(selectedPair, stage);
+
+    detailTitle.textContent = '候选 ' + selectedPair.a + ' 与 ' + selectedPair.b;
+    detailBadge.textContent = aliveNow ? '当前阶段仍存活' : '当前阶段已淘汰';
+    detailBadge.className = 'detail-badge ' + (aliveNow ? 'alive' : 'dead');
+    detailSummary.textContent = info.summary;
+    detailPair.textContent = selectedPair.a + ' 与 ' + selectedPair.b;
+    detailSum.textContent = String(selectedPair.sum);
+    detailProduct.textContent = String(selectedPair.product);
+    detailStage.textContent = info.stageText;
+    detailReason.innerHTML = info.reason;
+    renderRelationGroups(selectedPair);
+  }
+
+  /**
+   * 渲染当前候选所在的和分组与积分组，展示横向比较关系。
+   */
+  function renderRelationGroups(selectedPair) {
+    var sumGroup = (state.sumMap[selectedPair.sum] || []).slice().sort(function(left, right) {
+      return left.a - right.a;
+    });
+    var productGroup = (state.productMap[selectedPair.product] || []).slice().sort(function(left, right) {
+      return left.a - right.a;
+    });
+
+    sumGroupTitle.textContent = '同和候选：和 = ' + selectedPair.sum;
+    productGroupTitle.textContent = '同积候选：积 = ' + selectedPair.product;
+    sumGroupDesc.textContent = '庞涓拿到和 ' + selectedPair.sum + ' 时，脑中全部可能就是这一组。';
+    productGroupDesc.textContent = '孙膑拿到积 ' + selectedPair.product + ' 时，脑中全部可能就是这一组。';
+    sumGroupList.innerHTML = '';
+    productGroupList.innerHTML = '';
+
+    sumGroup.forEach(function(pair) {
+      var chip = document.createElement('div');
+      var alive = isAlive(pair, stage);
+      chip.className = 'relation-chip ' + (alive ? 'alive' : 'dead') + (pair.key === selectedPair.key ? ' focus' : '');
+      chip.textContent = pair.a + ' + ' + pair.b;
+      sumGroupList.appendChild(chip);
+    });
+
+    productGroup.forEach(function(pair) {
+      var chip = document.createElement('div');
+      var alive = isAlive(pair, stage);
+      chip.className = 'relation-chip ' + (alive ? 'alive' : 'dead') + (pair.key === selectedPair.key ? ' focus' : '');
+      chip.textContent = pair.a + ' × ' + pair.b;
+      productGroupList.appendChild(chip);
+    });
+  }
+
+  canvas.addEventListener('mousemove', function(event) {
+    var hit = findPoint(event.clientX, event.clientY);
+    if (!hit) {
+      hideTooltip();
+      return;
+    }
+    showTooltip(hit);
+  });
+
+  canvas.addEventListener('click', function(event) {
+    var hit = findPoint(event.clientX, event.clientY);
+    if (!hit) return;
+    selectedKey = hit.point.pair.key;
+    renderMatrix();
+    renderDetail();
+  });
+
+  canvas.addEventListener('mouseleave', hideTooltip);
+
+  window.addEventListener('resize', function() {
+    renderMatrix();
+  });
+
+  document.addEventListener('guigu-stage-change', function(event) {
+    stage = event.detail.stage;
+    state = event.detail.state || state;
+    renderMatrix();
+    renderDetail();
+    hideTooltip();
+  });
+
+  renderMatrix();
+  renderDetail();
+}
+
+/**
+ * 监听滚动进入视口，触发渐入动画。
+ */
+function bindRevealAnimations() {
+  var reveals = document.querySelectorAll('.reveal');
+  var observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.12 });
+
+  reveals.forEach(function(item) {
+    observer.observe(item);
+  });
+}
+
+/**
+ * 初始化页面交互。
+ */
+(function() {
+  bindThemeToggle();
+  bindStepPanels();
+  bindInferencePlayground();
+  bindCandidateMatrix();
+  bindRevealAnimations();
+})();
+</script>
+</body>
+</html>
