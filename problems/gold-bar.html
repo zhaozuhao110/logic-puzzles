@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>分割金条 — 经典逻辑推理</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Noto+Serif+SC:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --gold-bg:#0f0d0a;
+  --gold-surface:#1a1712;
+  --gold-card:#241f18;
+  --gold-bright:#f0c94d;
+  --gold-mid:#d4a537;
+  --gold-dim:#8a6d1b;
+  --cream:#e8dcc8;
+  --cream-dim:#9e9483;
+  --border:rgba(212,165,55,0.15);
+}
+
+[data-theme="light"]{
+  --gold-bg:#fdfaf0;
+  --gold-surface:#ffffff;
+  --gold-card:#ffffff;
+  --gold-bright:#d4a537;
+  --gold-mid:#b08235;
+  --gold-dim:#85672a;
+  --cream:#1a1410;
+  --cream-dim:#5a5550;
+  --border:rgba(176,130,53,0.2);
+}
+
+html{scroll-behavior:smooth}
+body{
+  font-family:'Noto Serif SC',serif;
+  background:var(--gold-bg);
+  color:var(--cream);
+  min-height:100vh;overflow-x:hidden;line-height:1.8;
+}
+
+.bg{
+  position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:radial-gradient(ellipse 60% 50% at 50% 10%,rgba(212,165,55,0.05),transparent),var(--gold-bg);
+}
+
+.container{position:relative;z-index:2;max-width:800px;margin:0 auto;padding:0 24px}
+
+/* ===== Hero ===== */
+.hero{min-height:80vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.hero-icon{width:64px;height:64px;margin-bottom:24px;color:var(--gold-mid);opacity:0.8}
+.hero h1{
+  font-family:'Playfair Display','Noto Serif SC',serif;
+  font-size:clamp(2rem,5.5vw,3.4rem);font-weight:900;
+  background:linear-gradient(135deg,var(--gold-bright),var(--gold-mid),var(--gold-dim));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  letter-spacing:0.04em;line-height:1.2;margin-bottom:12px;
+}
+.hero .subtitle{font-size:clamp(0.9rem,2vw,1.1rem);color:var(--cream-dim);font-weight:300;letter-spacing:0.2em;margin-bottom:36px}
+.hero-question{
+  max-width:540px;text-align:left;
+  background:var(--gold-card);border:1px solid var(--border);
+  padding:24px 28px;border-radius:4px;font-size:0.95rem;color:var(--cream-dim);line-height:2;
+  box-shadow:0 10px 30px rgba(0,0,0,0.1);
+}
+.hero-question strong{color:var(--gold-mid);font-weight:600}
+
+/* ===== Content ===== */
+section{padding:60px 0}
+.label{display:inline-block;font-size:0.75rem;letter-spacing:0.2em;color:var(--gold-dim);margin-bottom:12px;text-transform:uppercase}
+.heading{font-size:clamp(1.5rem,3vw,2rem);color:var(--cream);font-weight:700;margin-bottom:20px}
+
+.solution-card{
+  background:var(--gold-surface);border:1px solid var(--border);
+  padding:32px;border-radius:8px;margin-bottom:40px;
+}
+.step-item{margin-bottom:24px;position:relative;padding-left:32px}
+.step-item::before{
+  content:attr(data-day);position:absolute;left:0;top:0;
+  width:22px;height:22px;background:var(--gold-dim);color:var(--gold-bg);
+  border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:0.7rem;font-weight:900;
+}
+.step-title{font-weight:700;color:var(--gold-mid);margin-bottom:4px}
+.step-desc{font-size:0.9rem;color:var(--cream-dim)}
+
+.bar-visual{
+  display:flex;gap:4px;margin:30px 0;justify-content:center;
+}
+.segment{
+  height:40px;background:linear-gradient(135deg,var(--gold-bright),var(--gold-mid));
+  border-radius:2px;display:flex;align-items:center;justify-content:center;
+  color:var(--gold-bg);font-weight:900;font-size:0.8rem;
+  box-shadow:0 4px 10px rgba(0,0,0,0.2);
+}
+.seg-1{width:14.28%}
+.seg-2{width:28.56%}
+.seg-4{width:57.14%}
+
+/* Common Back Link & Theme Toggle */
+.back-link, .theme-toggle-sub{
+  position:fixed;top:28px;z-index:100;
+  display:flex;align-items:center;justify-content:center;
+  text-decoration:none;transition:all 0.3s cubic-bezier(0.4,0,0.2,1);
+  background:rgba(0,0,0,0.4);backdrop-filter:blur(12px);
+  border-radius:40px;border:1px solid var(--border);
+  box-shadow:0 4px 20px rgba(0,0,0,0.2);
+  color:var(--cream-dim);
+}
+.back-link{left:28px;padding:10px 18px;gap:10px;font-size:0.85rem;letter-spacing:0.1em;}
+.theme-toggle-sub{right:28px;width:44px;height:44px;cursor:pointer;padding:0;}
+
+.back-link:hover, .theme-toggle-sub:hover{
+  color:var(--cream);border-color:var(--gold-mid);
+  background:rgba(0,0,0,0.6);
+}
+.back-link:hover{transform:translateX(-4px);}
+.theme-toggle-sub:hover{transform:rotate(15deg);}
+
+.back-link svg, .theme-toggle-sub svg{width:18px;height:18px;stroke:currentColor;fill:none;transition:transform 0.3s}
+.theme-toggle-sub svg{fill:currentColor;stroke:none;}
+.back-link:hover svg{transform:translateX(-3px)}
+
+.theme-toggle-sub .sun-icon{display:none}
+[data-theme="light"] .theme-toggle-sub .sun-icon{display:block}
+[data-theme="light"] .theme-toggle-sub .moon-icon{display:none}
+
+@media(max-width:640px){
+  .back-link{top:16px;left:16px;padding:8px 14px;font-size:0.75rem}
+  .theme-toggle-sub{top:16px;right:16px;width:36px;height:36px;}
+}
+</style>
+</head>
+<body>
+<div class="bg"></div>
+
+<a href="../index.html" class="back-link">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+  <span>返回首页</span>
+</a>
+<button class="theme-toggle-sub" id="themeToggle" title="切换明暗模式">
+  <svg class="moon-icon" viewBox="0 0 24 24"><path d="M12.1,22c-4.9,0-9-3.8-9.1-8.7c0-3.1,1.5-6.1,4.1-8c0.2-0.1,0.5-0.1,0.7,0.1c0.2,0.2,0.2,0.5,0.1,0.7c-0.5,0.9-0.7,1.8-0.7,2.8c0,3.5,2.8,6.3,6.3,6.3c1,0,1.9-0.2,2.8-0.7c0.2-0.1,0.5-0.1,0.7,0.1c0.2,0.2,0.2,0.5,0.1,0.7C15.1,20.5,13.6,22,12.1,22z"/></svg>
+  <svg class="sun-icon" viewBox="0 0 24 24"><path d="M12,18c-3.3,0-6-2.7-6-6s2.7-6,6-6s6,2.7,6,6S15.3,18,12,18z M12,8c-2.2,0-4,1.8-4,4s1.8,4,4,4s4-1.8,4-4S14.2,8,12,8z M11,1h2v3h-2V1z M11,20h2v3h-2V20z M3.5,4.9l2.1-2.1l1.4,1.4L4.9,6.3L3.5,4.9z M17,18.4l2.1-2.1l1.4,1.4l-2.1,2.1L17,18.4z M1,11h3v2H1V11z M20,11h3v2h-3V11z M4.9,17.7l2.1,2.1l-1.4,1.4l-2.1-2.1L4.9,17.7z M18.4,5.6l2.1-2.1l1.4,1.4l-2.1,2.1L18.4,5.6z"/></svg>
+</button>
+
+<div class="container">
+  <section class="hero">
+    <div class="hero-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+    </div>
+    <h1>分割金条</h1>
+    <p class="subtitle">THE GOLD BAR PUZZLE</p>
+    <div class="hero-question">
+      你让工人为你工作 7 天，给工人的回报是一根金条。金条平分成相连的 7 段，你必须在每天结束时给他们一段金条。
+      <strong>如果只许你两次把金条弄断</strong>，你如何给你的工人付费？
+    </div>
+  </section>
+
+  <section id="solution">
+    <span class="label">逻辑解析 / ANALYSIS</span>
+    <h2 class="heading">二进制思维的妙用</h2>
+    
+    <div class="solution-card">
+      <div class="step-item" data-day="切">
+        <div class="step-title">第一步：如何切割</div>
+        <div class="step-desc">将金条切割两次，得到长度分别为 <strong>1段、2段、4段</strong> 的三个部分。这就像二进制中的 1, 2, 4 位，可以组合出 1 到 7 的任何数字。</div>
+        <div class="bar-visual">
+          <div class="segment seg-1">1</div>
+          <div class="segment seg-2">2</div>
+          <div class="segment seg-4">4</div>
+        </div>
+      </div>
+
+      <div class="step-item" data-day="1">
+        <div class="step-title">第一天：支付 1 段</div>
+        <div class="step-desc">直接给工人 <strong>1段</strong>。 (工人持有: 1)</div>
+      </div>
+
+      <div class="step-item" data-day="2">
+        <div class="step-title">第二天：支付 2 段，找回 1 段</div>
+        <div class="step-desc">给工人 <strong>2段</strong>，让他找回 <strong>1段</strong>。 (工人持有: 2)</div>
+      </div>
+
+      <div class="step-item" data-day="3">
+        <div class="step-title">第三天：再次支付 1 段</div>
+        <div class="step-desc">给工人 <strong>1段</strong>。 (工人持有: 2+1=3)</div>
+      </div>
+
+      <div class="step-item" data-day="4">
+        <div class="step-title">第四天：支付 4 段，找回 3 段</div>
+        <div class="step-desc">给工人 <strong>4段</strong>，让他找回 <strong>2段和1段</strong>。 (工人持有: 4)</div>
+      </div>
+
+      <div class="step-item" data-day="5">
+        <div class="step-title">第五天：再次支付 1 段</div>
+        <div class="step-desc">给工人 <strong>1段</strong>。 (工人持有: 4+1=5)</div>
+      </div>
+
+      <div class="step-item" data-day="6">
+        <div class="step-title">第六天：支付 2 段，找回 1 段</div>
+        <div class="step-desc">给工人 <strong>2段</strong>，让他找回 <strong>1段</strong>。 (工人持有: 4+2=6)</div>
+      </div>
+
+      <div class="step-item" data-day="7">
+        <div class="step-title">第七天：支付最后 1 段</div>
+        <div class="step-desc">给工人最后 <strong>1段</strong>。 (工人持有: 4+2+1=7)</div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+// 这里可以增加简单的交互逻辑，比如点击天数高亮对应的金条组合
+(function(){
+  // 基础初始化逻辑
+  var themeToggle = document.getElementById('themeToggle');
+  if (themeToggle) {
+    themeToggle.addEventListener('click', function() {
+      var isLight = document.documentElement.getAttribute('data-theme') === 'light';
+      var newTheme = isLight ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', newTheme);
+      localStorage.setItem('theme', newTheme);
+    });
+  }
+  var savedTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+  document.documentElement.setAttribute('data-theme', savedTheme);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>燃绳问题 — 经典逻辑推理</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Noto+Serif+SC:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --night:#0a0a0f;
+  --ember:#1a1008;
+  --charcoal:#1c1c22;
+  --fire:#e8712a;
+  --fire-bright:#ff9a44;
+  --fire-dim:#8b3a0f;
+  --ash:#5a5560;
+  --smoke:#9e98a6;
+  --cream:#e8e0d4;
+  --cream-dim:#8a8278;
+  --border:rgba(232,113,42,0.15);
+  --card-bg:rgba(28,28,34,0.9);
+}
+[data-theme="light"]{
+  --night:#fdf6f0;
+  --ember:#fffaf5;
+  --charcoal:#ffffff;
+  --fire:#d35400;
+  --fire-bright:#e67e22;
+  --fire-dim:#a04000;
+  --ash:#7f8c8d;
+  --smoke:#5a4a3a;
+  --cream:#2c1a0a;
+  --cream-dim:#5a4a3a;
+  --border:rgba(211,84,0,0.15);
+  --card-bg:rgba(255,255,255,0.9);
+}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Noto Serif SC',serif;
+  background:var(--night);
+  color:var(--cream);
+  min-height:100vh;overflow-x:hidden;line-height:1.8;
+}
+
+/* ===== Background ===== */
+.bg{
+  position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse 80% 50% at 50% 100%,rgba(232,113,42,0.06),transparent),
+    radial-gradient(ellipse 40% 30% at 30% 60%,rgba(139,58,15,0.04),transparent),
+    var(--night);
+}
+.bg::before{
+  content:'';position:absolute;inset:0;
+  background:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23f)'/%3E%3C/svg%3E");
+  opacity:0.03;
+}
+
+/* Ember particles */
+.ember{
+  position:fixed;width:3px;height:3px;border-radius:50%;pointer-events:none;z-index:1;
+  background:var(--fire);opacity:0;
+  animation:emberRise linear infinite;
+}
+@keyframes emberRise{
+  0%{transform:translateY(0) translateX(0);opacity:0}
+  10%{opacity:0.8}
+  80%{opacity:0.3}
+  100%{transform:translateY(-100vh) translateX(var(--drift));opacity:0}
+}
+
+.container{position:relative;z-index:2;max-width:880px;margin:0 auto;padding:0 24px}
+
+/* ===== Hero ===== */
+.hero{
+  min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;
+}
+.hero-flame{
+  width:48px;height:64px;margin-bottom:24px;position:relative;
+  animation:flicker 3s ease-in-out infinite;
+}
+@keyframes flicker{0%,100%{transform:scale(1)}25%{transform:scale(1.02,0.98)}50%{transform:scale(0.98,1.02)}75%{transform:scale(1.01,0.99)}}
+.flame-body{
+  width:100%;height:100%;
+  background:radial-gradient(ellipse at 50% 90%,var(--fire-bright),var(--fire),var(--fire-dim),transparent);
+  border-radius:50% 50% 50% 50% / 60% 60% 40% 40%;
+  filter:blur(1px);
+}
+.hero h1{
+  font-family:'Playfair Display','Noto Serif SC',serif;
+  font-size:clamp(2rem,5.5vw,3.6rem);
+  font-weight:900;
+  background:linear-gradient(180deg,var(--fire-bright),var(--fire),var(--fire-dim));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  letter-spacing:0.04em;line-height:1.2;margin-bottom:12px;
+}
+.hero .subtitle{
+  font-size:clamp(0.9rem,2vw,1.1rem);color:var(--cream-dim);
+  font-weight:300;letter-spacing:0.2em;margin-bottom:40px;
+}
+.hero-question{
+  max-width:500px;text-align:left;
+  background:var(--card-bg);border:1px solid var(--border);
+  padding:24px 28px;border-radius:3px;
+  font-size:0.92rem;color:var(--smoke);line-height:2;
+}
+.hero-question strong{color:var(--fire);font-weight:600}
+.scroll-cue{
+  margin-top:48px;color:var(--fire-dim);font-size:0.8rem;letter-spacing:0.15em;
+  display:flex;flex-direction:column;align-items:center;gap:6px;
+  animation:bob 2.5s ease-in-out infinite;
+}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(6px)}}
+
+/* ===== Section ===== */
+section{padding:72px 0}
+.label{
+  display:inline-block;font-family:'Playfair Display',serif;
+  font-size:0.72rem;letter-spacing:0.3em;text-transform:uppercase;
+  color:var(--fire-dim);margin-bottom:10px;
+  border:1px solid var(--border);padding:3px 14px;border-radius:1px;
+}
+.heading{
+  font-family:'Playfair Display','Noto Serif SC',serif;
+  font-size:clamp(1.4rem,3.5vw,2rem);
+  color:var(--cream);font-weight:700;margin-bottom:12px;line-height:1.3;
+}
+.desc{color:var(--cream-dim);max-width:580px;margin-bottom:36px;font-weight:300;font-size:0.92rem}
+
+/* ===== Rope Visualization ===== */
+.rope-stage{
+  background:var(--card-bg);border:1px solid var(--border);
+  border-radius:4px;padding:40px 24px;margin-bottom:32px;
+  position:relative;overflow:hidden;
+}
+.rope-stage::before{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:60px;
+  background:linear-gradient(to top,rgba(232,113,42,0.03),transparent);
+}
+.rope-label{
+  text-align:center;font-family:'Playfair Display',serif;
+  font-size:0.75rem;letter-spacing:0.2em;color:var(--fire-dim);margin-bottom:24px;
+}
+.rope-visual{
+  position:relative;height:60px;margin:0 auto 24px;
+}
+.rope-line{
+  position:absolute;top:50%;left:8%;right:8%;height:8px;
+  transform:translateY(-50%);border-radius:4px;
+  overflow:hidden;
+}
+.rope-fill{
+  height:100%;border-radius:4px;transition:width 1.5s ease;
+}
+.rope-a .rope-fill{background:linear-gradient(90deg,var(--fire-bright),var(--fire),var(--fire-dim),#3a2a1a)}
+.rope-b .rope-fill{background:linear-gradient(90deg,#6a8aff,#4a6adf,#2a3a8a,#1a1a3a)}
+.rope-info{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-bottom:8px;
+}
+.rope-name{
+  font-family:'Playfair Display',serif;font-size:0.9rem;color:var(--smoke);
+  letter-spacing:0.05em;
+}
+.rope-time{
+  font-family:'Playfair Display',serif;font-size:0.85rem;color:var(--fire-bright);
+  font-weight:700;
+}
+.rope-b .rope-time{color:#6a8aff}
+
+/* Burn markers */
+.burn-markers{
+  display:flex;justify-content:space-between;padding:0 8%;
+  margin-top:8px;
+}
+.burn-marker{
+  font-size:0.7rem;color:var(--ash);position:relative;
+}
+.burn-marker::before{
+  content:'';position:absolute;top:-14px;left:50%;width:1px;height:10px;
+  background:var(--ash);
+}
+
+/* ===== Solution Steps ===== */
+.solution-steps{display:flex;flex-direction:column;gap:20px;margin-bottom:36px}
+.step-card{
+  background:var(--card-bg);border:1px solid var(--border);
+  border-radius:3px;padding:24px 28px;
+  position:relative;overflow:hidden;
+  transition:all 0.5s;
+  opacity:0;transform:translateY(16px);
+}
+.step-card.visible{opacity:1;transform:translateY(0)}
+.step-card.highlight{border-color:var(--fire);box-shadow:0 0 20px rgba(232,113,42,0.08)}
+.step-num{
+  position:absolute;top:-6px;right:14px;
+  font-family:'Playfair Display',serif;font-size:3.5rem;
+  color:rgba(232,113,42,0.06);font-weight:900;line-height:1;
+}
+.step-card h3{font-size:1rem;color:var(--fire);margin-bottom:8px;font-weight:600}
+.step-card p{font-size:0.88rem;color:var(--smoke);line-height:1.8}
+.step-card p strong{color:var(--cream)}
+.step-card .key{color:var(--fire-bright);font-weight:700}
+
+/* ===== Interactive Timer ===== */
+.timer-section{
+  text-align:center;padding:40px 0;
+}
+.timer-display{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(3rem,8vw,5rem);font-weight:900;
+  color:var(--fire-bright);
+  margin-bottom:8px;
+  font-variant-numeric:tabular-nums;
+}
+.timer-label{font-size:0.85rem;color:var(--cream-dim);margin-bottom:24px;letter-spacing:0.1em}
+.timer-controls{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.timer-btn{
+  background:transparent;border:1px solid var(--border);
+  color:var(--smoke);padding:10px 24px;
+  font-family:'Noto Serif SC',serif;font-size:0.88rem;
+  cursor:pointer;border-radius:2px;transition:all 0.3s;
+}
+.timer-btn:hover{border-color:var(--fire-dim);color:var(--fire)}
+.timer-btn.running{border-color:var(--fire);color:var(--fire-bright);background:rgba(232,113,42,0.08)}
+.timer-btn:disabled{opacity:0.25;cursor:not-allowed}
+
+/* ===== Insight ===== */
+.insight{
+  background:linear-gradient(135deg,rgba(232,113,42,0.06),rgba(232,113,42,0.02));
+  border:1px solid var(--border);border-radius:3px;
+  padding:28px 32px;margin-top:40px;position:relative;overflow:hidden;
+}
+.insight::before{
+  content:'';position:absolute;top:-8px;right:14px;font-size:3rem;opacity:0.06;
+}
+.insight h3{
+  font-family:'Playfair Display',serif;color:var(--fire);
+  font-size:0.95rem;margin-bottom:10px;letter-spacing:0.05em;
+}
+.insight p{color:var(--cream-dim);font-size:0.88rem;line-height:1.9}
+.insight strong{color:var(--fire-bright)}
+
+footer{
+  text-align:center;padding:48px 0 28px;
+  color:rgba(158,152,166,0.2);font-size:0.78rem;
+  border-top:1px solid rgba(232,113,42,0.06);
+}
+footer span{color:var(--fire-dim)}
+
+@media(max-width:640px){
+  .rope-visual{height:50px}
+  .step-card{padding:18px 20px}
+}
+.reveal{opacity:0;transform:translateY(24px);transition:opacity 0.7s,transform 0.7s}
+.reveal.visible{opacity:1;transform:translateY(0)}
+  /* Common Back Link & Theme Toggle */
+  .back-link, .theme-toggle-sub{
+    position:fixed;top:28px;z-index:100;
+    display:flex;align-items:center;justify-content:center;
+    text-decoration:none;transition:all 0.3s cubic-bezier(0.4,0,0.2,1);
+    background:rgba(0,0,0,0.4);backdrop-filter:blur(12px);
+    border-radius:40px;border:1px solid var(--border);
+    box-shadow:0 4px 20px rgba(0,0,0,0.2);
+    color:var(--cream-dim);
+  }
+  .back-link{left:28px;padding:10px 18px;gap:10px;font-size:0.85rem;letter-spacing:0.1em;}
+  .theme-toggle-sub{right:28px;width:44px;height:44px;cursor:pointer;padding:0;}
+  
+  .back-link:hover, .theme-toggle-sub:hover{
+    color:var(--cream);border-color:var(--fire);
+    background:rgba(0,0,0,0.6);
+  }
+  .back-link:hover{transform:translateX(-4px);}
+  .theme-toggle-sub:hover{transform:rotate(15deg);}
+  
+  .back-link svg, .theme-toggle-sub svg{width:18px;height:18px;stroke:currentColor;fill:none;transition:transform 0.3s}
+  .theme-toggle-sub svg{fill:currentColor;stroke:none;}
+  .back-link:hover svg{transform:translateX(-3px)}
+  
+  .theme-toggle-sub .sun-icon{display:none}
+  [data-theme="light"] .theme-toggle-sub .sun-icon{display:block}
+  [data-theme="light"] .theme-toggle-sub .moon-icon{display:none}
+  
+  @media(max-width:640px){
+    .back-link{top:16px;left:16px;padding:8px 14px;font-size:0.75rem}
+    .theme-toggle-sub{top:16px;right:16px;width:36px;height:36px;}
+  }
+</style>
+</head>
+<body>
+
+<div class="bg"></div>
+<script>
+(function(){
+  for(var i=0;i<8;i++){
+    var e=document.createElement('div');e.className='ember';
+    e.style.cssText='left:'+((Math.random()*60)+20)+'%;animation-duration:'+(Math.random()*8+6)+'s;animation-delay:'+(Math.random()*6)+'s;--drift:'+(Math.random()*40-20)+'px;';
+    document.body.appendChild(e);
+  }
+})();
+</script>
+
+<a href="../index.html" class="back-link">
+   <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+   <span>返回首页</span>
+ </a>
+ <button class="theme-toggle-sub" id="themeToggle" title="切换明暗模式">
+   <svg class="moon-icon" viewBox="0 0 24 24"><path d="M12.1,22c-4.9,0-9-3.8-9.1-8.7c0-3.1,1.5-6.1,4.1-8c0.2-0.1,0.5-0.1,0.7,0.1c0.2,0.2,0.2,0.5,0.1,0.7c-0.5,0.9-0.7,1.8-0.7,2.8c0,3.5,2.8,6.3,6.3,6.3c1,0,1.9-0.2,2.8-0.7c0.2-0.1,0.5-0.1,0.7,0.1c0.2,0.2,0.2,0.5,0.1,0.7C15.1,20.5,13.6,22,12.1,22z"/></svg>
+   <svg class="sun-icon" viewBox="0 0 24 24"><path d="M12,18c-3.3,0-6-2.7-6-6s2.7-6,6-6s6,2.7,6,6S15.3,18,12,18z M12,8c-2.2,0-4,1.8-4,4s1.8,4,4,4s4-1.8,4-4S14.2,8,12,8z M11,1h2v3h-2V1z M11,20h2v3h-2V20z M3.5,4.9l2.1-2.1l1.4,1.4L4.9,6.3L3.5,4.9z M17,18.4l2.1-2.1l1.4,1.4l-2.1,2.1L17,18.4z M1,11h3v2H1V11z M20,11h3v2h-3V11z M4.9,17.7l2.1,2.1l-1.4,1.4l-2.1-2.1L4.9,17.7z M18.4,5.6l2.1-2.1l1.4,1.4l-2.1,2.1L18.4,5.6z"/></svg>
+ </button>
+
+<div class="container">
+  <section class="hero">
+    <div class="hero-flame"><div class="flame-body"></div></div>
+    <h1>燃绳问题</h1>
+    <p class="subtitle">经 典 逻 辑 推 理</p>
+    <div class="hero-question">
+      有两条材质不均匀的绳子，每条从一端烧到另一端恰好需要 <strong>1 小时</strong>。<br>
+      绳子粗细不均，所以燃烧速度不恒定——半条绳不代表 30 分钟。<br><br>
+      <strong>问题：如何用这两条绳子精确计量 45 分钟？</strong>
+    </div>
+    <div class="scroll-cue">
+      <span>查看解答</span>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 5v14M5 12l7 7 7-7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+  </section>
+
+  <section id="solution">
+    <div class="reveal">
+      <span class="label">Solution</span>
+      <h2 class="heading">破解思路</h2>
+      <p class="desc">关键洞察：从两端同时烧一条绳子，不管不均匀程度如何，必定恰好在 30 分钟烧完。</p>
+    </div>
+
+    <!-- Rope Visualization -->
+    <div class="rope-stage reveal" id="ropeStage">
+      <div class="rope-label">绳 子 状 态</div>
+
+      <div class="rope-info">
+        <span class="rope-name">绳子 A — 橙色</span>
+        <span class="rope-time" id="ropeATime">60 min</span>
+      </div>
+      <div class="rope-visual">
+        <div class="rope-line rope-a"><div class="rope-fill" id="ropeAFill" style="width:100%"></div></div>
+      </div>
+      <div class="burn-markers" id="ropeAMarkers">
+        <span class="burn-marker">两端点燃</span>
+        <span class="burn-marker">燃尽</span>
+      </div>
+
+      <div style="height:20px"></div>
+
+      <div class="rope-info">
+        <span class="rope-name">绳子 B — 蓝色</span>
+        <span class="rope-time" id="ropeBTime">60 min</span>
+      </div>
+      <div class="rope-visual">
+        <div class="rope-line rope-b"><div class="rope-fill" id="ropeBFill" style="width:100%"></div></div>
+      </div>
+      <div class="burn-markers" id="ropeBMarkers">
+        <span class="burn-marker">一端点燃</span>
+        <span class="burn-marker">另一端点燃</span>
+        <span class="burn-marker">燃尽</span>
+      </div>
+    </div>
+
+    <!-- Steps -->
+    <div class="solution-steps">
+      <div class="step-card reveal" data-delay="0">
+        <span class="step-num">1</span>
+        <h3>同时点燃绳子 A 的两端，绳子 B 的一端</h3>
+        <p>绳子 A <span class="key">两端同时燃烧</span>，无论粗细如何不均匀，从两端相向而行的火焰必然在 <strong>恰好 30 分钟</strong> 时相遇。绳子 B 从单端燃烧，30 分钟后还剩 30 分钟的量。</p>
+      </div>
+      <div class="step-card reveal" data-delay="100">
+        <span class="step-num">2</span>
+        <h3>绳子 A 燃尽时（30 分钟），立刻点燃绳子 B 的另一端</h3>
+        <p>绳子 B 此时还剩 30 分钟的燃烧量。现在点燃它的 <span class="key">另一端</span>，剩余部分从两端同时燃烧，将在 <strong>恰好 15 分钟</strong> 后燃尽。</p>
+      </div>
+      <div class="step-card reveal" data-delay="200">
+        <span class="step-num">3</span>
+        <h3>绳子 B 燃尽时 — 45 分钟到！</h3>
+        <p>绳子 A 燃尽 = <strong>30 min</strong>，绳子 B 剩余部分燃尽 = <strong>15 min</strong>。总计 <span class="key">30 + 15 = 45 分钟</span>，精确计时完成。</p>
+      </div>
+    </div>
+
+    <!-- Timer -->
+    <div class="timer-section reveal">
+      <div class="timer-label">模拟计时</div>
+      <div class="timer-display" id="timerDisplay">45:00</div>
+      <div class="timer-label" id="timerPhase">点击开始模拟燃烧过程</div>
+      <div class="timer-controls">
+        <button class="timer-btn" id="btnStart">开始燃烧</button>
+        <button class="timer-btn" id="btnPause" disabled>暂停</button>
+        <button class="timer-btn" id="btnResetTimer">重置</button>
+      </div>
+    </div>
+
+    <div class="insight reveal">
+      <h3>为什么两端燃烧就是一半时间？</h3>
+      <p>设绳子上某点 x，左端火焰到达 x 需要 t₁ 分钟，右端到达 x 需要 t₂ 分钟。因为总燃烧时间为 60 分钟，所以 <strong>t₁ + t₂ = 60</strong>。两端同时燃烧时，两股火焰在 t₁ = t₂ 处相遇，即 <strong>t₁ = t₂ = 30 分钟</strong>。这与绳子形状完全无关——粗细不均只影响"哪里相遇"，不影响"何时相遇"。</p>
+    </div>
+  </section>
+
+  <footer><span>🔥</span> 燃绳问题 — 经典逻辑推理</footer>
+</div>
+
+<script>
+// Timer simulation
+var btnStart=document.getElementById('btnStart');
+var btnPause=document.getElementById('btnPause');
+var btnResetTimer=document.getElementById('btnResetTimer');
+var timerDisplay=document.getElementById('timerDisplay');
+var timerPhase=document.getElementById('timerPhase');
+var ropeAFill=document.getElementById('ropeAFill');
+var ropeBFill=document.getElementById('ropeBFill');
+var ropeATime=document.getElementById('ropeATime');
+var ropeBTime=document.getElementById('ropeBTime');
+
+var TOTAL_MS=45000; // 45 seconds for demo
+var interval=null;
+var elapsed=0;
+var running=false;
+
+function formatTime(ms){
+  var s=Math.ceil(ms/1000);
+  var m=Math.floor(s/60);
+  s=s%60;
+  return m+':'+(s<10?'0':'')+s;
+}
+
+function update(){
+  var progress=elapsed/TOTAL_MS;
+  timerDisplay.textContent=formatTime(TOTAL_MS-elapsed);
+
+  if(progress<=2/3){
+    // Phase 1: Rope A burning from both ends, Rope B from one end
+    var p1=progress/(2/3); // 0-1 within phase 1
+    ropeAFill.style.width=Math.max(0,100-100*p1)+'%';
+    ropeBFill.style.width=Math.max(0,100-50*p1)+'%';
+    ropeATime.textContent=Math.round(30-30*p1)+' min';
+    ropeBTime.textContent=Math.round(60-30*p1)+' min';
+    timerPhase.textContent='第一阶段 — 绳A两端燃烧，绳B一端燃烧';
+  } else {
+    // Phase 2: Rope A done, Rope B burning from both ends
+    var p2=(progress-2/3)/(1/3);
+    ropeAFill.style.width='0%';
+    ropeBFill.style.width=Math.max(0,50-50*p2)+'%';
+    ropeATime.textContent='已燃尽';
+    ropeBTime.textContent=Math.round(30-15*p2)+' min';
+    timerPhase.textContent='第二阶段 — 绳A已尽，绳B两端燃烧';
+  }
+
+  if(elapsed>=TOTAL_MS){
+    clearInterval(interval);
+    running=false;
+    timerDisplay.textContent='0:00';
+    timerPhase.textContent='45 分钟到！计时完成';
+    ropeBTime.textContent='已燃尽';
+    ropeBFill.style.width='0%';
+    btnStart.disabled=true;
+    btnPause.disabled=true;
+  }
+}
+
+btnStart.addEventListener('click',function(){
+  if(running)return;
+  running=true;
+  btnStart.disabled=true;
+  btnPause.disabled=false;
+  interval=setInterval(function(){
+    elapsed+=100;
+    update();
+  },100);
+});
+
+btnPause.addEventListener('click',function(){
+  if(!running)return;
+  running=false;
+  clearInterval(interval);
+  btnStart.disabled=false;
+  btnPause.disabled=true;
+});
+
+btnResetTimer.addEventListener('click',function(){
+  running=false;
+  clearInterval(interval);
+  elapsed=0;
+  ropeAFill.style.width='100%';
+  ropeBFill.style.width='100%';
+  ropeATime.textContent='60 min';
+  ropeBTime.textContent='60 min';
+  timerDisplay.textContent='45:00';
+  timerPhase.textContent='点击开始模拟燃烧过程';
+  btnStart.disabled=false;
+  btnPause.disabled=true;
+});
+
+// Scroll reveal
+var reveals=document.querySelectorAll('.reveal');
+var observer=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){
+    if(e.isIntersecting){
+      var d=parseInt(e.target.getAttribute('data-delay'))||0;
+      setTimeout(function(){e.target.classList.add('visible')},d);
+    }
+  });
+},{threshold:0.1});
+reveals.forEach(function(el){observer.observe(el)});
+
+// Theme Logic
+(function(){
+  var themeToggle = document.getElementById('themeToggle');
+  if (themeToggle) {
+    themeToggle.addEventListener('click', function() {
+      var isLight = document.documentElement.getAttribute('data-theme') === 'light';
+      var newTheme = isLight ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', newTheme);
+      localStorage.setItem('theme', newTheme);
+    });
+  }
+  var savedTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+  document.documentElement.setAttribute('data-theme', savedTheme);
+})();
+</script>
+</body>
+</html>

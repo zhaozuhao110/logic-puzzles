@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>称球问题 — 经典逻辑推理</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Noto+Serif+SC:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --lab-bg:#0e0e12;
+  --lab-surface:#16161c;
+  --lab-card:#1c1c24;
+  --brass:#c49a3c;
+  --brass-bright:#ddb54e;
+  --brass-dim:#7a5e22;
+  --steel:#8a8a9a;
+  --steel-dim:#5a5a6a;
+  --cream:#d8d2c6;
+  --cream-dim:#8a847a;
+  --green:#4a9a5e;
+  --red:#c44;
+  --border:rgba(196,154,60,0.15);
+}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Noto Serif SC',serif;
+  background:var(--lab-bg);
+  color:var(--cream);
+  min-height:100vh;overflow-x:hidden;line-height:1.8;
+}
+.bg{
+  position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse 50% 40% at 50% 30%,rgba(196,154,60,0.04),transparent),
+    radial-gradient(ellipse 60% 50% at 50% 100%,rgba(138,138,154,0.03),transparent),
+    var(--lab-bg);
+}
+.bg::before{
+  content:'';position:absolute;inset:0;
+  background:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+  opacity:0.025;
+}
+.container{position:relative;z-index:2;max-width:900px;margin:0 auto;padding:0 24px}
+
+/* ===== Hero ===== */
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.hero-scale{
+  width:80px;height:60px;margin-bottom:24px;opacity:0.5;
+  animation:tilt 4s ease-in-out infinite;
+}
+@keyframes tilt{0%,100%{transform:rotate(-2deg)}50%{transform:rotate(2deg)}}
+.hero h1{
+  font-family:'DM Serif Display','Noto Serif SC',serif;
+  font-size:clamp(2rem,5.5vw,3.4rem);font-weight:400;
+  color:var(--brass);letter-spacing:0.04em;line-height:1.2;margin-bottom:12px;
+}
+.hero .subtitle{font-size:clamp(0.9rem,2vw,1.1rem);color:var(--cream-dim);font-weight:300;letter-spacing:0.2em;margin-bottom:36px}
+.hero-question{
+  max-width:520px;text-align:left;
+  background:var(--lab-card);border:1px solid var(--border);
+  padding:24px 28px;border-radius:3px;font-size:0.92rem;color:var(--cream-dim);line-height:2;
+}
+.hero-question strong{color:var(--brass);font-weight:600}
+.scroll-cue{margin-top:44px;color:var(--brass-dim);font-size:0.8rem;letter-spacing:0.15em;display:flex;flex-direction:column;align-items:center;gap:6px;animation:bob 2.5s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(6px)}}
+
+section{padding:72px 0}
+.label{display:inline-block;font-family:'DM Serif Display',serif;font-size:0.72rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--brass-dim);margin-bottom:10px;border:1px solid var(--border);padding:3px 14px;border-radius:1px}
+.heading{font-family:'DM Serif Display','Noto Serif SC',serif;font-size:clamp(1.4rem,3.5vw,2rem);color:var(--cream);font-weight:400;margin-bottom:12px;line-height:1.3}
+.desc{color:var(--cream-dim);max-width:580px;margin-bottom:36px;font-weight:300;font-size:0.92rem}
+
+/* ===== Balls ===== */
+.balls-row{
+  display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-bottom:36px;
+}
+.ball{
+  width:48px;height:48px;border-radius:50%;
+  background:radial-gradient(circle at 35% 30%,#9a9aaa,#6a6a7a,#4a4a5a);
+  border:2px solid var(--steel-dim);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'DM Serif Display',serif;font-size:0.85rem;color:var(--cream);
+  transition:all 0.5s;cursor:default;position:relative;
+}
+.ball.defective{
+  border-color:var(--red);
+  box-shadow:0 0 12px rgba(204,68,68,0.3);
+}
+.ball.eliminated{
+  opacity:0.2;border-style:dashed;
+}
+.ball.suspect{
+  border-color:var(--brass);
+  background:radial-gradient(circle at 35% 30%,#d4b44e,#a08030,#705a20);
+  box-shadow:0 0 10px rgba(196,154,60,0.15);
+}
+.ball.found{
+  border-color:var(--green);
+  box-shadow:0 0 16px rgba(74,154,94,0.4);
+  background:radial-gradient(circle at 35% 30%,#6abf7b,#4a9a5e,#2a6a3a);
+  animation:pulse-found 2s ease-in-out infinite;
+}
+@keyframes pulse-found{0%,100%{box-shadow:0 0 16px rgba(74,154,94,0.4)}50%{box-shadow:0 0 28px rgba(74,154,94,0.6)}}
+
+/* ===== Scale SVG ===== */
+.scale-viz{
+  text-align:center;margin-bottom:32px;
+  position:relative;
+}
+.scale-svg{
+  max-width:360px;margin:0 auto;display:block;
+  transition:transform 0.6s ease;
+}
+.scale-svg.tilt-left{transform:rotate(-4deg)}
+.scale-svg.tilt-right{transform:rotate(4deg)}
+.scale-svg.balance{transform:rotate(0deg)}
+
+/* ===== Weighing Steps ===== */
+.weigh-steps{display:flex;flex-direction:column;gap:20px}
+.weigh-card{
+  background:var(--lab-card);border:1px solid var(--border);
+  border-radius:3px;padding:24px 28px;position:relative;
+  transition:all 0.5s;opacity:0;transform:translateY(16px);
+}
+.weigh-card.visible{opacity:1;transform:translateY(0)}
+.weigh-card.active{border-color:var(--brass);box-shadow:0 0 16px rgba(196,154,60,0.06)}
+.weigh-round{
+  display:inline-block;font-family:'DM Serif Display',serif;
+  font-size:0.75rem;letter-spacing:0.15em;color:var(--brass-dim);
+  border:1px solid var(--border);padding:2px 10px;border-radius:1px;margin-bottom:12px;
+}
+.weigh-card h3{font-size:1rem;color:var(--brass);margin-bottom:8px;font-weight:600}
+.weigh-card p{font-size:0.88rem;color:var(--cream-dim);line-height:1.8}
+.weigh-card p strong{color:var(--cream)}
+.weigh-card .key{color:var(--brass-bright);font-weight:700}
+.weigh-card .result{
+  display:inline-flex;align-items:center;gap:6px;
+  margin-top:10px;padding:5px 14px;border-radius:2px;font-size:0.82rem;
+}
+.weigh-card .result.left{background:rgba(196,154,60,0.1);color:var(--brass);border:1px solid rgba(196,154,60,0.2)}
+.weigh-card .result.right{background:rgba(74,154,94,0.1);color:var(--green);border:1px solid rgba(74,154,94,0.2)}
+.weigh-card .result.even{background:rgba(138,138,154,0.1);color:var(--steel);border:1px solid rgba(138,138,154,0.2)}
+
+/* ===== Step nav ===== */
+.step-nav{display:flex;gap:12px;margin-top:28px;justify-content:center}
+.nav-btn{
+  background:transparent;border:1px solid var(--border);
+  color:var(--cream-dim);padding:10px 24px;
+  font-family:'Noto Serif SC',serif;font-size:0.88rem;
+  cursor:pointer;border-radius:2px;transition:all 0.3s;
+}
+.nav-btn:hover{border-color:var(--brass-dim);color:var(--brass)}
+.nav-btn:disabled{opacity:0.25;cursor:not-allowed}
+.nav-btn.primary{border-color:var(--brass-dim);color:var(--brass);background:rgba(196,154,60,0.06)}
+
+/* ===== Insight ===== */
+.insight{
+  background:linear-gradient(135deg,rgba(196,154,60,0.06),rgba(196,154,60,0.02));
+  border:1px solid var(--border);border-radius:3px;
+  padding:28px 32px;margin-top:40px;
+}
+.insight h3{font-family:'DM Serif Display',serif;color:var(--brass);font-size:0.95rem;margin-bottom:10px;letter-spacing:0.05em}
+.insight p{color:var(--cream-dim);font-size:0.88rem;line-height:1.9}
+.insight strong{color:var(--brass-bright)}
+
+footer{text-align:center;padding:48px 0 28px;color:rgba(138,132,122,0.2);font-size:0.78rem;border-top:1px solid rgba(196,154,60,0.06)}
+footer span{color:var(--brass-dim)}
+
+@media(max-width:640px){
+  .ball{width:40px;height:40px;font-size:0.75rem}
+  .balls-row{gap:6px}
+  .weigh-card{padding:18px 20px}
+}
+.reveal{opacity:0;transform:translateY(24px);transition:opacity 0.7s,transform 0.7s}
+.reveal.visible{opacity:1;transform:translateY(0)}
+
+    /* Common Back Link & Theme Toggle */
+    .back-link, .theme-toggle-sub{
+      position:fixed;top:28px;z-index:100;
+      display:flex;align-items:center;justify-content:center;
+      text-decoration:none;transition:all 0.3s cubic-bezier(0.4,0,0.2,1);
+      background:rgba(0,0,0,0.4);backdrop-filter:blur(12px);
+      border-radius:40px;border:1px solid rgba(255,255,255,0.1);
+      box-shadow:0 4px 20px rgba(0,0,0,0.2);
+      color:var(--cream-dim, #8a8278);
+    }
+    .back-link{left:28px;padding:10px 18px;gap:10px;font-size:0.85rem;letter-spacing:0.1em;}
+    .theme-toggle-sub{right:28px;width:44px;height:44px;cursor:pointer;padding:0;}
+    
+    .back-link:hover, .theme-toggle-sub:hover{
+      color:#fff;border-color:rgba(255,255,255,0.3);
+      background:rgba(0,0,0,0.6);
+    }
+    .back-link:hover{transform:translateX(-4px);}
+    .theme-toggle-sub:hover{transform:rotate(15deg);}
+    
+    .back-link svg, .theme-toggle-sub svg{width:18px;height:18px;stroke:currentColor;fill:none;transition:transform 0.3s}
+    .theme-toggle-sub svg{fill:currentColor;stroke:none;}
+    .back-link:hover svg{transform:translateX(-3px)}
+    
+    .theme-toggle-sub .sun-icon{display:none}
+    [data-theme="light"] .theme-toggle-sub .sun-icon{display:block}
+    [data-theme="light"] .theme-toggle-sub .moon-icon{display:none}
+    
+    @media(max-width:640px){
+      .back-link{top:16px;left:16px;padding:8px 14px;font-size:0.75rem}
+      .theme-toggle-sub{top:16px;right:16px;width:36px;height:36px;}
+    }
+    
+</style>
+</head>
+<body>
+
+    <a href="../index.html" class="back-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      <span>返回首页</span>
+    </a>
+    <button class="theme-toggle-sub" id="themeToggle" title="切换明暗模式">
+      <svg class="moon-icon" viewBox="0 0 24 24"><path d="M12.1,22c-4.9,0-9-3.8-9.1-8.7c0-3.1,1.5-6.1,4.1-8c0.2-0.1,0.5-0.1,0.7,0.1c0.2,0.2,0.2,0.5,0.1,0.7c-0.5,0.9-0.7,1.8-0.7,2.8c0,3.5,2.8,6.3,6.3,6.3c1,0,1.9-0.2,2.8-0.7c0.2-0.1,0.5-0.1,0.7,0.1c0.2,0.2,0.2,0.5,0.1,0.7C15.1,20.5,13.6,22,12.1,22z"/></svg>
+      <svg class="sun-icon" viewBox="0 0 24 24"><path d="M12,18c-3.3,0-6-2.7-6-6s2.7-6,6-6s6,2.7,6,6S15.3,18,12,18z M12,8c-2.2,0-4,1.8-4,4s1.8,4,4,4s4-1.8,4-4S14.2,8,12,8z M11,1h2v3h-2V1z M11,20h2v3h-2V20z M3.5,4.9l2.1-2.1l1.4,1.4L4.9,6.3L3.5,4.9z M17,18.4l2.1-2.1l1.4,1.4l-2.1,2.1L17,18.4z M1,11h3v2H1V11z M20,11h3v2h-3V11z M4.9,17.7l2.1,2.1l-1.4,1.4l-2.1-2.1L4.9,17.7z M18.4,5.6l2.1-2.1l1.4,1.4l-2.1,2.1L18.4,5.6z"/></svg>
+    </button>
+    
+<div class="bg"></div>
+<div class="container">
+  <section class="hero">
+    <svg class="hero-scale" viewBox="0 0 80 60" fill="none" stroke="currentColor" stroke-width="1.5" style="color:var(--brass-dim)">
+      <line x1="40" y1="4" x2="40" y2="18"/>
+      <circle cx="40" cy="4" r="3" fill="none"/>
+      <line x1="8" y1="18" x2="72" y2="18"/>
+      <line x1="8" y1="18" x2="14" y2="48"/><line x1="72" y1="18" x2="66" y2="48"/>
+      <path d="M6 48 Q14 54 22 48" fill="none"/><path d="M60 48 Q68 54 76 48" fill="none"/>
+      <circle cx="14" cy="40" r="6" fill="rgba(196,154,60,0.1)" stroke="var(--brass-dim)"/>
+      <circle cx="66" cy="40" r="6" fill="rgba(196,154,60,0.1)" stroke="var(--brass-dim)"/>
+    </svg>
+    <h1>称球问题</h1>
+    <p class="subtitle">经 典 逻 辑 推 理</p>
+    <div class="hero-question">
+      有 <strong>10 个乒乓球</strong>，外观完全相同，其中 <strong>1 个是次品</strong>，重量与其他 9 个不同（可能偏轻或偏重）。<br><br>
+      <strong>仅用一架天平，最多称 3 次，如何找出次品？</strong>
+    </div>
+    <div class="scroll-cue">
+      <span>逐步推演</span>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 5v14M5 12l7 7 7-7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+  </section>
+
+  <section id="solve">
+    <div class="reveal">
+      <span class="label">Solution</span>
+      <h2 class="heading">三称定次品</h2>
+      <p class="desc">核心策略：每次称量将嫌疑范围尽可能三等分。10个球的难点在于不知次品偏轻还是偏重。</p>
+    </div>
+
+    <!-- Balls -->
+    <div class="reveal">
+      <div class="balls-row" id="ballsRow">
+        <div class="ball" data-id="1">1</div>
+        <div class="ball" data-id="2">2</div>
+        <div class="ball" data-id="3">3</div>
+        <div class="ball" data-id="4">4</div>
+        <div class="ball" data-id="5">5</div>
+        <div class="ball" data-id="6">6</div>
+        <div class="ball" data-id="7">7</div>
+        <div class="ball" data-id="8">8</div>
+        <div class="ball" data-id="9">9</div>
+        <div class="ball" data-id="10">10</div>
+      </div>
+    </div>
+
+    <!-- Scale -->
+    <div class="scale-viz reveal">
+      <svg class="scale-svg" id="scaleSvg" viewBox="0 0 200 100" fill="none">
+        <line x1="100" y1="8" x2="100" y2="28" stroke="var(--brass-dim)" stroke-width="2"/>
+        <circle cx="100" cy="8" r="5" stroke="var(--brass-dim)" stroke-width="1.5" fill="var(--lab-card)"/>
+        <line x1="20" y1="28" x2="180" y2="28" stroke="var(--brass)" stroke-width="2.5" stroke-linecap="round" id="scaleBeam"/>
+        <line x1="20" y1="28" x2="28" y2="72" stroke="var(--brass-dim)" stroke-width="1"/>
+        <line x1="180" y1="28" x2="172" y2="72" stroke="var(--brass-dim)" stroke-width="1"/>
+        <path d="M16 72 Q28 82 40 72" stroke="var(--brass-dim)" stroke-width="1.5" fill="var(--lab-card)"/>
+        <path d="M160 72 Q172 82 184 72" stroke="var(--brass-dim)" stroke-width="1.5" fill="var(--lab-card)"/>
+        <text x="28" y="70" text-anchor="middle" font-size="10" fill="var(--brass)" font-family="DM Serif Display" id="leftLabel">—</text>
+        <text x="172" y="70" text-anchor="middle" font-size="10" fill="var(--brass)" font-family="DM Serif Display" id="rightLabel">—</text>
+      </svg>
+    </div>
+
+    <!-- Steps -->
+    <div class="weigh-steps" id="weighSteps">
+      <div class="weigh-card reveal" data-step="0">
+        <span class="weigh-round">第 1 称</span>
+        <h3>将球分为三组：{1,2,3,4} vs {5,6,7,8}</h3>
+        <p>取前8个球分为两组，各放天平一侧。<span class="key">4 vs 4</span>，剩余 {9,10} 放一旁。</p>
+        <div class="result even" id="result1">⚖ 天平平衡 — 次品在 {9,10} 中</div>
+        <p style="margin-top:8px">若平衡：次品在 <strong class="key">{9,10}</strong> 中，且 1-8 均为标准球。<br>
+        若不平衡：次品在 <strong>{1,2,3,4,5,6,7,8}</strong> 中，且已知倾斜方向。</p>
+      </div>
+      <div class="weigh-card reveal" data-step="1">
+        <span class="weigh-round">第 2 称（天平平衡的情况）</span>
+        <h3>从 {9,10} 中取 9 号与标准球 1 号比较</h3>
+        <p>我们已知 1 号是标准球。将 <span class="key">9 号 vs 1 号</span>（标准球）放在天平上。</p>
+        <div class="result even" id="result2a">⚖ 天平平衡 → 9 号正常 → 次品是 10 号</div>
+        <div class="result left" id="result2b">↗ 天平不平衡 → 9 号就是次品</div>
+        <p style="margin-top:8px">若平衡：9 号正常，<strong class="key">10 号是次品</strong>（第3称可用10号与标准球比，确定偏轻/偏重）。<br>
+        若不平衡：<strong class="key">9 号是次品</strong>，且根据倾斜方向可知偏轻或偏重。</p>
+      </div>
+      <div class="weigh-card reveal" data-step="2">
+        <span class="weigh-round">第 2 称（天平不平衡的情况）</span>
+        <h3>交叉验证法：{1,2,5} vs {3,6,9}</h3>
+        <p>假设第1称左侧偏重。从左盘取 <strong>1,2</strong> 保留，<strong>3,4</strong> 暂移；从右盘取 <strong>5</strong> 保留，<strong>6,7,8</strong> 中取6保留；加入已知标准球 <strong>9</strong>。<br>
+        左放 <span class="key">{1,2,5}</span>，右放 <span class="key">{3,6,9}</span>。</p>
+        <p style="margin-top:8px">若平衡：次品在 <strong>{4,7,8}</strong> 中，结合第1称方向可判定。<br>
+        若左重：次品在 <strong>{1,2,6}</strong> 中（1,2可能偏重，6可能偏轻）。<br>
+        若右重：次品在 <strong>{3,5}</strong> 中（3可能偏重，5可能偏轻）。</p>
+      </div>
+      <div class="weigh-card reveal" data-step="3">
+        <span class="weigh-round">第 3 称</span>
+        <h3>最后一称锁定次品</h3>
+        <p>根据第2称的结果，嫌疑缩小到 2-3 个球，且已知次品可能偏轻还是偏重：</p>
+        <p style="margin-top:8px">
+          · 若嫌疑是 <strong>{4,7,8}</strong>：称 7 vs 8。平衡→4号偏重；7轻→7号偏轻；8轻→8号偏轻。<br>
+          · 若嫌疑是 <strong>{1,2,6}</strong>：称 1 vs 2。平衡→6号偏轻；1重→1号偏重；2重→2号偏重。<br>
+          · 若嫌疑是 <strong>{3,5}</strong>：称 3 vs 标准球。3重→3号偏重；平衡→5号偏轻。<br>
+          · 若嫌疑是 <strong>{9,10}</strong>：称 9 vs 标准球。平衡→10号偏轻/偏重（已由第2称确定）；不平→9号偏轻/偏重。
+        </p>
+        <div class="result right" id="result3">✓ 3 次称量，锁定次品</div>
+      </div>
+    </div>
+
+    <div class="insight reveal">
+      <h3>为什么最多3次？</h3>
+      <p>每次天平称量有 <strong>3种结果</strong>（左重、右重、平衡），3次称量可区分 <strong>3³ = 27</strong> 种情况。10个球每个可能偏轻或偏重，共 <strong>10 × 2 = 20</strong> 种情况，20 ≤ 27，所以3次称量理论上足够。信息论的角度看，3次天平称量的信息量恰好覆盖所有可能性。</p>
+    </div>
+  </section>
+
+  <footer><span>⚖</span> 称球问题 — 经典逻辑推理</footer>
+</div>
+
+<script>
+var cards=document.querySelectorAll('.weigh-card');
+var scaleSvg=document.getElementById('scaleSvg');
+var balls=document.querySelectorAll('.ball');
+var currentStep=-1;
+
+function showStep(n){
+  currentStep=n;
+  cards.forEach(function(c,i){
+    c.classList.toggle('active',i===n);
+    if(i<=n) c.classList.add('visible');
+  });
+  // Update scale
+  scaleSvg.classList.remove('tilt-left','tilt-right','balance');
+  if(n===0) scaleSvg.classList.add('balance');
+  else if(n===1) scaleSvg.classList.add('balance');
+  else if(n===2) scaleSvg.classList.add('tilt-left');
+  else if(n===3) scaleSvg.classList.add('tilt-right');
+
+  // Update balls
+  balls.forEach(function(b){b.classList.remove('eliminated','suspect','found')});
+  if(n>=0){
+    // Step 0: all equal initially
+    if(n>=1){
+      // After step 0 balanced: 1-8 eliminated
+      for(var i=1;i<=8;i++) document.querySelector('[data-id="'+i+'"]').classList.add('eliminated');
+      document.querySelector('[data-id="9"]').classList.add('suspect');
+      document.querySelector('[data-id="10"]').classList.add('suspect');
+    }
+    if(n>=2){
+      // After step 1: narrow down
+      document.querySelector('[data-id="9"]').classList.add('found');
+      document.querySelector('[data-id="10"]').classList.add('suspect');
+    }
+    if(n>=3){
+      document.querySelector('[data-id="9"]').classList.remove('found');
+      document.querySelector('[data-id="9"]').classList.add('suspect');
+      document.querySelector('[data-id="10"]').classList.add('found');
+    }
+  }
+}
+
+// Click cards to activate
+cards.forEach(function(c,i){
+  c.addEventListener('click',function(){showStep(i)});
+});
+
+// Auto-reveal on scroll
+var reveals=document.querySelectorAll('.reveal');
+var observer=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){
+    if(e.isIntersecting) e.target.classList.add('visible');
+  });
+},{threshold:0.1});
+reveals.forEach(function(el){observer.observe(el)});
+
+// Initial state
+showStep(0);
+</script>
+
+    <script>
+    (function(){
+      var themeToggle = document.getElementById('themeToggle');
+      if (themeToggle) {
+        themeToggle.addEventListener('click', function() {
+          var isLight = document.documentElement.getAttribute('data-theme') === 'light';
+          var newTheme = isLight ? 'dark' : 'light';
+          document.documentElement.setAttribute('data-theme', newTheme);
+          localStorage.setItem('theme', newTheme);
+        });
+      }
+      var savedTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+      document.documentElement.setAttribute('data-theme', savedTheme);
+    })();
+    </script>
+    
+</body>
+</html>

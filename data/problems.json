@@ -1,0 +1,37 @@
+[
+  {
+    "id": 1,
+    "title": "称球问题",
+    "file": "problems/balance-scale.html",
+    "description": "有 10 个乒乓球，外观完全相同，其中 1 个是次品，重量与其他 9 个不同（可能偏轻或偏重）。 仅用一架天平，最多称 3 次，如何找出次品？",
+    "category": "logic"
+  },
+  {
+    "id": 2,
+    "title": "燃绳问题",
+    "file": "problems/burning-rope.html",
+    "description": "有两条材质不均匀的绳子，每条从一端烧到另一端恰好需要 1 小时。 绳子粗细不均，所以燃烧速度不恒定——半条绳不代表 30 分钟。 问题：如何用这两条绳子精确计量 45 分钟？",
+    "category": "logic"
+  },
+  {
+    "id": 3,
+    "title": "猜牌问题",
+    "file": "problems/guess-card.html",
+    "description": "Case File 案发现场：16 张牌 点击下方按钮逐步推进推理，每一步对话都将排除不可能的牌。",
+    "category": "logic"
+  },
+  {
+    "id": 4,
+    "title": "海盗分金",
+    "file": "problems/pirate-gold.html",
+    "description": "(function(){ for(var i=0;i Pirate's Gold 海 盗 分 金 — 博 弈 论 经 典 问 题",
+    "category": "logic"
+  },
+  {
+    "id": 5,
+    "title": "喝汽水问题",
+    "file": "problems/soda-bottle.html",
+    "description": "汽水 1 元一瓶，喝完后每 2 个空瓶可以换 1 瓶新汽水。 你有 20 元，最多能喝多少瓶？",
+    "category": "logic"
+  }
+]

@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>海盗分金 — 博弈论经典问题</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Noto+Serif+SC:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --ocean-abyss:#070d1a;
+  --ocean-deep:#0c1829;
+  --ocean-mid:#132744;
+  --ocean-surface:#1a3a66;
+  --gold:#d4a537;
+  --gold-bright:#f0c94d;
+  --gold-dim:#8a6d1b;
+  --parchment:#e8d5a3;
+  --parchment-dark:#c4a96a;
+  --blood:#8b1a1a;
+  --bone:#d4cfc4;
+  --ink:#1a1410;
+  --card-bg:rgba(12,24,41,0.85);
+  --card-border:rgba(212,165,55,0.25);
+}
+[data-theme="light"]{
+  --ocean-abyss:#f0f4f8;
+  --ocean-deep:#ffffff;
+  --ocean-mid:#e1e8f0;
+  --ocean-surface:#d0dceb;
+  --gold:#b08235;
+  --gold-bright:#d4a537;
+  --gold-dim:#8a6d1b;
+  --parchment:#fdf6e3;
+  --parchment-dark:#85672a;
+  --bone:#1a1410;
+  --ink:#f0f4f8;
+  --card-bg:rgba(255,255,255,0.9);
+  --card-border:rgba(176,130,53,0.3);
+}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Noto Serif SC',serif;
+  background:var(--ocean-abyss);
+  color:var(--bone);
+  min-height:100vh;
+  overflow-x:hidden;
+  line-height:1.8;
+}
+
+/* ===== Ocean Background ===== */
+.ocean-bg{
+  position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse 120% 60% at 50% 120%,rgba(26,58,102,0.4),transparent),
+    radial-gradient(ellipse 80% 40% at 20% 80%,rgba(19,39,68,0.5),transparent),
+    radial-gradient(ellipse 60% 30% at 80% 90%,rgba(19,39,68,0.4),transparent),
+    var(--ocean-abyss);
+}
+.ocean-bg::before{
+  content:'';position:absolute;inset:0;
+  background:url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity:0.03;
+}
+.wave{
+  position:fixed;bottom:0;left:0;width:200%;height:180px;z-index:1;pointer-events:none;
+  opacity:0.06;
+}
+.wave:nth-child(2){animation:wave 12s ease-in-out infinite;opacity:0.04}
+.wave:nth-child(3){animation:wave 16s ease-in-out infinite reverse;opacity:0.03}
+@keyframes wave{0%,100%{transform:translateX(0)}50%{transform:translateX(-25%)}}
+
+/* ===== Particles (bubbles) ===== */
+.bubble{
+  position:fixed;border-radius:50%;pointer-events:none;z-index:1;
+  background:radial-gradient(circle at 30% 30%,rgba(212,165,55,0.15),rgba(212,165,55,0.02));
+  border:1px solid rgba(212,165,55,0.08);
+  animation:rise linear infinite;
+}
+@keyframes rise{
+  0%{transform:translateY(0) scale(1);opacity:0}
+  10%{opacity:1}
+  90%{opacity:0.5}
+  100%{transform:translateY(-100vh) scale(0.3);opacity:0}
+}
+
+/* ===== Layout ===== */
+.container{position:relative;z-index:2;max-width:960px;margin:0 auto;padding:0 24px}
+
+/* ===== Hero ===== */
+.hero{
+  min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;position:relative;
+}
+.hero-compass{
+  width:80px;height:80px;margin-bottom:32px;
+  animation:spin-slow 30s linear infinite;
+  opacity:0.7;
+}
+@keyframes spin-slow{to{transform:rotate(360deg)}}
+.hero h1{
+  font-family:'Cinzel Decorative',serif;
+  font-size:clamp(2.4rem,6vw,4.2rem);
+  font-weight:900;
+  background:linear-gradient(135deg,var(--gold-bright),var(--gold),var(--gold-dim));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+  letter-spacing:0.05em;
+  text-shadow:none;
+  line-height:1.2;
+  margin-bottom:16px;
+}
+.hero .subtitle{
+  font-size:clamp(1rem,2.5vw,1.3rem);
+  color:var(--parchment-dark);
+  font-weight:300;
+  letter-spacing:0.15em;
+  margin-bottom:40px;
+}
+.scroll-hint{
+  display:flex;flex-direction:column;align-items:center;gap:8px;
+  color:var(--gold-dim);font-size:0.85rem;letter-spacing:0.1em;
+  animation:bob 2.5s ease-in-out infinite;
+}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(8px)}}
+.scroll-hint svg{width:20px;height:20px;stroke:var(--gold-dim);fill:none;stroke-width:1.5}
+
+/* ===== Section ===== */
+section{padding:80px 0}
+.section-label{
+  display:inline-block;font-family:'Cinzel Decorative',serif;
+  font-size:0.75rem;letter-spacing:0.25em;text-transform:uppercase;
+  color:var(--gold-dim);margin-bottom:12px;
+  border:1px solid var(--card-border);padding:4px 16px;border-radius:2px;
+}
+.section-title{
+  font-size:clamp(1.6rem,4vw,2.4rem);font-weight:900;
+  color:var(--parchment);margin-bottom:16px;line-height:1.3;
+}
+.section-desc{color:rgba(212,207,196,0.7);max-width:640px;margin-bottom:40px;font-weight:300}
+
+/* ===== Rules Card ===== */
+.rules-grid{display:grid;gap:20px;counter-reset:rule}
+.rule-card{
+  background:var(--card-bg);border:1px solid var(--card-border);
+  border-radius:4px;padding:24px 28px;
+  position:relative;overflow:hidden;
+  transition:border-color 0.3s,transform 0.3s;
+  counter-increment:rule;
+}
+.rule-card:hover{border-color:var(--gold);transform:translateY(-2px)}
+.rule-card::before{
+  content:counter(rule);
+  position:absolute;top:-8px;right:12px;
+  font-family:'Cinzel Decorative',serif;font-size:4rem;
+  color:rgba(212,165,55,0.07);font-weight:900;line-height:1;
+}
+.rule-card h3{color:var(--gold);font-size:1.05rem;margin-bottom:8px;font-weight:600}
+.rule-card p{color:rgba(212,207,196,0.65);font-size:0.92rem;line-height:1.7}
+
+/* ===== Deduction Steps ===== */
+.deduction-nav{
+  display:flex;gap:8px;margin-bottom:32px;flex-wrap:wrap;
+}
+.deduction-btn{
+  background:transparent;border:1px solid var(--card-border);
+  color:var(--parchment-dark);padding:10px 20px;
+  font-family:'Noto Serif SC',serif;font-size:0.9rem;
+  cursor:pointer;border-radius:2px;transition:all 0.3s;
+  position:relative;
+}
+.deduction-btn:hover{border-color:var(--gold-dim);color:var(--gold)}
+.deduction-btn.active{
+  background:rgba(212,165,55,0.12);border-color:var(--gold);
+  color:var(--gold-bright);
+}
+.deduction-btn.active::after{
+  content:'';position:absolute;bottom:-1px;left:20%;right:20%;height:2px;
+  background:var(--gold);
+}
+.deduction-panel{
+  display:none;
+  animation:fadeSlide 0.5s ease;
+}
+.deduction-panel.active{display:block}
+@keyframes fadeSlide{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+.deduction-header{
+  display:flex;align-items:center;gap:16px;margin-bottom:24px;
+}
+.pirate-row{
+  display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px;
+}
+.pirate-tag{
+  display:flex;align-items:center;gap:8px;
+  background:rgba(12,24,41,0.9);border:1px solid var(--card-border);
+  padding:10px 16px;border-radius:3px;min-width:100px;
+  transition:all 0.3s;
+}
+.pirate-tag.proposer{border-color:var(--gold);background:rgba(212,165,55,0.08)}
+.pirate-tag.dead{opacity:0.25;text-decoration:line-through;border-style:dashed}
+.pirate-tag.bribed{border-color:#4a8c5c;background:rgba(74,140,92,0.08)}
+.pirate-name{
+  font-family:'Cinzel Decorative',serif;font-weight:700;
+  font-size:0.95rem;color:var(--parchment);
+}
+.pirate-gold{
+  font-size:1.1rem;font-weight:700;margin-left:auto;
+}
+.pirate-gold.has-gold{color:var(--gold-bright)}
+.pirate-gold.no-gold{color:rgba(212,207,196,0.25)}
+
+.reasoning-box{
+  background:rgba(19,39,68,0.4);border-left:3px solid var(--gold-dim);
+  padding:20px 24px;border-radius:0 4px 4px 0;
+  margin-top:20px;
+}
+.reasoning-box p{font-size:0.92rem;color:rgba(212,207,196,0.75);margin-bottom:8px}
+.reasoning-box strong{color:var(--gold)}
+.reasoning-box .highlight{color:var(--gold-bright);font-weight:700}
+
+.vote-result{
+  display:inline-flex;align-items:center;gap:6px;
+  margin-top:12px;padding:6px 14px;border-radius:3px;font-size:0.85rem;
+}
+.vote-result.pass{background:rgba(74,140,92,0.15);color:#6abf7b;border:1px solid rgba(74,140,92,0.3)}
+.vote-result.fail{background:rgba(139,26,26,0.15);color:#d45555;border:1px solid rgba(139,26,26,0.3)}
+
+/* ===== Gold Visualization ===== */
+.gold-viz{
+  background:var(--card-bg);border:1px solid var(--card-border);
+  border-radius:4px;padding:32px;margin-top:32px;
+}
+.gold-viz-title{
+  font-family:'Cinzel Decorative',serif;font-size:0.85rem;
+  color:var(--gold-dim);letter-spacing:0.15em;margin-bottom:24px;text-align:center;
+}
+.gold-bar-container{display:flex;flex-direction:column;gap:16px}
+.gold-bar-row{display:flex;align-items:center;gap:12px}
+.gold-bar-label{
+  font-family:'Cinzel Decorative',serif;font-weight:700;
+  font-size:1rem;color:var(--parchment);width:36px;text-align:right;
+}
+.gold-bar-track{
+  flex:1;height:32px;background:rgba(19,39,68,0.6);border-radius:2px;
+  overflow:hidden;position:relative;
+}
+.gold-bar-fill{
+  height:100%;border-radius:2px;
+  background:linear-gradient(90deg,var(--gold-dim),var(--gold),var(--gold-bright));
+  transition:width 1.2s cubic-bezier(0.25,0.46,0.45,0.94);
+  position:relative;
+  display:flex;align-items:center;justify-content:flex-end;padding-right:8px;
+}
+.gold-bar-fill.zero{
+  background:rgba(212,207,196,0.08);width:0!important;
+}
+.gold-bar-fill::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(180deg,rgba(255,255,255,0.15) 0%,transparent 60%);
+}
+.gold-bar-value{
+  font-size:0.85rem;font-weight:700;color:var(--ink);
+  position:relative;z-index:1;
+}
+.gold-bar-value.is-zero{color:rgba(212,207,196,0.25);margin-left:8px}
+.gold-coins{
+  display:flex;gap:2px;margin-left:8px;flex-shrink:0;
+}
+.coin{
+  width:18px;height:18px;border-radius:50%;
+  background:radial-gradient(circle at 35% 35%,var(--gold-bright),var(--gold),var(--gold-dim));
+  border:1px solid var(--gold-dim);
+  font-size:8px;display:flex;align-items:center;justify-content:center;
+  color:var(--ink);font-weight:700;
+  animation:coinDrop 0.4s ease-out backwards;
+}
+@keyframes coinDrop{from{transform:translateY(-20px) scale(0);opacity:0}to{transform:translateY(0) scale(1);opacity:1}}
+
+/* ===== Final Result ===== */
+.final-result{
+  text-align:center;padding:60px 0;
+}
+.final-crown{font-size:3rem;margin-bottom:16px;display:block;opacity:0.8}
+.final-title{
+  font-family:'Cinzel Decorative',serif;font-size:clamp(1.4rem,3.5vw,2rem);
+  color:var(--gold);font-weight:700;margin-bottom:8px;
+}
+.final-subtitle{color:rgba(212,207,196,0.5);font-size:0.9rem;margin-bottom:32px}
+.final-table{
+  width:100%;max-width:600px;margin:0 auto;
+  border-collapse:separate;border-spacing:0 6px;
+}
+.final-table th{
+  font-family:'Cinzel Decorative',serif;font-size:0.8rem;
+  letter-spacing:0.12em;color:var(--gold-dim);
+  padding:8px 0;font-weight:400;
+}
+.final-table td{
+  background:var(--card-bg);padding:16px;
+  border:1px solid var(--card-border);
+}
+.final-table tr td:first-child{border-radius:4px 0 0 4px;text-align:left}
+.final-table tr td:last-child{border-radius:0 4px 4px 0;text-align:right;font-weight:700;font-size:1.1rem}
+.pirate-cell{
+  display:flex;align-items:center;gap:10px;
+}
+.pirate-avatar{
+  width:36px;height:36px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.2rem;
+  border:2px solid var(--card-border);
+  background:rgba(19,39,68,0.6);
+}
+.pirate-avatar.captain{border-color:var(--gold);background:rgba(212,165,55,0.1)}
+.pirate-cell-name{
+  font-family:'Cinzel Decorative',serif;font-weight:700;font-size:0.95rem;color:var(--parchment);
+}
+.pirate-cell-role{font-size:0.75rem;color:var(--gold-dim)}
+.gold-cell{font-variant-numeric:tabular-nums}
+.gold-cell .num{color:var(--gold-bright)}
+.gold-cell .num.zero{color:rgba(212,207,196,0.2)}
+.gold-cell .unit{font-size:0.75rem;color:var(--gold-dim);margin-left:4px;font-weight:400}
+
+/* ===== Insight ===== */
+.insight{
+  background:linear-gradient(135deg,rgba(212,165,55,0.08),rgba(212,165,55,0.02));
+  border:1px solid var(--card-border);border-radius:4px;
+  padding:32px;margin-top:48px;position:relative;overflow:hidden;
+}
+.insight::before{
+  content:'💡';position:absolute;top:-10px;right:16px;font-size:3rem;opacity:0.1;
+}
+.insight h3{
+  font-family:'Cinzel Decorative',serif;color:var(--gold);
+  font-size:1rem;margin-bottom:12px;letter-spacing:0.05em;
+}
+.insight p{color:rgba(212,207,196,0.7);font-size:0.92rem;line-height:1.8}
+
+/* ===== Footer ===== */
+footer{
+  text-align:center;padding:48px 0 32px;
+  color:rgba(212,207,196,0.25);font-size:0.8rem;
+  border-top:1px solid rgba(212,165,55,0.08);
+}
+footer span{color:var(--gold-dim)}
+
+/* ===== Responsive ===== */
+@media(max-width:640px){
+  .pirate-row{flex-direction:column}
+  .pirate-tag{min-width:auto}
+  .deduction-nav{gap:6px}
+  .deduction-btn{padding:8px 14px;font-size:0.82rem}
+  section{padding:48px 0}
+  .gold-bar-row{gap:8px}
+  .gold-coins{display:none}
+}
+
+/* ===== Scroll animations ===== */
+.reveal{
+  opacity:0;transform:translateY(30px);
+  transition:opacity 0.7s ease,transform 0.7s ease;
+}
+.reveal.visible{opacity:1;transform:translateY(0)}
+  /* Common Back Link & Theme Toggle */
+  .back-link, .theme-toggle-sub{
+    position:fixed;top:28px;z-index:100;
+    display:flex;align-items:center;justify-content:center;
+    text-decoration:none;transition:all 0.3s cubic-bezier(0.4,0,0.2,1);
+    background:rgba(0,0,0,0.4);backdrop-filter:blur(12px);
+    border-radius:40px;border:1px solid var(--card-border);
+    box-shadow:0 4px 20px rgba(0,0,0,0.2);
+    color:var(--parchment-dark);
+  }
+  .back-link{left:28px;padding:10px 18px;gap:10px;font-size:0.85rem;letter-spacing:0.1em;}
+  .theme-toggle-sub{right:28px;width:44px;height:44px;cursor:pointer;padding:0;}
+  
+  .back-link:hover, .theme-toggle-sub:hover{
+    color:var(--gold-bright);border-color:var(--gold);
+    background:rgba(0,0,0,0.6);
+  }
+  .back-link:hover{transform:translateX(-4px);}
+  .theme-toggle-sub:hover{transform:rotate(15deg);}
+  
+  .back-link svg, .theme-toggle-sub svg{width:18px;height:18px;stroke:currentColor;fill:none;transition:transform 0.3s}
+  .theme-toggle-sub svg{fill:currentColor;stroke:none;}
+  .back-link:hover svg{transform:translateX(-3px)}
+  
+  .theme-toggle-sub .sun-icon{display:none}
+  [data-theme="light"] .theme-toggle-sub .sun-icon{display:block}
+  [data-theme="light"] .theme-toggle-sub .moon-icon{display:none}
+  
+  @media(max-width:640px){
+    .back-link{top:16px;left:16px;padding:8px 14px;font-size:0.75rem}
+    .theme-toggle-sub{top:16px;right:16px;width:36px;height:36px;}
+  }
+</style>
+</head>
+<body>
+
+<!-- Ocean Background -->
+<div class="ocean-bg"></div>
+
+<a href="../index.html" class="back-link">
+   <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+   <span>返回首页</span>
+ </a>
+ <button class="theme-toggle-sub" id="themeToggle" title="切换明暗模式">
+   <svg class="moon-icon" viewBox="0 0 24 24"><path d="M12.1,22c-4.9,0-9-3.8-9.1-8.7c0-3.1,1.5-6.1,4.1-8c0.2-0.1,0.5-0.1,0.7,0.1c0.2,0.2,0.2,0.5,0.1,0.7c-0.5,0.9-0.7,1.8-0.7,2.8c0,3.5,2.8,6.3,6.3,6.3c1,0,1.9-0.2,2.8-0.7c0.2-0.1,0.5-0.1,0.7,0.1c0.2,0.2,0.2,0.5,0.1,0.7C15.1,20.5,13.6,22,12.1,22z"/></svg>
+   <svg class="sun-icon" viewBox="0 0 24 24"><path d="M12,18c-3.3,0-6-2.7-6-6s2.7-6,6-6s6,2.7,6,6S15.3,18,12,18z M12,8c-2.2,0-4,1.8-4,4s1.8,4,4,4s4-1.8,4-4S14.2,8,12,8z M11,1h2v3h-2V1z M11,20h2v3h-2V20z M3.5,4.9l2.1-2.1l1.4,1.4L4.9,6.3L3.5,4.9z M17,18.4l2.1-2.1l1.4,1.4l-2.1,2.1L17,18.4z M1,11h3v2H1V11z M20,11h3v2h-3V11z M4.9,17.7l2.1,2.1l-1.4,1.4l-2.1-2.1L4.9,17.7z M18.4,5.6l2.1-2.1l1.4,1.4l-2.1,2.1L18.4,5.6z"/></svg>
+ </button>
+
+<svg class="wave" viewBox="0 0 1440 320" preserveAspectRatio="none">
+  <path d="M0,80 C360,160 720,0 1080,80 C1260,120 1380,100 1440,80 L1440,180 L0,180Z" fill="rgba(26,58,102,0.3)"/>
+</svg>
+<svg class="wave" viewBox="0 0 1440 180" preserveAspectRatio="none">
+  <path d="M0,100 C240,40 480,140 720,80 C960,20 1200,120 1440,60 L1440,180 L0,180Z" fill="rgba(19,39,68,0.4)"/>
+</svg>
+<svg class="wave" viewBox="0 0 1440 180" preserveAspectRatio="none">
+  <path d="M0,60 C320,120 640,20 960,100 C1120,140 1320,60 1440,90 L1440,180 L0,180Z" fill="rgba(12,24,41,0.5)"/>
+</svg>
+
+<!-- Bubbles -->
+<script>
+(function(){
+  for(var i=0;i<12;i++){
+    var b=document.createElement('div');b.className='bubble';
+    var s=Math.random()*30+10;
+    b.style.cssText='width:'+s+'px;height:'+s+'px;left:'+Math.random()*100+'%;animation-duration:'+(Math.random()*12+8)+'s;animation-delay:'+(Math.random()*8)+'s;';
+    document.body.appendChild(b);
+  }
+
+  // Theme Logic
+  (function(){
+    var themeToggle = document.getElementById('themeToggle');
+    if (themeToggle) {
+      themeToggle.addEventListener('click', function() {
+        var isLight = document.documentElement.getAttribute('data-theme') === 'light';
+        var newTheme = isLight ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+      });
+    }
+    var savedTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+    document.documentElement.setAttribute('data-theme', savedTheme);
+  })();
+})();
+</script>
+
+<!-- Hero -->
+<div class="container">
+  <section class="hero">
+    <svg class="hero-compass" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="1.2" style="color:var(--gold-dim)">
+      <circle cx="50" cy="50" r="45"/>
+      <circle cx="50" cy="50" r="38"/>
+      <line x1="50" y1="5" x2="50" y2="20"/><line x1="50" y1="80" x2="50" y2="95"/>
+      <line x1="5" y1="50" x2="20" y2="50"/><line x1="80" y1="50" x2="95" y2="50"/>
+      <polygon points="50,12 54,44 50,38 46,44" fill="var(--blood)" stroke="none"/>
+      <polygon points="50,88 54,56 50,62 46,56" stroke="var(--parchment-dark)" fill="none"/>
+      <polygon points="12,50 44,46 38,50 44,54" stroke="var(--parchment-dark)" fill="none"/>
+      <polygon points="88,50 56,46 62,50 56,54" stroke="var(--parchment-dark)" fill="none"/>
+      <circle cx="50" cy="50" r="4" fill="var(--gold-dim)"/>
+    </svg>
+    <h1>Pirate's Gold</h1>
+    <p class="subtitle">海 盗 分 金 — 博 弈 论 经 典 问 题</p>
+    <div class="scroll-hint">
+      <span>向下探索</span>
+      <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12l7 7 7-7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+  </section>
+
+  <!-- Rules -->
+  <section id="rules">
+    <div class="reveal">
+      <span class="section-label">Chapter I</span>
+      <h2 class="section-title">游戏规则</h2>
+      <p class="section-desc">五名海盗劫掠了100枚金币，需要按规则分配。每个人都绝对理性——保命优先，其次多拿金子，最后才考虑杀人取乐。</p>
+    </div>
+    <div class="rules-grid reveal">
+      <div class="rule-card">
+        <h3>层级排序</h3>
+        <p>五名海盗按资历排位：P1 最资深，P5 最末。最资深者率先提出分配方案。</p>
+      </div>
+      <div class="rule-card">
+        <h3>投票表决</h3>
+        <p>方案提出后全员投票。半数及以上同意则方案通过，按方案分配金币。</p>
+      </div>
+      <div class="rule-card">
+        <h3>船长喂鱼</h3>
+        <p>若方案未获半数支持，提案者被扔下海，由剩余海盗中资历最深者重新提案。</p>
+      </div>
+      <div class="rule-card">
+        <h3>理性优先</h3>
+        <p>所有海盗绝对理性且彼此知道对方理性。决策优先级：保命 → 多拿金 → 杀人取乐。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Deduction -->
+  <section id="deduction">
+    <div class="reveal">
+      <span class="section-label">Chapter II</span>
+      <h2 class="section-title">逆向推理</h2>
+      <p class="section-desc">从最简单的两人情形出发，逐步向五人推进。每一步的逻辑都建立在前一步的结论之上——这就是逆向归纳法的精妙之处。</p>
+    </div>
+    <div class="deduction-nav reveal" id="deductionNav">
+      <button class="deduction-btn active" data-step="1">2 人 · P4 P5</button>
+      <button class="deduction-btn" data-step="2">3 人 · P3 P4 P5</button>
+      <button class="deduction-btn" data-step="3">4 人 · P2 P3 P4 P5</button>
+      <button class="deduction-btn" data-step="4">5 人 · P1 P2 P3 P4 P5</button>
+    </div>
+
+    <!-- Step 1 -->
+    <div class="deduction-panel active" id="step1">
+      <div class="pirate-row">
+        <div class="pirate-tag proposer">
+          <span class="pirate-name">P4</span>
+          <span class="pirate-gold has-gold">100</span>
+        </div>
+        <div class="pirate-tag">
+          <span class="pirate-name">P5</span>
+          <span class="pirate-gold no-gold">0</span>
+        </div>
+      </div>
+      <div class="reasoning-box">
+        <p>只剩 <strong>P4</strong> 和 <strong>P5</strong> 时，P4 作为提案者只需 <span class="highlight">1票</span>（自己的）即可过半。</p>
+        <p>P5 无论是否同意都无法改变结果，因此 P4 囊括全部金币，P5 一无所获。</p>
+        <div class="vote-result pass">✓ P4 自身1票 ≥ 半数，方案通过</div>
+      </div>
+      <div class="gold-viz" id="goldViz1">
+        <div class="gold-viz-title">金币分配</div>
+        <div class="gold-bar-container">
+          <div class="gold-bar-row"><span class="gold-bar-label">P4</span><div class="gold-bar-track"><div class="gold-bar-fill" style="width:100%"><span class="gold-bar-value">100</span></div></div></div>
+          <div class="gold-bar-row"><span class="gold-bar-label">P5</span><div class="gold-bar-track"><div class="gold-bar-fill zero" style="width:0%"></div></div><span class="gold-bar-value is-zero">0</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 2 -->
+    <div class="deduction-panel" id="step2">
+      <div class="pirate-row">
+        <div class="pirate-tag proposer">
+          <span class="pirate-name">P3</span>
+          <span class="pirate-gold has-gold">99</span>
+        </div>
+        <div class="pirate-tag">
+          <span class="pirate-name">P4</span>
+          <span class="pirate-gold no-gold">0</span>
+        </div>
+        <div class="pirate-tag bribed">
+          <span class="pirate-name">P5</span>
+          <span class="pirate-gold has-gold">1</span>
+        </div>
+      </div>
+      <div class="reasoning-box">
+        <p><strong>P3</strong> 需要 <span class="highlight">2票</span> 方可通过，自己1票，还需再拉拢1人。</p>
+        <p>在两人局中 P5 得 0 枚，因此 P3 只需给 P5 <span class="highlight">1枚</span> 即可收买——P5 理性接受，因为 1 > 0。</p>
+        <p>P4 在两人局中能独吞100枚，不可能被收买，因此给 0。</p>
+        <div class="vote-result pass">✓ P3 + P5 共2票 ≥ 半数，方案通过</div>
+      </div>
+      <div class="gold-viz" id="goldViz2">
+        <div class="gold-viz-title">金币分配</div>
+        <div class="gold-bar-container">
+          <div class="gold-bar-row"><span class="gold-bar-label">P3</span><div class="gold-bar-track"><div class="gold-bar-fill" style="width:99%"><span class="gold-bar-value">99</span></div></div></div>
+          <div class="gold-bar-row"><span class="gold-bar-label">P4</span><div class="gold-bar-track"><div class="gold-bar-fill zero" style="width:0%"></div></div><span class="gold-bar-value is-zero">0</span></div>
+          <div class="gold-bar-row"><span class="gold-bar-label">P5</span><div class="gold-bar-track"><div class="gold-bar-fill" style="width:1%"><span class="gold-bar-value">1</span></div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 3 -->
+    <div class="deduction-panel" id="step3">
+      <div class="pirate-row">
+        <div class="pirate-tag proposer">
+          <span class="pirate-name">P2</span>
+          <span class="pirate-gold has-gold">99</span>
+        </div>
+        <div class="pirate-tag bribed">
+          <span class="pirate-name">P3</span>
+          <span class="pirate-gold no-gold">0</span>
+        </div>
+        <div class="pirate-tag">
+          <span class="pirate-name">P4</span>
+          <span class="pirate-gold has-gold">1</span>
+        </div>
+        <div class="pirate-tag">
+          <span class="pirate-name">P5</span>
+          <span class="pirate-gold no-gold">0</span>
+        </div>
+      </div>
+      <div class="reasoning-box">
+        <p><strong>P2</strong> 需要 <span class="highlight">2票</span>，自己1票，还需1人支持。</p>
+        <p>三人局中 P4 得 0 枚，因此给 P4 <span class="highlight">1枚</span> 即可收买——1 > 0，P4 理性接受。</p>
+        <p>P3 在三人局中可得99枚，收买成本太高；P5 在三人局中可得1枚，需给出 ≥2 枚才能收买，不划算。</p>
+        <div class="vote-result pass">✓ P2 + P4 共2票 ≥ 半数，方案通过</div>
+      </div>
+      <div class="gold-viz" id="goldViz3">
+        <div class="gold-viz-title">金币分配</div>
+        <div class="gold-bar-container">
+          <div class="gold-bar-row"><span class="gold-bar-label">P2</span><div class="gold-bar-track"><div class="gold-bar-fill" style="width:99%"><span class="gold-bar-value">99</span></div></div></div>
+          <div class="gold-bar-row"><span class="gold-bar-label">P3</span><div class="gold-bar-track"><div class="gold-bar-fill zero" style="width:0%"></div></div><span class="gold-bar-value is-zero">0</span></div>
+          <div class="gold-bar-row"><span class="gold-bar-label">P4</span><div class="gold-bar-track"><div class="gold-bar-fill" style="width:1%"><span class="gold-bar-value">1</span></div></div></div>
+          <div class="gold-bar-row"><span class="gold-bar-label">P5</span><div class="gold-bar-track"><div class="gold-bar-fill zero" style="width:0%"></div></div><span class="gold-bar-value is-zero">0</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 4 -->
+    <div class="deduction-panel" id="step4">
+      <div class="pirate-row">
+        <div class="pirate-tag proposer">
+          <span class="pirate-name">P1</span>
+          <span class="pirate-gold has-gold">98</span>
+        </div>
+        <div class="pirate-tag">
+          <span class="pirate-name">P2</span>
+          <span class="pirate-gold no-gold">0</span>
+        </div>
+        <div class="pirate-tag bribed">
+          <span class="pirate-name">P3</span>
+          <span class="pirate-gold has-gold">1</span>
+        </div>
+        <div class="pirate-tag">
+          <span class="pirate-name">P4</span>
+          <span class="pirate-gold no-gold">0</span>
+        </div>
+        <div class="pirate-tag bribed">
+          <span class="pirate-name">P5</span>
+          <span class="pirate-gold has-gold">1</span>
+        </div>
+      </div>
+      <div class="reasoning-box">
+        <p><strong>P1</strong> 需要 <span class="highlight">3票</span>，自己1票，还需再拉拢2人。</p>
+        <p>四人局中 P3 得 0 枚，P5 得 0 枚，各给 <span class="highlight">1枚</span> 即可收买——1 > 0，两人理性接受。</p>
+        <p>P2 在四人局中可得99枚，收买成本极高；P4 在四人局中可得1枚，需给 ≥2 枚才能收买，不划算。</p>
+        <p>因此 P1 选择最低成本策略：收买 P3 和 P5，自己独得 <span class="highlight">98枚</span>。</p>
+        <div class="vote-result pass">✓ P1 + P3 + P5 共3票 ≥ 半数，方案通过</div>
+      </div>
+      <div class="gold-viz" id="goldViz4">
+        <div class="gold-viz-title">金币分配</div>
+        <div class="gold-bar-container">
+          <div class="gold-bar-row"><span class="gold-bar-label">P1</span><div class="gold-bar-track"><div class="gold-bar-fill" style="width:98%"><span class="gold-bar-value">98</span></div></div></div>
+          <div class="gold-bar-row"><span class="gold-bar-label">P2</span><div class="gold-bar-track"><div class="gold-bar-fill zero" style="width:0%"></div></div><span class="gold-bar-value is-zero">0</span></div>
+          <div class="gold-bar-row"><span class="gold-bar-label">P3</span><div class="gold-bar-track"><div class="gold-bar-fill" style="width:1%"><span class="gold-bar-value">1</span></div></div></div>
+          <div class="gold-bar-row"><span class="gold-bar-label">P4</span><div class="gold-bar-track"><div class="gold-bar-fill zero" style="width:0%"></div></div><span class="gold-bar-value is-zero">0</span></div>
+          <div class="gold-bar-row"><span class="gold-bar-label">P5</span><div class="gold-bar-track"><div class="gold-bar-fill" style="width:1%"><span class="gold-bar-value">1</span></div></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Final Result -->
+  <section id="result" class="final-result">
+    <div class="reveal">
+      <span class="section-label">Chapter III</span>
+      <h2 class="section-title">最终方案</h2>
+      <p class="final-subtitle">看似最弱势的船长，凭借理性与前瞻，拿走了几乎全部金币</p>
+    </div>
+    <div class="reveal">
+      <table class="final-table">
+        <thead>
+          <tr><th>海盗</th><th>金币</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <div class="pirate-cell">
+                <div class="pirate-avatar captain">🏴‍☠️</div>
+                <div><div class="pirate-cell-name">P1</div><div class="pirate-cell-role">船长 · 提案者</div></div>
+              </div>
+            </td>
+            <td class="gold-cell"><span class="num">98</span><span class="unit">枚</span></td>
+          </tr>
+          <tr>
+            <td>
+              <div class="pirate-cell">
+                <div class="pirate-avatar">⚔️</div>
+                <div><div class="pirate-cell-name">P2</div><div class="pirate-cell-role">大副</div></div>
+              </div>
+            </td>
+            <td class="gold-cell"><span class="num zero">0</span><span class="unit">枚</span></td>
+          </tr>
+          <tr>
+            <td>
+              <div class="pirate-cell">
+                <div class="pirate-avatar">🗡️</div>
+                <div><div class="pirate-cell-name">P3</div><div class="pirate-cell-role">水手长</div></div>
+              </div>
+            </td>
+            <td class="gold-cell"><span class="num">1</span><span class="unit">枚</span></td>
+          </tr>
+          <tr>
+            <td>
+              <div class="pirate-cell">
+                <div class="pirate-avatar">⚓</div>
+                <div><div class="pirate-cell-name">P4</div><div class="pirate-cell-role">舵手</div></div>
+              </div>
+            </td>
+            <td class="gold-cell"><span class="num zero">0</span><span class="unit">枚</span></td>
+          </tr>
+          <tr>
+            <td>
+              <div class="pirate-cell">
+                <div class="pirate-avatar">🪝</div>
+                <div><div class="pirate-cell-name">P5</div><div class="pirate-cell-role">新水手</div></div>
+              </div>
+            </td>
+            <td class="gold-cell"><span class="num">1</span><span class="unit">枚</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="insight reveal">
+      <h3>为什么船长能拿走98枚？</h3>
+      <p>直觉上船长最危险——稍有差池便被扔下海。但正因为后续轮次中某些海盗一无所获，船长只需用 <strong>1枚金币</strong> 就能收买他们的支持。理性让"弱者"成了"便宜票"，而信息不对称在此不存在——每个人都能预见所有未来的结局。这就是博弈论中<strong>逆向归纳法</strong>的力量：从终点倒推，每一步都清晰可见。</p>
+    </div>
+  </section>
+
+  <footer>
+    <span>⚓</span> 海盗分金 — 博弈论经典问题 <span>⚓</span>
+  </footer>
+</div>
+
+<script>
+// Deduction tabs
+var btns = document.querySelectorAll('.deduction-btn');
+var panels = document.querySelectorAll('.deduction-panel');
+btns.forEach(function(btn){
+  btn.addEventListener('click', function(){
+    var step = this.getAttribute('data-step');
+    btns.forEach(function(b){b.classList.remove('active')});
+    panels.forEach(function(p){p.classList.remove('active')});
+    this.classList.add('active');
+    document.getElementById('step'+step).classList.add('active');
+  });
+});
+
+// Scroll reveal
+var reveals = document.querySelectorAll('.reveal');
+var observer = new IntersectionObserver(function(entries){
+  entries.forEach(function(entry){
+    if(entry.isIntersecting){
+      entry.target.classList.add('visible');
+    }
+  });
+},{threshold:0.12,rootMargin:'0px 0px -40px 0px'});
+reveals.forEach(function(el){observer.observe(el)});
+
+// Gold bar animation on reveal
+var goldObserver = new IntersectionObserver(function(entries){
+  entries.forEach(function(entry){
+    if(entry.isIntersecting){
+      var fills = entry.target.querySelectorAll('.gold-bar-fill:not(.zero)');
+      fills.forEach(function(fill,i){
+        var w = fill.style.width;
+        fill.style.width = '0%';
+        setTimeout(function(){fill.style.width = w}, 100 + i * 120);
+      });
+    }
+  });
+},{threshold:0.2});
+document.querySelectorAll('.gold-viz').forEach(function(el){goldObserver.observe(el)});
+</script>
+</body>
+</html>
