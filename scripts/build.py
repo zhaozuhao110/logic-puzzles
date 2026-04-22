@@ -192,47 +192,15 @@ def get_difficulty(title):
 
 
 def inject_common_features(content):
-    """向 HTML 内容注入返回按钮和明暗模式切换逻辑"""
-    # 1. 注入 CSS
-    common_css = """
-    /* Common Back Link & Theme Toggle */
-    .back-link, .theme-toggle-sub{
-      position:fixed;top:28px;z-index:100;
-      display:flex;align-items:center;justify-content:center;
-      text-decoration:none;transition:all 0.3s cubic-bezier(0.4,0,0.2,1);
-      background:rgba(0,0,0,0.4);backdrop-filter:blur(12px);
-      border-radius:40px;border:1px solid rgba(255,255,255,0.1);
-      box-shadow:0 4px 20px rgba(0,0,0,0.2);
-      color:var(--cream-dim, #8a8278);
-    }
-    .back-link{left:28px;padding:10px 18px;gap:10px;font-size:0.85rem;letter-spacing:0.1em;}
-    .theme-toggle-sub{right:28px;width:44px;height:44px;cursor:pointer;padding:0;}
-    
-    .back-link:hover, .theme-toggle-sub:hover{
-      color:#fff;border-color:rgba(255,255,255,0.3);
-      background:rgba(0,0,0,0.6);
-    }
-    .back-link:hover{transform:translateX(-4px);}
-    .theme-toggle-sub:hover{transform:rotate(15deg);}
-    
-    .back-link svg, .theme-toggle-sub svg{width:18px;height:18px;stroke:currentColor;fill:none;transition:transform 0.3s}
-    .theme-toggle-sub svg{fill:currentColor;stroke:none;}
-    .back-link:hover svg{transform:translateX(-3px)}
-    
-    .theme-toggle-sub .sun-icon{display:none}
-    [data-theme="light"] .theme-toggle-sub .sun-icon{display:block}
-    [data-theme="light"] .theme-toggle-sub .moon-icon{display:none}
-    
-    @media(max-width:640px){
-      .back-link{top:16px;left:16px;padding:8px 14px;font-size:0.75rem}
-      .theme-toggle-sub{top:16px;right:16px;width:36px;height:36px;}
-    }
-    """
-    
-    if "</style>" in content:
-        content = content.replace("</style>", f"{common_css}\n</style>")
-    elif "</head>" in content:
-        content = content.replace("</head>", f"<style>{common_css}</style>\n</head>")
+    """向 HTML 内容注入公共能力（返回首页 + 主题切换 + 公共资源引用）"""
+    # 1) 注入公共资源引用：base.css + theme.js
+    # 注意：题目页输出在 problems/ 下，所以资源相对路径使用 ../assets/
+    common_head = (
+        '<link rel="stylesheet" href="../assets/base.css">\n'
+        '<script src="../assets/theme.js" defer></script>\n'
+    )
+    if "</head>" in content and "../assets/base.css" not in content:
+        content = content.replace("</head>", f"{common_head}</head>")
 
     # 2. 注入 HTML
     common_html = """
@@ -248,30 +216,22 @@ def inject_common_features(content):
     if "<body>" in content:
         content = content.replace("<body>", f"<body>\n{common_html}")
 
-    # 3. 注入脚本
-    theme_script = """
-    <script>
-    (function(){
-      var themeToggle = document.getElementById('themeToggle');
-      if (themeToggle) {
-        themeToggle.addEventListener('click', function() {
-          var isLight = document.documentElement.getAttribute('data-theme') === 'light';
-          var newTheme = isLight ? 'dark' : 'light';
-          document.documentElement.setAttribute('data-theme', newTheme);
-          localStorage.setItem('theme', newTheme);
-        });
-      }
-      var savedTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
-      document.documentElement.setAttribute('data-theme', savedTheme);
-    })();
-    </script>
-    """
-    if "</body>" in content:
-        content = content.replace("</body>", f"{theme_script}\n</body>")
-    else:
-        content += theme_script
-
     return content
+
+
+def write_problems_js(data_dir: Path, problems: list):
+    """生成 data/problems.js（用于 file:// 直接打开首页时的兜底数据）。"""
+    js_path = data_dir / "problems.js"
+    with open(js_path, "w", encoding="utf-8") as f:
+        f.write(
+            "/**\n"
+            " * 题目数据（由 scripts/build.py 生成）。\n"
+            " * 说明：用于 file:// 方式直接打开 index.html 时，避免 fetch 本地 JSON 被浏览器拦截。\n"
+            " */\n"
+        )
+        f.write("window.__PROBLEMS__ = ")
+        json.dump(problems, f, ensure_ascii=False, indent=2)
+        f.write(";\n")
 
 
 def process_files(src_dir, dest_dir):
@@ -366,6 +326,9 @@ def process_files(src_dir, dest_dir):
     json_path = data_dir / "problems.json"
     with open(json_path, "w", encoding="utf-8") as f:
         json.dump(problems, f, ensure_ascii=False, indent=2)
+
+    # 同步生成 problems.js（从同一份 problems 列表派生）
+    write_problems_js(data_dir, problems)
 
     print(f"\n[OK] 已生成 {json_path}")
     print(f"[OK] 共处理 {len(problems)} 道题目")

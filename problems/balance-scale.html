@@ -6,6 +6,8 @@
 <title>称球问题 — 经典逻辑推理</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Noto+Serif+SC:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/base.css">
+<script src="../assets/theme.js" defer></script>
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 :root{
@@ -210,39 +212,7 @@ footer span{color:var(--brass-dim)}
 .reveal{opacity:0;transform:translateY(24px);transition:opacity 0.7s,transform 0.7s}
 .reveal.visible{opacity:1;transform:translateY(0)}
 
-    /* Common Back Link & Theme Toggle */
-    .back-link, .theme-toggle-sub{
-      position:fixed;top:28px;z-index:100;
-      display:flex;align-items:center;justify-content:center;
-      text-decoration:none;transition:all 0.3s cubic-bezier(0.4,0,0.2,1);
-      background:var(--nav-bg);backdrop-filter:blur(12px);
-      border-radius:40px;border:1px solid var(--nav-border);
-      box-shadow:0 4px 20px rgba(0,0,0,0.1);
-      color:var(--cream-dim);
-    }
-    .back-link{left:28px;padding:10px 18px;gap:10px;font-size:0.85rem;letter-spacing:0.1em;}
-    .theme-toggle-sub{right:28px;width:44px;height:44px;cursor:pointer;padding:0;}
-    
-    .back-link:hover, .theme-toggle-sub:hover{
-      color:var(--brass-bright);border-color:var(--brass);
-      background:var(--lab-card);
-    }
-    .back-link:hover{transform:translateX(-4px);}
-    .theme-toggle-sub:hover{transform:rotate(15deg);}
-    
-    .back-link svg, .theme-toggle-sub svg{width:18px;height:18px;stroke:currentColor;fill:none;transition:transform 0.3s}
-    .theme-toggle-sub svg{fill:currentColor;stroke:none;}
-    .back-link:hover svg{transform:translateX(-3px)}
-    
-    .theme-toggle-sub .sun-icon{display:none}
-    [data-theme="light"] .theme-toggle-sub .sun-icon{display:block}
-    [data-theme="light"] .theme-toggle-sub .moon-icon{display:none}
-    
-    @media(max-width:640px){
-      .back-link{top:16px;left:16px;padding:8px 14px;font-size:0.75rem}
-      .theme-toggle-sub{top:16px;right:16px;width:36px;height:36px;}
-    }
-    
+ 
 </style>
 </head>
 <body>
@@ -428,22 +398,6 @@ reveals.forEach(function(el){observer.observe(el)});
 // Initial state
 showStep(0);
 </script>
-
-    <script>
-    (function(){
-      var themeToggle = document.getElementById('themeToggle');
-      if (themeToggle) {
-        themeToggle.addEventListener('click', function() {
-          var isLight = document.documentElement.getAttribute('data-theme') === 'light';
-          var newTheme = isLight ? 'dark' : 'light';
-          document.documentElement.setAttribute('data-theme', newTheme);
-          localStorage.setItem('theme', newTheme);
-        });
-      }
-      var savedTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
-      document.documentElement.setAttribute('data-theme', savedTheme);
-    })();
-    </script>
-    
 </body>
+</html>
 </html>

@@ -6,6 +6,8 @@
 <title>鬼谷考徒 — 经典逻辑推理</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Noto+Serif+SC:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/base.css">
+<script src="../assets/theme.js" defer></script>
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 :root{
@@ -61,30 +63,6 @@ body{
   opacity:0.025;
 }
 .container{position:relative;z-index:2;max-width:960px;margin:0 auto;padding:0 24px}
-
-.back-link,.theme-toggle-sub{
-  position:fixed;top:28px;z-index:100;
-  display:flex;align-items:center;justify-content:center;
-  text-decoration:none;transition:all 0.3s cubic-bezier(0.4,0,0.2,1);
-  background:rgba(0,0,0,0.35);backdrop-filter:blur(12px);
-  border-radius:40px;border:1px solid var(--line);
-  box-shadow:0 4px 20px rgba(0,0,0,0.2);
-  color:var(--cream-dim);
-}
-.back-link{left:28px;padding:10px 18px;gap:10px;font-size:0.85rem;letter-spacing:0.1em}
-.theme-toggle-sub{right:28px;width:44px;height:44px;cursor:pointer;padding:0}
-.back-link:hover,.theme-toggle-sub:hover{
-  color:var(--cream);border-color:var(--line-strong);
-  background:rgba(0,0,0,0.55);
-}
-.back-link:hover{transform:translateX(-4px)}
-.theme-toggle-sub:hover{transform:rotate(15deg)}
-.back-link svg,.theme-toggle-sub svg{width:18px;height:18px;stroke:currentColor;fill:none;transition:transform 0.3s}
-.theme-toggle-sub svg{fill:currentColor;stroke:none}
-.back-link:hover svg{transform:translateX(-3px)}
-.theme-toggle-sub .sun-icon{display:none}
-[data-theme="light"] .theme-toggle-sub .sun-icon{display:block}
-[data-theme="light"] .theme-toggle-sub .moon-icon{display:none}
 
 .hero{
   min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;
@@ -705,22 +683,6 @@ footer span{color:var(--accent-dim)}
 
 <script>
 /**
- * 切换明暗主题并持久化用户选择。
- */
-function bindThemeToggle() {
-  var themeToggle = document.getElementById('themeToggle');
-  if (!themeToggle) return;
-  themeToggle.addEventListener('click', function() {
-    var isLight = document.documentElement.getAttribute('data-theme') === 'light';
-    var newTheme = isLight ? 'dark' : 'light';
-    document.documentElement.setAttribute('data-theme', newTheme);
-    localStorage.setItem('theme', newTheme);
-  });
-  var savedTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
-  document.documentElement.setAttribute('data-theme', savedTheme);
-}
-
-/**
  * 绑定对白步骤切换，让读者按三句话逐步查看推理。
  */
 function bindStepPanels() {
@@ -1298,7 +1260,6 @@ function bindRevealAnimations() {
  * 初始化页面交互。
  */
 (function() {
-  bindThemeToggle();
   bindStepPanels();
   bindInferencePlayground();
   bindCandidateMatrix();

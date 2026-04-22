@@ -1,0 +1,87 @@
+/**
+ * 题目数据（由 scripts/build.py 生成）。
+ * 说明：用于 file:// 方式直接打开 index.html 时，避免 fetch 本地 JSON 被浏览器拦截。
+ */
+window.__PROBLEMS__ = [
+  {
+    "id": 1,
+    "title": "称球问题",
+    "file": "problems/balance-scale.html",
+    "description": "有 10 个乒乓球，外观完全相同，其中 1 个是次品，重量与其他 9 个不同（可能偏轻或偏重）。 仅用一架天平，最多称 3 次，如何找出次品？",
+    "category": "logic",
+    "difficulty": 9
+  },
+  {
+    "id": 2,
+    "title": "燃绳问题",
+    "file": "problems/burning-rope.html",
+    "description": "有两条材质不均匀的绳子，每条从一端烧到另一端恰好需要 1 小时。 绳子粗细不均，所以燃烧速度不恒定——半条绳不代表 30 分钟。 问题：如何用这两条绳子精确计量 45 分钟？",
+    "category": "logic",
+    "difficulty": 5
+  },
+  {
+    "id": 3,
+    "title": "猜牌问题",
+    "file": "problems/guess-card.html",
+    "description": "Case File 案发现场：16 张牌 点击下方按钮逐步推进推理，每一步对话都将排除不可能的牌。",
+    "category": "logic",
+    "difficulty": 8
+  },
+  {
+    "id": 4,
+    "title": "海盗分金",
+    "file": "problems/pirate-gold.html",
+    "description": "Pirate's Gold 海 盗 分 金 — 博 弈 论 经 典 问 题",
+    "category": "game-theory",
+    "difficulty": 7
+  },
+  {
+    "id": 5,
+    "title": "喝汽水问题",
+    "file": "problems/soda-bottle.html",
+    "description": "汽水 1 元一瓶，喝完后每 2 个空瓶可以换 1 瓶新汽水。 你有 20 元，最多能喝多少瓶？",
+    "category": "logic",
+    "difficulty": 3
+  },
+  {
+    "id": 6,
+    "title": "分割金条",
+    "file": "problems/gold-bar.html",
+    "description": "你让工人为你工作 7 天，给工人的回报是一根金条。金条平分成相连的 7 段，你必须在每天结束时给他们一段金条。如果只许你两次把金条弄断，你如何给你的工人付费？",
+    "category": "logic",
+    "difficulty": 4
+  },
+  {
+    "id": 7,
+    "title": "鬼谷考徒",
+    "file": "problems/guigu-apprentices.html",
+    "description": "鬼谷子从 2 到 99 中选出两个不同整数，把积告诉孙膑、把和告诉庞涓。三轮对白之后，他们为何都能锁定答案？",
+    "category": "logic",
+    "difficulty": 10
+  },
+  {
+    "id": 8,
+    "title": "舀酒难题",
+    "file": "problems/wine-ladle.html",
+    "description": "店里只有 7 两勺 and 11 两勺，不能用刻度作弊，只靠舀满、倒空和互倒，怎样准确量出 2 两酒？",
+    "category": "logic",
+    "difficulty": 6
+  },
+  {
+    "id": 9,
+    "title": "五个囚犯",
+    "file": "problems/five-prisoners.html",
+    "description": "5个囚犯按顺序抓100颗绿豆，抓得最多和最少的人将被处死。在绝对理性的死亡威胁下，谁能在这场博弈中存活？",
+    "category": "game-theory",
+    "difficulty": 8
+  },
+  {
+    "id": 10,
+    "title": "爱因斯坦的谜题",
+    "file": "problems/einstein-puzzle.html",
+    "description": "5栋房子5种颜色，5个国籍，5种饮料香烟宠物。爱因斯坦声称世界上90%的人回答不出：谁养鱼？",
+    "category": "logic",
+    "difficulty": 7
+  }
+];
+
