@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>目录大纲 — 逻辑题集</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Noto+Serif+SC:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Noto+Serif+SC:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/base.css">
   <script src="assets/theme.js" defer></script>
   <script src="data/problems.js" defer></script>
@@ -14,36 +14,44 @@
   :root{
     --bg:#050508;
     --surface:#0c0c12;
-    --card:rgba(20, 20, 30, 0.45);
-    --card-hover:rgba(28, 28, 40, 0.7);
+    --surface-strong:#101018;
+    --card:rgba(20,20,30,0.48);
+    --card-hover:rgba(28,28,40,0.82);
     --accent:#d4a537;
     --accent-bright:#f0c94d;
     --accent-dim:#8a6d1b;
     --cream:#e8e0d4;
     --cream-dim:#8a847a;
-    --border:rgba(212, 165, 55, 0.12);
-    --border-hover:rgba(212, 165, 55, 0.28);
-    --tag-bg:rgba(212, 165, 55, 0.06);
-    --glass-bg: rgba(12, 12, 18, 0.72);
-    --bg-gradient-1: rgba(212, 165, 55, 0.05);
-    --bg-gradient-2: rgba(74, 122, 223, 0.04);
+    --border:rgba(212,165,55,0.12);
+    --border-hover:rgba(212,165,55,0.3);
+    --tag-bg:rgba(212,165,55,0.06);
+    --tag-strong:rgba(212,165,55,0.14);
+    --glass-bg:rgba(10,10,16,0.78);
+    --hero-glow-1:rgba(212,165,55,0.08);
+    --hero-glow-2:rgba(74,122,223,0.05);
+    --hero-line:rgba(255,255,255,0.03);
+    --shadow-lg:0 24px 64px rgba(0,0,0,0.28);
   }
   [data-theme="light"]{
     --bg:#f2f4f7;
     --surface:#ffffff;
-    --card:rgba(255, 255, 255, 0.86);
+    --surface-strong:#fafbfc;
+    --card:rgba(255,255,255,0.82);
     --card-hover:#ffffff;
     --accent:#b08235;
     --accent-bright:#d4a537;
     --accent-dim:#8a6528;
     --cream:#1a1a1c;
     --cream-dim:#5a5a5e;
-    --border:rgba(176, 130, 53, 0.15);
-    --border-hover:rgba(176, 130, 53, 0.28);
-    --tag-bg:rgba(176, 130, 53, 0.06);
-    --glass-bg: rgba(255, 255, 255, 0.82);
-    --bg-gradient-1: rgba(212, 165, 55, 0.06);
-    --bg-gradient-2: rgba(74, 122, 223, 0.05);
+    --border:rgba(176,130,53,0.15);
+    --border-hover:rgba(176,130,53,0.32);
+    --tag-bg:rgba(176,130,53,0.06);
+    --tag-strong:rgba(176,130,53,0.14);
+    --glass-bg:rgba(255,255,255,0.8);
+    --hero-glow-1:rgba(212,165,55,0.1);
+    --hero-glow-2:rgba(74,122,223,0.07);
+    --hero-line:rgba(176,130,53,0.06);
+    --shadow-lg:0 20px 54px rgba(28,38,58,0.12);
   }
   html{scroll-behavior:smooth}
   body{
@@ -55,125 +63,654 @@
     line-height:1.75;
   }
   .bg-layer{
-    position:fixed;inset:0;z-index:0;pointer-events:none;
+    position:fixed;
+    inset:0;
+    z-index:0;
+    pointer-events:none;
     background:
-      radial-gradient(ellipse 50% 40% at 20% 10%,var(--bg-gradient-1),transparent),
-      radial-gradient(ellipse 40% 50% at 80% 90%,var(--bg-gradient-2),transparent),
+      radial-gradient(circle at 12% 10%,var(--hero-glow-1),transparent 34%),
+      radial-gradient(circle at 86% 16%,var(--hero-glow-2),transparent 30%),
+      radial-gradient(circle at 50% 100%,rgba(212,165,55,0.04),transparent 42%),
       var(--bg);
   }
   .bg-layer::before{
-    content:'';position:absolute;inset:0;
-    background:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-    opacity:0.02;
+    content:'';
+    position:absolute;
+    inset:0;
+    background-image:
+      linear-gradient(var(--hero-line) 1px,transparent 1px),
+      linear-gradient(90deg,var(--hero-line) 1px,transparent 1px);
+    background-size:160px 160px;
+    mask-image:linear-gradient(to bottom,rgba(0,0,0,0.45),transparent 78%);
   }
-  .container{position:relative;z-index:1;max-width:1080px;margin:0 auto;padding:0 28px}
-
-  header{padding:64px 0 18px;text-align:center}
-  .title{
-    font-family:'Playfair Display','Noto Serif SC',serif;
-    font-size:clamp(2.2rem,6vw,3.4rem);
-    font-weight:900;
-    background:linear-gradient(135deg,var(--accent-bright),var(--accent),var(--accent-dim));
-    -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-    letter-spacing:0.08em;line-height:1.1;margin-bottom:10px;
+  .container{
+    position:relative;
+    z-index:1;
+    max-width:1180px;
+    margin:0 auto;
+    padding:0 28px 44px;
   }
-  .subtitle{color:var(--cream-dim);font-size:0.95rem;font-weight:300;letter-spacing:0.24em;text-transform:uppercase}
-
-  .toolbar{
-    position:sticky;top:0;z-index:50;
-    margin:18px -28px 24px;
-    padding:12px 0;
-    background:var(--glass-bg);
-    backdrop-filter:blur(18px);
-    -webkit-backdrop-filter:blur(18px);
-    border-bottom:1px solid rgba(212,165,55,0.08);
+  .hero{
+    padding:88px 0 34px;
   }
-  .toolbar-inner{
-    max-width:1080px;margin:0 auto;padding:0 28px;
-    display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;
+  .hero-shell{
+    display:grid;
+    grid-template-columns:minmax(0,1.25fr) minmax(300px,0.75fr);
+    gap:28px;
+    align-items:stretch;
   }
-  .chips{display:flex;gap:10px;flex-wrap:wrap}
-  .chip{
-    display:inline-flex;align-items:center;gap:10px;
-    padding:8px 14px;border-radius:999px;
-    background:var(--tag-bg);border:1px solid var(--border);
-    color:var(--cream-dim);font-size:0.86rem;cursor:pointer;
-    text-decoration:none;
-    transition:all .22s ease;
-    letter-spacing:0.04em;
-  }
-  .chip:hover{border-color:var(--border-hover);color:var(--accent-bright);transform:translateY(-1px)}
-  .chip.primary{background:rgba(212,165,55,0.16);color:var(--cream)}
-
-  .back-link{
-    position:fixed;left:22px;top:18px;z-index:60;
-    display:inline-flex;align-items:center;gap:10px;
-    padding:10px 14px;border-radius:999px;
-    border:1px solid rgba(212,165,55,0.18);
-    background:rgba(12,12,18,0.55);
-    color:var(--cream-dim);text-decoration:none;
-    backdrop-filter:blur(10px);
-    -webkit-backdrop-filter:blur(10px);
-    transition:all .2s ease;
-  }
-  .back-link:hover{border-color:rgba(212,165,55,0.35);color:var(--accent-bright);transform:translateY(-1px)}
-  .back-link svg{width:18px;height:18px}
-
-  .section{margin:26px 0 22px}
-  .section-head{
-    display:flex;align-items:baseline;justify-content:space-between;gap:18px;
-    padding:12px 4px 10px;border-bottom:1px solid rgba(212, 165, 55, 0.08);
-  }
-  .section-title{
-    font-family:'Playfair Display','Noto Serif SC',serif;
-    font-size:1.35rem;font-weight:900;letter-spacing:0.08em;
-  }
-  .section-meta{color:var(--cream-dim);font-size:0.84rem;letter-spacing:0.10em;opacity:0.78}
-
-  .bucket-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px;margin-top:16px}
+  .hero-main,
+  .hero-side,
+  .toolbar-shell,
+  .legend,
+  .section,
   .bucket{
     background:var(--card);
     border:1px solid var(--border);
-    border-radius:16px;
-    padding:18px 18px 14px;
+    border-radius:28px;
+    backdrop-filter:blur(16px);
+    -webkit-backdrop-filter:blur(16px);
+    box-shadow:var(--shadow-lg);
+  }
+  .hero-main{
+    position:relative;
+    overflow:hidden;
+    padding:40px;
+  }
+  .hero-main::before{
+    content:'';
+    position:absolute;
+    right:-10%;
+    bottom:-32%;
+    width:340px;
+    height:340px;
+    border-radius:50%;
+    background:radial-gradient(circle,rgba(212,165,55,0.14),transparent 66%);
+    pointer-events:none;
+  }
+  .hero-main::after{
+    content:'';
+    position:absolute;
+    right:22px;
+    top:20px;
+    width:160px;
+    height:160px;
+    border-radius:50%;
+    border:1px solid rgba(212,165,55,0.06);
+    box-shadow:inset 0 0 0 24px rgba(212,165,55,0.02);
+    pointer-events:none;
+  }
+  .eyebrow{
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    padding:8px 14px;
+    border-radius:999px;
+    background:var(--tag-bg);
+    border:1px solid var(--border);
+    color:var(--cream-dim);
+    font-size:0.8rem;
+    letter-spacing:0.16em;
+    text-transform:uppercase;
+  }
+  .eyebrow::before{
+    content:'';
+    width:8px;
+    height:8px;
+    border-radius:50%;
+    background:linear-gradient(135deg,var(--accent-bright),var(--accent));
+    box-shadow:0 0 18px rgba(212,165,55,0.45);
+  }
+  .title{
+    margin-top:18px;
+    font-family:'Playfair Display','Noto Serif SC',serif;
+    font-size:clamp(2.8rem,7vw,5rem);
+    font-weight:900;
+    line-height:1;
+    letter-spacing:0.05em;
+    background:linear-gradient(135deg,var(--accent-bright),var(--cream) 46%,var(--accent-dim));
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+    background-clip:text;
+  }
+  .subtitle{
+    margin-top:16px;
+    max-width:720px;
+    color:var(--cream-dim);
+    font-size:1rem;
+  }
+  .hero-divider{
+    width:86px;
+    height:1px;
+    margin-top:22px;
+    background:linear-gradient(90deg,var(--accent),transparent);
+  }
+  .hero-actions{
+    display:flex;
+    flex-wrap:wrap;
+    gap:12px;
+    margin-top:24px;
+  }
+  .hero-link{
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    padding:12px 18px;
+    border-radius:999px;
+    text-decoration:none;
+    border:1px solid var(--border);
+    background:rgba(255,255,255,0.02);
+    color:var(--cream);
     transition:all .25s ease;
   }
-  .bucket:hover{border-color:var(--border-hover);background:var(--card-hover);transform:translateY(-2px)}
-  .bucket h3{font-size:1rem;color:var(--cream);font-weight:900;margin-bottom:6px}
-  .bucket p{font-size:0.86rem;color:var(--cream-dim);margin-bottom:10px}
-  .list{display:flex;flex-direction:column;gap:8px}
-  .item{
-    display:flex;align-items:center;justify-content:space-between;gap:12px;
-    padding:10px 12px;border-radius:12px;
-    background:rgba(0,0,0,0.16);
+  .hero-link:hover{
+    border-color:var(--border-hover);
+    transform:translateY(-2px);
+  }
+  .hero-link.primary{
+    background:linear-gradient(135deg,var(--accent-bright),var(--accent));
+    color:var(--bg);
+    border-color:transparent;
+  }
+  .hero-link.secondary{
+    color:var(--cream-dim);
+  }
+  .hero-link svg{
+    width:18px;
+    height:18px;
+  }
+  .hero-note-row{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    margin-top:20px;
+  }
+  .hero-note{
+    padding:8px 12px;
+    border-radius:999px;
     border:1px solid rgba(212,165,55,0.08);
-    text-decoration:none;color:inherit;
-    transition:all .2s ease;
+    background:rgba(255,255,255,0.03);
+    color:var(--cream-dim);
+    font-size:0.82rem;
+    letter-spacing:0.04em;
   }
-  [data-theme="light"] .item{background:rgba(176,130,53,0.06)}
-  .item:hover{border-color:rgba(212,165,55,0.22);transform:translateY(-1px)}
-  .item .name{
-    font-weight:800;color:var(--cream);line-height:1.35;
-    flex:1;min-width:0;
+  .hero-quote{
+    position:relative;
+    margin-top:26px;
+    padding:18px 18px 18px 22px;
+    border-radius:20px;
+    border:1px solid rgba(212,165,55,0.08);
+    background:linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.015));
   }
-  .item .meta{
-    font-size:0.78rem;color:var(--cream-dim);opacity:0.78;
-    white-space:nowrap;
+  .hero-quote::before{
+    content:'';
+    position:absolute;
+    left:0;
+    top:18px;
+    bottom:18px;
+    width:2px;
+    border-radius:999px;
+    background:linear-gradient(180deg,var(--accent-bright),transparent);
+  }
+  .hero-quote-text{
+    color:var(--cream);
+    font-size:0.95rem;
+    line-height:1.8;
+  }
+  .hero-quote-meta{
+    margin-top:8px;
+    color:var(--cream-dim);
+    font-size:0.78rem;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+  }
+  .hero-side{
+    padding:24px;
+    display:flex;
+    flex-direction:column;
+    gap:16px;
+  }
+  .side-kicker{
+    color:var(--accent);
+    font-size:0.78rem;
+    letter-spacing:0.18em;
+    text-transform:uppercase;
+  }
+  .side-title{
+    font-size:1.2rem;
+    font-weight:700;
+    line-height:1.45;
+  }
+  .side-text{
+    color:var(--cream-dim);
+    font-size:0.92rem;
+  }
+  .side-list{
+    display:grid;
+    gap:10px;
+  }
+  .side-item{
+    padding:14px 16px;
+    border-radius:18px;
+    border:1px solid rgba(212,165,55,0.08);
+    background:rgba(255,255,255,0.03);
+  }
+  .side-item-title{
+    color:var(--cream);
+    font-size:0.92rem;
+    font-weight:700;
+  }
+  .side-item-desc{
+    margin-top:4px;
+    color:var(--cream-dim);
+    font-size:0.82rem;
+    line-height:1.6;
+  }
+  .stats{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:12px;
+  }
+  .stat-card{
+    padding:16px 18px;
+    border-radius:20px;
+    background:rgba(255,255,255,0.03);
+    border:1px solid rgba(212,165,55,0.08);
+  }
+  .stat-label{
+    color:var(--cream-dim);
+    font-size:0.74rem;
+    letter-spacing:0.16em;
+    text-transform:uppercase;
+  }
+  .stat-num{
+    margin-top:8px;
+    font-family:'Playfair Display',serif;
+    font-size:2rem;
+    color:var(--accent-bright);
+  }
+  .stat-text{
+    margin-top:6px;
+    color:var(--cream-dim);
+    font-size:0.84rem;
+  }
+  .toolbar-container{
+    position:sticky;
+    top:0;
+    z-index:90;
+    margin:0 0 28px;
+    padding-top:8px;
+  }
+  .toolbar-shell{
+    overflow:hidden;
+    transition:border-color .25s ease,background .25s ease;
+  }
+  .toolbar-container.is-sticky .toolbar-shell{
+    background:var(--glass-bg);
+    border-color:var(--border-hover);
+  }
+  .toolbar{
+    display:grid;
+    grid-template-columns:minmax(0,1fr) auto;
+    gap:18px;
+    padding:20px 22px;
+  }
+  .toolbar-main{
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+  }
+  .toolbar-top{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:14px;
+    flex-wrap:wrap;
+  }
+  .toolbar-head{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    flex-wrap:wrap;
+  }
+  .toolbar-badge{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    padding:7px 12px;
+    border-radius:999px;
+    border:1px solid rgba(212,165,55,0.1);
+    background:rgba(212,165,55,0.06);
+    color:var(--accent);
+    font-size:0.74rem;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+  }
+  .toolbar-badge::before{
+    content:'';
+    width:7px;
+    height:7px;
+    border-radius:50%;
+    background:currentColor;
+    box-shadow:0 0 12px currentColor;
+  }
+  .toolbar-title{
+    font-size:1rem;
+    font-weight:700;
+    letter-spacing:0.06em;
+  }
+  .toolbar-hint,
+  .toolbar-meta{
+    color:var(--cream-dim);
+    font-size:0.82rem;
+    letter-spacing:0.04em;
+  }
+  .toolbar-side{
+    display:flex;
+    align-items:flex-start;
+    justify-content:flex-end;
+    gap:10px;
+    flex-wrap:wrap;
+  }
+  .chips{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+  }
+  .chip{
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    padding:9px 14px;
+    border-radius:999px;
+    background:var(--tag-bg);
+    border:1px solid var(--border);
+    color:var(--cream-dim);
+    font-size:0.84rem;
+    text-decoration:none;
+    transition:all .22s ease;
+  }
+  .chip:hover{
+    border-color:var(--border-hover);
+    color:var(--accent-bright);
+    transform:translateY(-1px);
+  }
+  .chip.primary{
+    background:var(--tag-strong);
+    color:var(--cream);
+  }
+  .chip.active{
+    background:linear-gradient(135deg,var(--accent-bright),var(--accent));
+    color:var(--bg);
+    border-color:transparent;
+    box-shadow:0 10px 24px rgba(212,165,55,0.18);
+  }
+  .difficulty-strip{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:10px;
+  }
+  .difficulty-pill{
+    padding:14px 14px 12px;
+    border-radius:18px;
+    border:1px solid rgba(212,165,55,0.08);
+    background:rgba(255,255,255,0.03);
+  }
+  .difficulty-pill-title{
+    color:var(--cream);
+    font-size:0.86rem;
+    font-weight:700;
+  }
+  .difficulty-pill-meta{
+    margin-top:6px;
+    color:var(--cream-dim);
+    font-size:0.78rem;
+    line-height:1.55;
+  }
+  .legend{
+    margin:0 0 28px;
+    padding:20px 22px;
+  }
+  .section-head{
+    display:flex;
+    align-items:flex-end;
+    justify-content:space-between;
+    gap:16px;
+    margin-bottom:18px;
+  }
+  .section-title{
+    font-family:'Playfair Display','Noto Serif SC',serif;
+    font-size:1.35rem;
+    font-weight:900;
+    letter-spacing:0.08em;
+  }
+  .section-meta{
+    color:var(--cream-dim);
+    font-size:0.82rem;
+    letter-spacing:0.06em;
+  }
+  .legend-grid{
+    display:grid;
+    grid-template-columns:repeat(4,minmax(0,1fr));
+    gap:14px;
+  }
+  .legend-item{
+    padding:18px 16px;
+    border-radius:20px;
+    background:linear-gradient(180deg,rgba(255,255,255,0.035),rgba(255,255,255,0.015));
+    border:1px solid rgba(212,165,55,0.08);
+  }
+  .legend-level{
+    color:var(--accent-bright);
+    font-weight:700;
+  }
+  .legend-desc{
+    margin-top:8px;
+    color:var(--cream-dim);
+    font-size:0.86rem;
+    line-height:1.65;
+  }
+  #content{
+    display:flex;
+    flex-direction:column;
+    gap:24px;
+  }
+  .section{
+    padding:22px;
+    opacity:1;
+    transform:translateY(0);
+    transition:opacity .5s ease,transform .5s ease,border-color .28s ease,background .28s ease;
+  }
+  .section.reveal-ready{
+    opacity:0;
+    transform:translateY(24px);
+  }
+  .section.is-visible{
+    opacity:1;
+    transform:translateY(0);
+  }
+  .section-headline{
+    display:flex;
+    align-items:flex-end;
+    justify-content:space-between;
+    gap:18px;
+    padding:0 2px 16px;
+    border-bottom:1px solid rgba(212,165,55,0.08);
+  }
+  .section-title-wrap{
+    display:flex;
+    align-items:flex-end;
+    gap:14px;
+    flex-wrap:wrap;
+  }
+  .section-index{
+    font-family:'Playfair Display',serif;
+    font-size:1.9rem;
+    color:var(--accent-dim);
+    line-height:1;
+    letter-spacing:0.08em;
+  }
+  .section-meta-strong{
+    color:var(--cream-dim);
+    font-size:0.82rem;
+    letter-spacing:0.08em;
+  }
+  .bucket-grid{
+    column-count:2;
+    column-gap:18px;
+    margin-top:18px;
+  }
+  .bucket{
+    break-inside:avoid;
+    display:inline-block;
+    width:100%;
+    padding:24px;
+    border-radius:28px;
+    margin-bottom:20px;
+    background:rgba(255,255,255,0.02);
+    border:1px solid rgba(212,165,55,0.06);
+    transition:all .28s ease;
+  }
+  .bucket:hover{
+    border-color:var(--border-hover);
+    background:var(--card-hover);
+  }
+  .bucket-head{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    margin-bottom:12px;
+  }
+  .bucket-title{
+    color:var(--cream);
+    font-size:1rem;
+    font-weight:800;
+  }
+  .bucket-count{
+    color:var(--accent);
+    font-size:0.8rem;
+    letter-spacing:0.08em;
+  }
+  .bucket-desc{
+    color:var(--cream-dim);
+    font-size:0.84rem;
+    line-height:1.65;
+  }
+  .list{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    margin-top:14px;
+  }
+  .item{
+    position:relative;
+    display:grid;
+    grid-template-columns:auto minmax(0,1fr) auto;
+    gap:14px;
+    align-items:center;
+    padding:14px 16px;
+    border-radius:18px;
+    text-decoration:none;
+    color:inherit;
+    background:linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.015));
+    border:1px solid rgba(212,165,55,0.08);
+    transition:all .22s ease;
+  }
+  .item:hover{
+    border-color:var(--border-hover);
+    transform:translateY(-1px);
+  }
+  .item-no{
+    width:54px;
+    min-height:54px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:16px;
+    background:rgba(212,165,55,0.08);
+    border:1px solid rgba(212,165,55,0.12);
+    font-family:'Playfair Display',serif;
+    font-size:1rem;
+    color:var(--accent-bright);
+    letter-spacing:0.06em;
     flex:0 0 auto;
+  }
+  .item-main{
+    min-width:0;
+  }
+  .item-name{
+    font-weight:800;
+    color:var(--cream);
+    line-height:1.4;
+  }
+  .item-desc{
+    margin-top:5px;
+    color:var(--cream-dim);
+    font-size:0.84rem;
+    line-height:1.65;
+  }
+  .item-meta{
     text-align:right;
+    color:var(--cream-dim);
+    font-size:0.78rem;
+    line-height:1.65;
+    letter-spacing:0.04em;
+    white-space:nowrap;
   }
-
-  @media (max-width: 520px){
-    .item{flex-direction:column;align-items:flex-start;gap:6px}
-    .item .meta{white-space:normal;text-align:left}
+  .item-meta strong{
+    color:var(--accent-bright);
+    font-weight:700;
   }
-
+  .status,
+  .empty-state{
+    margin-top:8px;
+    padding:28px 22px;
+    border-radius:24px;
+    border:1px solid rgba(212,165,55,0.08);
+    background:var(--card);
+    color:var(--cream-dim);
+    text-align:center;
+  }
   footer{
-    text-align:center;padding:42px 0 34px;margin-top:46px;
-    color:rgba(122,116,104,0.32);font-size:0.78rem;
+    text-align:center;
+    padding:52px 0 24px;
+    margin-top:60px;
+    color:rgba(122,116,104,0.38);
+    font-size:0.78rem;
     border-top:1px solid rgba(201,148,62,0.06);
   }
   footer span{color:var(--accent-dim)}
+  @media(max-width:1080px){
+    .hero-shell{grid-template-columns:1fr}
+    .difficulty-strip{grid-template-columns:repeat(4,minmax(0,1fr))}
+    .legend-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .bucket-grid{column-count:1}
+    .toolbar{grid-template-columns:1fr}
+    .toolbar-side{justify-content:flex-start}
+  }
+  @media(max-width:760px){
+    .container{padding:0 16px 36px}
+    .hero{padding:84px 0 28px}
+    .hero-main,.hero-side,.toolbar-shell,.legend,.section,.bucket{border-radius:24px}
+    .hero-main{padding:28px 22px}
+    .hero-side,.legend,.section,.bucket{padding:18px}
+    .toolbar{padding:18px}
+    .section-head,.section-headline{flex-direction:column;align-items:flex-start}
+  }
+  @media(max-width:640px){
+    .difficulty-strip{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .legend-grid{grid-template-columns:1fr}
+    .stats{grid-template-columns:1fr 1fr}
+    .item{
+      grid-template-columns:1fr;
+      align-items:flex-start;
+    }
+    .item-meta{
+      text-align:left;
+      white-space:normal;
+    }
+  }
   </style>
 </head>
 <body>
@@ -183,57 +720,138 @@
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
     <span>返回首页</span>
   </a>
+  <button class="theme-toggle-sub" id="themeToggle" title="切换明暗模式" aria-label="切换明暗模式">
+    <svg class="moon-icon" viewBox="0 0 24 24"><path d="M12.1,22c-4.9,0-9-3.8-9.1-8.7c0-3.1,1.5-6.1,4.1-8c0.2-0.1,0.5-0.1,0.7,0.1c0.2,0.2,0.2,0.5,0.1,0.7c-0.5,0.9-0.7,1.8-0.7,2.8c0,3.5,2.8,6.3,6.3,6.3c1,0,1.9-0.2,2.8-0.7c0.2-0.1,0.5-0.1,0.7,0.1c0.2,0.2,0.2,0.5,0.1,0.7C15.1,20.5,13.6,22,12.1,22z"/></svg>
+    <svg class="sun-icon" viewBox="0 0 24 24"><path d="M12,18c-3.3,0-6-2.7-6-6s2.7-6,6-6s6,2.7,6,6S15.3,18,12,18z M12,8c-2.2,0-4,1.8-4,4s1.8,4,4,4s4-1.8,4-4S14.2,8,12,8z M11,1h2v3h-2V1z M11,20h2v3h-2V20z M3.5,4.9l2.1-2.1l1.4,1.4L4.9,6.3L3.5,4.9z M17,18.4l2.1-2.1l1.4,1.4l-2.1,2.1L17,18.4z M1,11h3v2H1V11z M20,11h3v2h-3V11z M4.9,17.7l2.1,2.1l-1.4,1.4l-2.1-2.1L4.9,17.7z M18.4,5.6l2.1-2.1l1.4,1.4l-2.1,2.1L18.4,5.6z"/></svg>
+  </button>
 
   <div class="container">
-    <header>
-      <h1 class="title">目录大纲</h1>
-      <p class="subtitle">CATALOG · BY CATEGORY & DIFFICULTY</p>
+    <header class="hero">
+      <div class="hero-shell">
+        <section class="hero-main">
+          <span class="eyebrow">Catalog View</span>
+          <h1 class="title">目录大纲</h1>
+          <p class="subtitle">将庞杂的逻辑题库系统化、结构化，以数字档案馆的严谨标准，为您呈现一本具备宏观视野的思维知识图谱。</p>
+          <div class="hero-divider"></div>
+          <div class="hero-actions">
+            <a class="hero-link primary" href="#catalogNav">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+              <span>开始总览</span>
+            </a>
+            <a class="hero-link secondary" href="index.html">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M19 12H5M12 19l-7-7 7-7"/>
+              </svg>
+              <span>返回首页</span>
+            </a>
+          </div>
+          <div class="hero-note-row">
+            <span class="hero-note">结构化分类</span>
+            <span class="hero-note">阶梯式难度</span>
+            <span class="hero-note">全局序列追踪</span>
+          </div>
+          <div class="hero-quote">
+            <div class="hero-quote-text">好的目录不只是内容的罗列，而是展现思维流派的脉络，让探索者在知识图谱中精准定位自己的坐标。</div>
+            <div class="hero-quote-meta">Curated Catalog System</div>
+          </div>
+        </section>
+
+        <aside class="hero-side">
+          <div class="side-kicker">Structured Overview</div>
+          <div class="side-title">以宏观视角构建知识图谱，精准锚定思考的切入点。</div>
+          <div class="side-text">摒弃碎片化的堆砌，将经典题型系统性地拆解为不同的思维流派与难度阶梯。为您呈现一本具备严谨目录学特征的逻辑档案。</div>
+          <div class="difficulty-strip" id="difficultyOverview"></div>
+          <div class="side-list">
+            <div class="side-item">
+              <div class="side-item-title">聚焦核心流派</div>
+              <div class="side-item-desc">从逻辑推演、数学思辨到博弈策略，分类锁定特定领域的思维挑战。</div>
+            </div>
+            <div class="side-item">
+              <div class="side-item-title">攀升认知阶梯</div>
+              <div class="side-item-desc">依循科学的难度矩阵，从思维热身平滑过渡至极客级的脑力激荡。</div>
+            </div>
+          </div>
+          <div class="stats">
+            <div class="stat-card">
+              <div class="stat-label">章节数</div>
+              <div class="stat-num" id="catCount">-</div>
+              <div class="stat-text">按题型组织</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">题目总数</div>
+              <div class="stat-num" id="totalCount">-</div>
+              <div class="stat-text">按展示顺序编号</div>
+            </div>
+          </div>
+        </aside>
+      </div>
     </header>
 
-    <div class="toolbar">
-      <div class="toolbar-inner">
-        <div class="chips" id="navCats"></div>
-        <div class="chips">
-          <a class="chip" href="#legend">难度说明</a>
+    <div class="toolbar-container" id="toolbarContainer">
+      <div class="toolbar-shell" id="catalogNav">
+        <div class="toolbar">
+          <div class="toolbar-main">
+            <div class="toolbar-top">
+              <div class="toolbar-head">
+                <span class="toolbar-badge">Catalog</span>
+                <div>
+                  <div class="toolbar-title">章节导航</div>
+                  <div class="toolbar-hint">按分类浏览，每章内部按难度分层</div>
+                </div>
+              </div>
+              <div class="toolbar-meta" id="toolbarMeta">准备载入目录...</div>
+            </div>
+            <div class="chips" id="navCats"></div>
+          </div>
+          <div class="toolbar-side">
+            <a class="chip" href="#legend">难度说明</a>
+          </div>
         </div>
       </div>
     </div>
 
-    <section class="section" id="legend">
+    <section class="legend" id="legend">
       <div class="section-head">
         <div class="section-title">难度分层</div>
-        <div class="section-meta">按 difficulty（1-10）分段</div>
+        <div class="section-meta">difficulty 1 - 10 的阅读建议</div>
       </div>
-      <div class="bucket-grid">
-        <div class="bucket">
-          <h3>入门（1-3）</h3>
-          <p>单点洞见，最短推理链</p>
+      <div class="legend-grid">
+        <div class="legend-item">
+          <div class="legend-level">入门（1-3）</div>
+          <div class="legend-desc">单点洞见，推理链短，适合作为目录浏览时的起点。</div>
         </div>
-        <div class="bucket">
-          <h3>进阶（4-6）</h3>
-          <p>信息整合，多步排除</p>
+        <div class="legend-item">
+          <div class="legend-level">进阶（4-6）</div>
+          <div class="legend-desc">需要整合信息与多步排除，适合形成连续阅读节奏。</div>
         </div>
-        <div class="bucket">
-          <h3>挑战（7-8）</h3>
-          <p>公共知识 / 分类讨论</p>
+        <div class="legend-item">
+          <div class="legend-level">挑战（7-8）</div>
+          <div class="legend-desc">公共知识与逆向思考更明显，适合集中精力阅读。</div>
         </div>
-        <div class="bucket">
-          <h3>大师（9-10）</h3>
-          <p>高信息量策略 / 极强结构化</p>
+        <div class="legend-item">
+          <div class="legend-level">大师（9-10）</div>
+          <div class="legend-desc">高信息量和复杂策略并存，适合作为章节压轴题。</div>
         </div>
       </div>
     </section>
 
-    <div id="content"></div>
+    <main id="content"></main>
 
-    <footer><span>&#9670;</span> 逻辑题集 &mdash; 目录大纲 <span>&#9670;</span></footer>
+    <footer><span>&#9670;</span> 逻辑题集 · 目录大纲 · 高级统一版 <span>&#9670;</span></footer>
   </div>
 
   <script>
   (function(){
     var content = document.getElementById('content');
     var navCats = document.getElementById('navCats');
+    var toolbarMeta = document.getElementById('toolbarMeta');
+    var totalCount = document.getElementById('totalCount');
+    var catCount = document.getElementById('catCount');
+    var difficultyOverview = document.getElementById('difficultyOverview');
     var problems = [];
+    var sectionObserver = null;
 
     var catNames = {
       'game-theory': '博弈论',
@@ -246,10 +864,33 @@
     var catOrder = ['logic', 'math', 'game-theory', 'strategy', 'programming'];
 
     /**
-     * 加载题目数据（与 index.html 同策略：优先 JSON，file:// 用 __PROBLEMS__ 兜底）。
+     * 加载题目数据。
+     * 与首页保持一致：优先 JSON，file:// 场景用 __PROBLEMS__ 兜底。
      */
     function loadJSON() {
       var isLocal = window.location.protocol === 'file:';
+
+      /**
+       * 尝试从指定路径获取数据。
+       * @param {string[]} paths 候选路径
+       * @param {number} index 当前索引
+       */
+      function tryLoad(paths, index) {
+        if (index >= paths.length) {
+          content.innerHTML = '<div class="status">无法加载题目数据，请确认 `data/problems.json` 存在。</div>';
+          return;
+        }
+
+        fetch(paths[index]).then(function(r) {
+          if (!r.ok) throw new Error('HTTP ' + r.status);
+          return r.json();
+        }).then(function(data) {
+          problems = data || [];
+          render();
+        }).catch(function() {
+          tryLoad(paths, index + 1);
+        });
+      }
 
       if (isLocal && window.__PROBLEMS__ && window.__PROBLEMS__.length) {
         problems = window.__PROBLEMS__;
@@ -257,53 +898,24 @@
         return;
       }
 
-      fetch('data/problems.json').then(function(r){
-        if (!r.ok) throw new Error('HTTP ' + r.status);
-        return r.json();
-      }).then(function(data){
-        problems = data || [];
-        render();
-      }).catch(function(){
-        // 兜底：尝试相对路径
-        fetch('./data/problems.json').then(function(r){ return r.json(); }).then(function(data){
-          problems = data || [];
-          render();
-        }).catch(function(){
-          content.innerHTML = '<div style="color:#c0392b;padding:18px 4px">无法加载题目数据，请确认 data/problems.json 存在</div>';
-        });
-      });
+      tryLoad(['data/problems.json', './data/problems.json'], 0);
     }
 
     /**
-     * 获取难度段信息。
-     * @param {number} diff difficulty (1-10)
+     * 根据 difficulty 返回难度分层描述。
+     * @param {number} diff
      * @returns {{key:string,title:string,desc:string}}
      */
     function diffBucket(diff) {
       var d = Number(diff || 5);
-      if (d <= 3) return { key:'easy', title:'入门（1-3）', desc:'单点洞见，最短推理链' };
+      if (d <= 3) return { key:'easy', title:'入门（1-3）', desc:'单点洞见，推理链短' };
       if (d <= 6) return { key:'mid', title:'进阶（4-6）', desc:'信息整合，多步排除' };
       if (d <= 8) return { key:'hard', title:'挑战（7-8）', desc:'公共知识 / 分类讨论' };
       return { key:'master', title:'大师（9-10）', desc:'高信息量策略 / 极强结构化' };
     }
 
     /**
-     * 生成链接列表项。
-     * @param {Object} p 题目
-     * @returns {string} HTML
-     */
-    function itemHTML(p, displayNo) {
-      var diff = Number(p.difficulty || 5);
-      return (
-        '<a class="item" href="' + p.file + '" data-id="' + String(p.id || '') + '">' +
-          '<div class="name">' + escapeHTML(p.title) + '</div>' +
-          '<div class="meta">难度 ' + diff + ' · CASE #' + String(displayNo).padStart(2,'0') + ' · 原题 #' + String(p.id).padStart(2,'0') + '</div>' +
-        '</a>'
-      );
-    }
-
-    /**
-     * HTML 转义。
+     * 转义文本，避免动态内容破坏 HTML 结构。
      * @param {string} str 文本
      * @returns {string}
      */
@@ -314,103 +926,267 @@
     }
 
     /**
-     * 渲染目录大纲：分类分组 + 组内按难度段聚合。
+     * 生成单条题目项 HTML。
+     * 通过独立序号块强化目录页的“馆藏编号”观感。
+     * @param {Object} problem 题目
+     * @param {number} displayNo 展示序号
+     * @returns {string}
      */
-    function render() {
-      if (!problems || !problems.length) {
-        content.innerHTML = '<div style="color:#c0392b;padding:18px 4px">题目列表为空</div>';
-        return;
+    function itemHTML(problem, displayNo) {
+      var diff = Number(problem.difficulty || 5);
+      return (
+        '<a class="item" href="' + problem.file + '" data-id="' + String(problem.id || '') + '">' +
+          '<div class="item-no">#' + String(displayNo).padStart(2, '0') + '</div>' +
+          '<div class="item-main">' +
+            '<div class="item-name">' + escapeHTML(problem.title) + '</div>' +
+            (problem.description ? '<div class="item-desc">' + escapeHTML(problem.description) + '</div>' : '') +
+          '</div>' +
+          '<div class="item-meta"><strong>难度 ' + diff + '</strong><br>原题 #' + String(problem.id || '').padStart(2, '0') + '</div>' +
+        '</a>'
+      );
+    }
+
+    /**
+     * 更新顶部辅助信息。
+     * @param {number} total 总题数
+     * @param {number} categories 分类数
+     */
+    function updateSummary(total, categories) {
+      totalCount.textContent = total;
+      catCount.textContent = categories;
+      if (toolbarMeta) {
+        toolbarMeta.textContent = '当前共 ' + total + ' 题 · ' + categories + ' 个章节 · 目录按难度分层';
       }
+    }
 
-      // 按分类聚合
-      var groupMap = {};
-      problems.forEach(function(p){
-        var c = p.category || 'logic';
-        if (!groupMap[c]) groupMap[c] = [];
-        groupMap[c].push(p);
-      });
-
-      // 分类顺序：预设 + 追加未知分类
-      Object.keys(groupMap).forEach(function(c){
-        if (catOrder.indexOf(c) === -1) catOrder.push(c);
-      });
-
-      // 顶部导航 chip
+    /**
+     * 渲染顶部分类导航。
+     * @param {Object} groupMap 按分类聚合后的数据
+     */
+    function renderNav(groupMap) {
       navCats.innerHTML = '';
-      catOrder.forEach(function(cat){
+      catOrder.forEach(function(cat) {
+        var a;
         if (!groupMap[cat] || !groupMap[cat].length) return;
-        var a = document.createElement('a');
+        a = document.createElement('a');
         a.className = 'chip primary';
         a.href = '#cat-' + cat;
+        a.setAttribute('data-target', cat);
         a.textContent = catNames[cat] || cat;
         navCats.appendChild(a);
       });
+    }
 
-      // 正文：CASE 编号按“展示顺序”连续递增（与首页保持一致）
+    /**
+     * 渲染全局难度分布概览。
+     * @param {Object} groupMap 按分类聚合后的数据
+     */
+    function renderDifficultyOverview(groupMap) {
+      var all = [];
+      var bucketInfo = [
+        { key:'easy', title:'入门', desc:'适合热身' },
+        { key:'mid', title:'进阶', desc:'适合连续推理' },
+        { key:'hard', title:'挑战', desc:'适合专注阅读' },
+        { key:'master', title:'大师', desc:'适合压轴攻关' }
+      ];
+      var counter = { easy:0, mid:0, hard:0, master:0 };
+
+      if (!difficultyOverview) return;
+
+      Object.keys(groupMap).forEach(function(cat) {
+        all = all.concat(groupMap[cat]);
+      });
+
+      all.forEach(function(problem) {
+        counter[diffBucket(problem.difficulty).key]++;
+      });
+
+      difficultyOverview.innerHTML = bucketInfo.map(function(item) {
+        return (
+          '<div class="difficulty-pill">' +
+            '<div class="difficulty-pill-title">' + item.title + ' · ' + counter[item.key] + ' 题</div>' +
+            '<div class="difficulty-pill-meta">' + item.desc + '</div>' +
+          '</div>'
+        );
+      }).join('');
+    }
+
+    /**
+     * 设置当前激活的章节导航项。
+     * @param {string} category 当前分类 key
+     */
+    function setActiveNav(category) {
+      navCats.querySelectorAll('.chip').forEach(function(chip) {
+        chip.classList.toggle('active', chip.getAttribute('data-target') === category);
+      });
+    }
+
+    /**
+     * 绑定章节观察器。
+     * - 进入视口时让章节渐显
+     * - 根据当前章节同步顶部导航高亮
+     */
+    function bindSectionObservers() {
+      var sections = content.querySelectorAll('.section');
+
+      if (!sections.length) return;
+      if (sectionObserver) sectionObserver.disconnect();
+
+      sections.forEach(function(section) {
+        section.classList.add('reveal-ready');
+      });
+
+      sectionObserver = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          var cat;
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            cat = entry.target.id.replace('cat-', '');
+            setActiveNav(cat);
+            if (toolbarMeta) {
+              toolbarMeta.textContent = '当前浏览 · ' + (catNames[cat] || cat) + ' · 已进入章节目录';
+            }
+          }
+        });
+      }, {
+        threshold: 0.01,
+        rootMargin: '100px 0px 100px 0px'
+      });
+
+      sections.forEach(function(section) {
+        sectionObserver.observe(section);
+      });
+    }
+
+    /**
+     * 渲染目录页正文。
+     * - 先按分类分章
+     * - 每章内部按难度段分桶
+     * - 题目展示序号按全文连续递增
+     */
+    function render() {
+      var groupMap = {};
       var displayNo = 1;
+      var sectionNo = 1;
+
+      if (!problems || !problems.length) {
+        content.innerHTML = '<div class="empty-state">题目列表为空。</div>';
+        return;
+      }
+
+      problems.forEach(function(problem) {
+        var category = String(problem.category || 'logic').trim().toLowerCase();
+        if (!groupMap[category]) groupMap[category] = [];
+        groupMap[category].push(problem);
+      });
+
+      Object.keys(groupMap).forEach(function(cat) {
+        if (catOrder.indexOf(cat) === -1) catOrder.push(cat);
+      });
+
+      updateSummary(problems.length, Object.keys(groupMap).length);
+      renderNav(groupMap);
+      renderDifficultyOverview(groupMap);
       content.innerHTML = '';
-      catOrder.forEach(function(cat){
+
+      catOrder.forEach(function(cat) {
+        var bucketOrder;
+        var buckets;
+        var grid;
+        var head;
         var list = groupMap[cat];
+        var sec;
+
         if (!list || !list.length) return;
 
-        // 组内按难度再按 id 排序
-        list.sort(function(a,b){
+        list.sort(function(a, b) {
           var da = Number(a.difficulty || 5);
           var db = Number(b.difficulty || 5);
           if (da !== db) return da - db;
           return Number(a.id || 0) - Number(b.id || 0);
         });
 
-        // 按难度段分桶
-        var buckets = { easy:[], mid:[], hard:[], master:[] };
-        list.forEach(function(p){
-          buckets[diffBucket(p.difficulty).key].push(p);
+        buckets = { easy:[], mid:[], hard:[], master:[] };
+        list.forEach(function(problem) {
+          buckets[diffBucket(problem.difficulty).key].push(problem);
         });
 
-        var sec = document.createElement('section');
+        sec = document.createElement('section');
         sec.className = 'section';
         sec.id = 'cat-' + cat;
 
-        var head = document.createElement('div');
-        head.className = 'section-head';
+        head = document.createElement('div');
+        head.className = 'section-headline';
         head.innerHTML =
-          '<div class="section-title">' + escapeHTML(catNames[cat] || cat) + '</div>' +
-          '<div class="section-meta">共 ' + list.length + ' 题 · 按难度分段</div>';
+          '<div class="section-title-wrap">' +
+            '<div class="section-index">' + String(sectionNo).padStart(2, '0') + '</div>' +
+            '<div class="section-title">' + escapeHTML(catNames[cat] || cat) + '</div>' +
+          '</div>' +
+          '<div class="section-meta-strong">共 ' + list.length + ' 题 · 按难度分层整理</div>';
         sec.appendChild(head);
 
-        var grid = document.createElement('div');
+        grid = document.createElement('div');
         grid.className = 'bucket-grid';
 
-        // 固定桶顺序
-        var bucketOrder = [
+        bucketOrder = [
           {key:'easy', title:'入门（1-3）', desc:'单点洞见，最短推理链'},
           {key:'mid', title:'进阶（4-6）', desc:'信息整合，多步排除'},
           {key:'hard', title:'挑战（7-8）', desc:'公共知识 / 分类讨论'},
           {key:'master', title:'大师（9-10）', desc:'高信息量策略 / 极强结构化'}
         ];
 
-        bucketOrder.forEach(function(b){
-          if (!buckets[b.key].length) return;
-          var box = document.createElement('div');
-          box.className = 'bucket';
-          box.innerHTML = '<h3>' + b.title + '</h3><p>' + b.desc + ' · ' + buckets[b.key].length + ' 题</p>';
+        bucketOrder.forEach(function(bucket) {
+          var box;
+          var wrap;
+          if (!buckets[bucket.key].length) return;
 
-          var wrap = document.createElement('div');
+          box = document.createElement('div');
+          box.className = 'bucket';
+          box.innerHTML =
+            '<div class="bucket-head">' +
+              '<div class="bucket-title">' + bucket.title + '</div>' +
+              '<div class="bucket-count">' + buckets[bucket.key].length + ' 题</div>' +
+            '</div>' +
+            '<div class="bucket-desc">' + bucket.desc + '</div>';
+
+          wrap = document.createElement('div');
           wrap.className = 'list';
-          wrap.innerHTML = buckets[b.key].map(function(p){
-            var html = itemHTML(p, displayNo);
+          wrap.innerHTML = buckets[bucket.key].map(function(problem) {
+            var html = itemHTML(problem, displayNo);
             displayNo++;
             return html;
           }).join('');
-          box.appendChild(wrap);
 
+          box.appendChild(wrap);
           grid.appendChild(box);
         });
 
         sec.appendChild(grid);
         content.appendChild(sec);
+        sectionNo++;
+      });
+
+      setActiveNav(catOrder[0]);
+      bindSectionObservers();
+    }
+
+    /**
+     * 绑定页面交互。
+     * 当前仅处理目录页吸顶工具栏状态。
+     */
+    function bindEvents() {
+      var toolbarContainer = document.getElementById('toolbarContainer');
+
+      window.addEventListener('scroll', function() {
+        if (window.scrollY > 180) {
+          toolbarContainer.classList.add('is-sticky');
+        } else {
+          toolbarContainer.classList.remove('is-sticky');
+        }
       });
     }
+
+    bindEvents();
 
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', loadJSON);

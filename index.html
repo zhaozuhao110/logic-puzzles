@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>逻辑题集 — 经典思维挑战</title>
+<title>逻辑题集 — 高级简约的思维挑战主页</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Noto+Serif+SC:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Noto+Serif+SC:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/base.css">
 <script src="assets/theme.js" defer></script>
 <script src="data/problems.js" defer></script>
@@ -14,398 +14,979 @@
 :root{
   --bg:#050508;
   --surface:#0c0c12;
-  --card:rgba(20, 20, 30, 0.4);
-  --card-hover:rgba(28, 28, 40, 0.7);
+  --surface-strong:#101018;
+  --card:rgba(20,20,30,0.48);
+  --card-hover:rgba(28,28,40,0.82);
   --accent:#d4a537;
   --accent-bright:#f0c94d;
   --accent-dim:#8a6d1b;
   --cream:#e8e0d4;
   --cream-dim:#8a847a;
-  --border:rgba(212, 165, 55, 0.1);
-  --border-hover:rgba(212, 165, 55, 0.3);
-  --tag-bg:rgba(212, 165, 55, 0.05);
-  --red:#c0392b;
-  --green:#4a9a5e;
-  --blue:#4a7adf;
-  --purple:#8a5abf;
-  --bg-gradient-1: rgba(212, 165, 55, 0.04);
-  --bg-gradient-2: rgba(74, 122, 223, 0.03);
-  --glass-bg: rgba(12, 12, 18, 0.7);
+  --border:rgba(212,165,55,0.12);
+  --border-hover:rgba(212,165,55,0.3);
+  --tag-bg:rgba(212,165,55,0.06);
+  --tag-strong:rgba(212,165,55,0.14);
+  --glass-bg:rgba(10,10,16,0.78);
+  --hero-glow-1:rgba(212,165,55,0.08);
+  --hero-glow-2:rgba(74,122,223,0.05);
+  --hero-line:rgba(255,255,255,0.03);
+  --hero-ring:rgba(212,165,55,0.18);
+  --shadow-lg:0 24px 64px rgba(0,0,0,0.28);
 }
 [data-theme="light"]{
   --bg:#f2f4f7;
   --surface:#ffffff;
-  --card:rgba(255, 255, 255, 0.8);
+  --surface-strong:#fafbfc;
+  --card:rgba(255,255,255,0.82);
   --card-hover:#ffffff;
   --accent:#b08235;
   --accent-bright:#d4a537;
   --accent-dim:#8a6528;
   --cream:#1a1a1c;
   --cream-dim:#5a5a5e;
-  --border:rgba(176, 130, 53, 0.15);
-  --border-hover:rgba(176, 130, 53, 0.3);
-  --tag-bg:rgba(176, 130, 53, 0.06);
-  --bg-gradient-1: rgba(212, 165, 55, 0.06);
-  --bg-gradient-2: rgba(74, 122, 223, 0.05);
-  --glass-bg: rgba(255, 255, 255, 0.8);
+  --border:rgba(176,130,53,0.15);
+  --border-hover:rgba(176,130,53,0.32);
+  --tag-bg:rgba(176,130,53,0.06);
+  --tag-strong:rgba(176,130,53,0.14);
+  --glass-bg:rgba(255,255,255,0.8);
+  --hero-glow-1:rgba(212,165,55,0.1);
+  --hero-glow-2:rgba(74,122,223,0.07);
+  --hero-line:rgba(176,130,53,0.06);
+  --hero-ring:rgba(176,130,53,0.18);
+  --shadow-lg:0 20px 54px rgba(28,38,58,0.12);
 }
 html{scroll-behavior:smooth}
 body{
   font-family:'Noto Serif SC',serif;
-  background:var(--bg);color:var(--cream);
-  min-height:100vh;overflow-x:hidden;line-height:1.7;
+  background:var(--bg);
+  color:var(--cream);
+  min-height:100vh;
+  overflow-x:hidden;
+  line-height:1.72;
 }
-/* ===== Background ===== */
 .bg-layer{
-  position:fixed;inset:0;z-index:0;pointer-events:none;
+  position:fixed;
+  inset:0;
+  z-index:0;
+  pointer-events:none;
   background:
-    radial-gradient(ellipse 50% 40% at 20% 10%,var(--bg-gradient-1),transparent),
-    radial-gradient(ellipse 40% 50% at 80% 90%,var(--bg-gradient-2),transparent),
+    radial-gradient(circle at 12% 10%,var(--hero-glow-1),transparent 34%),
+    radial-gradient(circle at 86% 16%,var(--hero-glow-2),transparent 30%),
+    radial-gradient(circle at 50% 100%,rgba(212,165,55,0.04),transparent 42%),
     var(--bg);
-  transition:background 0.5s ease;
 }
 .bg-layer::before{
-  content:'';position:absolute;inset:0;
-  background:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  opacity:0.025;
+  content:'';
+  position:absolute;
+  inset:0;
+  background-image:
+    linear-gradient(var(--hero-line) 1px,transparent 1px),
+    linear-gradient(90deg,var(--hero-line) 1px,transparent 1px);
+  background-size:160px 160px;
+  mask-image:linear-gradient(to bottom,rgba(0,0,0,0.45),transparent 78%);
 }
-
-.container{position:relative;z-index:1;max-width:1080px;margin:0 auto;padding:0 28px}
-
-/* ===== Header ===== */
-header{padding:80px 0 40px;text-align:center}
+.container{
+  position:relative;
+  z-index:1;
+  max-width:1180px;
+  margin:0 auto;
+  padding:0 28px 44px;
+}
+.theme-toggle{
+  position:fixed;
+  top:24px;
+  right:24px;
+  z-index:120;
+}
+.hero{
+  padding:88px 0 36px;
+}
+.hero-shell{
+  position:relative;
+  display:grid;
+  grid-template-columns:minmax(0,1.3fr) minmax(280px,0.7fr);
+  gap:28px;
+  align-items:stretch;
+}
+.hero-main,
+.hero-side,
+.toolbar-shell,
+.legend,
+.group-section{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:28px;
+  backdrop-filter:blur(16px);
+  -webkit-backdrop-filter:blur(16px);
+  box-shadow:var(--shadow-lg);
+}
+.hero-main{
+  position:relative;
+  overflow:hidden;
+  padding:42px;
+}
+.hero-main::before{
+  content:'';
+  position:absolute;
+  inset:auto -12% -40% 34%;
+  height:260px;
+  background:radial-gradient(circle,rgba(212,165,55,0.14),transparent 66%);
+  pointer-events:none;
+}
+.hero-main::after{
+  content:'';
+  position:absolute;
+  inset:20px 20px auto auto;
+  width:160px;
+  height:160px;
+  border-radius:50%;
+  border:1px solid rgba(212,165,55,0.06);
+  box-shadow:inset 0 0 0 24px rgba(212,165,55,0.02);
+  pointer-events:none;
+}
+.eyebrow{
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  padding:8px 14px;
+  border-radius:999px;
+  background:var(--tag-bg);
+  border:1px solid var(--border);
+  color:var(--cream-dim);
+  font-size:0.8rem;
+  letter-spacing:0.16em;
+  text-transform:uppercase;
+}
+.eyebrow::before{
+  content:'';
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  background:linear-gradient(135deg,var(--accent-bright),var(--accent));
+  box-shadow:0 0 18px rgba(212,165,55,0.45);
+}
 .site-title{
+  margin-top:20px;
   font-family:'Playfair Display','Noto Serif SC',serif;
-  font-size:clamp(2.5rem,7vw,4rem);font-weight:900;
-  background:linear-gradient(135deg,var(--accent-bright),var(--accent),var(--accent-dim));
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-  letter-spacing:0.08em;line-height:1.1;margin-bottom:12px;
+  font-size:clamp(3rem,8vw,5.4rem);
+  line-height:0.98;
+  font-weight:900;
+  letter-spacing:0.04em;
+  background:linear-gradient(135deg,var(--accent-bright),var(--cream) 48%,var(--accent-dim));
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
 }
 .site-subtitle{
-  color:var(--cream-dim);font-size:1rem;font-weight:300;letter-spacing:0.25em;text-transform:uppercase;
+  margin-top:18px;
+  max-width:700px;
+  color:var(--cream-dim);
+  font-size:1rem;
 }
-.header-links{margin-top:18px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
-.header-link{
-  display:inline-flex;align-items:center;gap:10px;
-  padding:10px 16px;border-radius:999px;
-  background:var(--tag-bg);border:1px solid var(--border);
-  color:var(--cream-dim);text-decoration:none;font-size:0.9rem;
-  transition:all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-  letter-spacing:0.06em;
+.hero-divider{
+  width:84px;
+  height:1px;
+  margin-top:22px;
+  background:linear-gradient(90deg,var(--accent),transparent);
 }
-.header-link:hover{border-color:var(--border-hover);color:var(--accent-bright);transform:translateY(-2px)}
-.header-link svg{width:18px;height:18px}
-
-/* ===== Search & Filter ===== */
-.toolbar-container{
-  position:sticky;top:0;z-index:90;
-  padding:16px 0;margin:0 -28px 32px;
-  background:transparent;
-  transition:all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+.hero-actions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:12px;
+  margin-top:26px;
 }
-.toolbar-container.is-sticky{
-  background:var(--glass-bg);
-  backdrop-filter:blur(20px);
-  -webkit-backdrop-filter:blur(20px);
-  box-shadow:0 10px 30px rgba(0,0,0,0.1);
-  padding:12px 0;
-}
-.toolbar{
-  display:flex;gap:16px;align-items:center;flex-wrap:wrap;
-  max-width:1080px;margin:0 auto;padding:0 28px;
-}
-.toolbar-right{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-left:auto}
-.view-hint{font-size:0.8rem;color:var(--cream-dim);letter-spacing:0.06em;opacity:0.75}
-.sort-select{
-  padding:10px 14px;
-  border-radius:12px;
-  background:var(--surface);
+.hero-link{
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  padding:12px 18px;
+  border-radius:999px;
+  text-decoration:none;
   border:1px solid var(--border);
   color:var(--cream);
+  background:rgba(255,255,255,0.02);
+  transition:all .25s ease;
+}
+.hero-link:hover{
+  border-color:var(--border-hover);
+  transform:translateY(-2px);
+}
+.hero-link.primary{
+  background:linear-gradient(135deg,var(--accent-bright),var(--accent));
+  color:var(--bg);
+  border-color:transparent;
+}
+.hero-link.secondary{
+  color:var(--cream-dim);
+}
+.hero-link svg{
+  width:18px;
+  height:18px;
+}
+.hero-notes{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  margin-top:22px;
+}
+.hero-note{
+  padding:8px 12px;
+  border-radius:999px;
+  background:rgba(255,255,255,0.03);
+  border:1px solid rgba(212,165,55,0.08);
+  color:var(--cream-dim);
+  font-size:0.82rem;
+  letter-spacing:0.04em;
+}
+.hero-quote{
+  position:relative;
+  margin-top:28px;
+  padding:18px 18px 18px 22px;
+  border-radius:20px;
+  border:1px solid rgba(212,165,55,0.08);
+  background:linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.015));
+}
+.hero-quote::before{
+  content:'';
+  position:absolute;
+  left:0;
+  top:18px;
+  bottom:18px;
+  width:2px;
+  border-radius:999px;
+  background:linear-gradient(180deg,var(--accent-bright),transparent);
+}
+.hero-quote-text{
+  color:var(--cream);
+  font-size:0.95rem;
+  line-height:1.8;
+}
+.hero-quote-meta{
+  margin-top:8px;
+  color:var(--cream-dim);
+  font-size:0.78rem;
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+}
+.hero-side{
+  padding:24px;
+  display:flex;
+  flex-direction:column;
+  gap:16px;
+}
+.side-kicker{
+  color:var(--accent);
+  font-size:0.78rem;
+  letter-spacing:0.18em;
+  text-transform:uppercase;
+}
+.side-title{
+  font-size:1.2rem;
+  font-weight:700;
+  line-height:1.4;
+}
+.side-text{
+  color:var(--cream-dim);
+  font-size:0.92rem;
+}
+.curation-list{
+  display:grid;
+  gap:10px;
+}
+.curation-item{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:12px;
+  padding:14px 14px 14px 16px;
+  border-radius:18px;
+  text-decoration:none;
+  color:inherit;
+  background:rgba(255,255,255,0.03);
+  border:1px solid rgba(212,165,55,0.08);
+  transition:all .22s ease;
+}
+.curation-item:hover{
+  border-color:var(--border-hover);
+  transform:translateY(-1px);
+}
+.curation-copy{
+  min-width:0;
+}
+.curation-name{
+  font-size:0.92rem;
+  font-weight:700;
+  color:var(--cream);
+}
+.curation-desc{
+  margin-top:4px;
+  color:var(--cream-dim);
+  font-size:0.8rem;
+  line-height:1.6;
+}
+.curation-arrow{
+  flex:0 0 auto;
+  width:28px;
+  height:28px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:50%;
+  background:rgba(212,165,55,0.1);
+  color:var(--accent);
+}
+.stats{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:12px;
+}
+.stat-card{
+  padding:16px 18px;
+  border-radius:20px;
+  background:rgba(255,255,255,0.03);
+  border:1px solid rgba(212,165,55,0.08);
+}
+.stat-label{
+  color:var(--cream-dim);
+  font-size:0.74rem;
+  letter-spacing:0.16em;
+  text-transform:uppercase;
+}
+.stat-num{
+  margin-top:8px;
+  font-family:'Playfair Display',serif;
+  font-size:2rem;
+  color:var(--accent-bright);
+}
+.stat-text{
+  margin-top:6px;
+  color:var(--cream-dim);
+  font-size:0.84rem;
+}
+.toolbar-container{
+  position:sticky;
+  top:0;
+  z-index:90;
+  margin:0 0 30px;
+  padding:8px 0 0;
+}
+.toolbar-shell{
+  overflow:hidden;
+  transition:border-color .25s ease,transform .25s ease,box-shadow .25s ease,background .25s ease;
+}
+.toolbar-container.is-sticky .toolbar-shell{
+  background:var(--glass-bg);
+  border-color:var(--border-hover);
+}
+.toolbar{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  gap:18px;
+  padding:20px 22px;
+}
+.toolbar-main{
+  display:flex;
+  flex-direction:column;
+  gap:16px;
+}
+.toolbar-top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  flex-wrap:wrap;
+}
+.toolbar-head{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  flex-wrap:wrap;
+}
+.toolbar-badge{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:7px 12px;
+  border-radius:999px;
+  border:1px solid rgba(212,165,55,0.1);
+  background:rgba(212,165,55,0.06);
+  color:var(--accent);
+  font-size:0.74rem;
+  letter-spacing:0.12em;
+  text-transform:uppercase;
+}
+.toolbar-badge::before{
+  content:'';
+  width:7px;
+  height:7px;
+  border-radius:50%;
+  background:currentColor;
+  box-shadow:0 0 12px currentColor;
+}
+.toolbar-title{
+  font-size:1rem;
+  font-weight:700;
+  letter-spacing:0.06em;
+}
+.view-hint{
+  color:var(--cream-dim);
+  font-size:0.82rem;
+  letter-spacing:0.04em;
+}
+.result-meta{
+  color:var(--cream-dim);
+  font-size:0.8rem;
+  letter-spacing:0.06em;
+  white-space:nowrap;
+}
+.search-box{
+  position:relative;
+}
+.search-box input{
+  width:100%;
+  padding:15px 18px 15px 48px;
+  border-radius:18px;
+  border:1px solid var(--border);
+  background:var(--surface-strong);
+  color:var(--cream);
+  font-size:0.96rem;
   font-family:'Noto Serif SC',serif;
-  font-size:0.88rem;
   outline:none;
-  transition:all 0.3s;
+  transition:all .25s ease;
+}
+.search-box input::placeholder{
+  color:var(--cream-dim);
+  opacity:0.55;
+}
+.search-box input:focus{
+  border-color:var(--accent);
+  box-shadow:0 0 0 4px rgba(212,165,55,0.06);
+}
+.search-icon{
+  position:absolute;
+  left:18px;
+  top:50%;
+  transform:translateY(-50%);
+  color:var(--accent);
+  opacity:0.7;
+  pointer-events:none;
+}
+.filter-tags{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+}
+.filter-tag{
+  padding:9px 16px;
+  border-radius:999px;
+  background:var(--tag-bg);
+  border:1px solid var(--border);
+  color:var(--cream-dim);
+  font-size:0.84rem;
+  cursor:pointer;
+  user-select:none;
+  transition:all .22s ease;
+}
+.filter-tag:hover{
+  border-color:var(--border-hover);
+  color:var(--accent-bright);
+  transform:translateY(-1px);
+}
+.filter-tag.active{
+  background:var(--tag-strong);
+  color:var(--cream);
+  border-color:rgba(212,165,55,0.26);
+}
+.toolbar-side{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  justify-content:space-between;
+  min-width:240px;
+}
+.sort-select{
+  width:100%;
+  padding:12px 14px;
+  border-radius:16px;
+  border:1px solid var(--border);
+  background:var(--surface-strong);
+  color:var(--cream);
+  font-size:0.9rem;
+  font-family:'Noto Serif SC',serif;
+  outline:none;
 }
 .sort-select:focus{
   border-color:var(--accent);
-  box-shadow:0 0 0 4px rgba(212, 165, 55, 0.05);
+  box-shadow:0 0 0 4px rgba(212,165,55,0.06);
 }
 .toolbar-link{
-  display:inline-flex;align-items:center;gap:10px;
-  padding:10px 14px;border-radius:12px;
-  background:var(--tag-bg);border:1px solid var(--border);
-  color:var(--cream-dim);text-decoration:none;font-size:0.88rem;
-  transition:all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-  letter-spacing:0.06em;user-select:none;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  width:100%;
+  padding:12px 14px;
+  border-radius:16px;
+  border:1px solid var(--border);
+  background:rgba(255,255,255,0.02);
+  text-decoration:none;
+  color:var(--cream-dim);
+  transition:all .22s ease;
 }
-.toolbar-link:hover{border-color:var(--border-hover);color:var(--accent-bright);transform:translateY(-2px)}
-.toolbar-link svg{width:18px;height:18px}
-.search-box{
-  flex:1;min-width:260px;position:relative;
+.toolbar-link:hover{
+  color:var(--accent-bright);
+  border-color:var(--border-hover);
+  transform:translateY(-1px);
 }
-.search-box input{
-  width:100%;padding:14px 16px 14px 46px;
-  background:var(--surface);border:1px solid var(--border);
-  border-radius:12px;color:var(--cream);font-size:0.95rem;
-  font-family:'Noto Serif SC',serif;
-  outline:none;transition:all 0.3s;
+.toolbar-link svg{
+  width:18px;
+  height:18px;
 }
-.search-box input::placeholder{color:var(--cream-dim);opacity:0.4}
-.search-box input:focus{
-  border-color:var(--accent);
-  box-shadow:0 0 0 4px rgba(212, 165, 55, 0.05);
-  background:var(--bg);
+.legend{
+  margin:0 0 30px;
+  padding:20px 22px;
 }
-.search-icon{
-  position:absolute;left:18px;top:50%;transform:translateY(-50%);
-  color:var(--accent);opacity:0.6;pointer-events:none;
+.section-head{
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  gap:16px;
+  margin-bottom:18px;
 }
-.filter-tags{display:flex;gap:10px;flex-wrap:wrap}
-.filter-tag{
-  padding:8px 18px;border-radius:30px;
-  background:var(--tag-bg);border:1px solid var(--border);
-  color:var(--cream-dim);font-size:0.85rem;cursor:pointer;
-  transition:all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  letter-spacing:0.04em;user-select:none;
+.section-title{
+  font-family:'Playfair Display','Noto Serif SC',serif;
+  font-size:1.35rem;
+  font-weight:900;
+  letter-spacing:0.08em;
 }
-.filter-tag:hover{border-color:var(--accent);color:var(--accent-bright);background:rgba(212, 165, 55, 0.1)}
-.filter-tag.active{background:var(--accent);border-color:var(--accent);color:var(--bg);font-weight:600}
-
-/* ===== Stats ===== */
-.stats{
-  display:flex;gap:48px;justify-content:center;margin-bottom:12px;padding:0 4px;
+.section-meta{
+  color:var(--cream-dim);
+  font-size:0.82rem;
+  letter-spacing:0.06em;
 }
-.stat-item{text-align:center;position:relative}
-.stat-item:not(:last-child)::after{
-  content:'';position:absolute;right:-24px;top:50%;transform:translateY(-50%);
-  width:1px;height:24px;background:var(--border);
-}
-.stat-num{font-family:'Playfair Display',serif;font-size:2rem;font-weight:700;color:var(--accent)}
-.stat-label{font-size:0.75rem;color:var(--cream-dim);letter-spacing:0.15em;margin-top:4px}
-
-/* ===== Card Grid ===== */
-.card-grid{
+.legend-grid{
   display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
-  gap:24px;
-  margin-top:16px;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:14px;
 }
-
-.group-section{margin-top:26px}
+.legend-item{
+  padding:18px 16px;
+  border-radius:20px;
+  background:linear-gradient(180deg,rgba(255,255,255,0.035),rgba(255,255,255,0.015));
+  border:1px solid rgba(212,165,55,0.08);
+}
+.legend-level{
+  color:var(--accent-bright);
+  font-weight:700;
+}
+.legend-desc{
+  margin-top:8px;
+  color:var(--cream-dim);
+  font-size:0.86rem;
+  line-height:1.65;
+}
+.group-section{
+  margin-top:24px;
+  padding:22px;
+}
 .group-header{
-  display:flex;align-items:flex-end;justify-content:space-between;gap:18px;
-  padding:14px 4px 10px;border-bottom:1px solid rgba(212, 165, 55, 0.08);
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  gap:18px;
+  padding:0 2px 16px;
+  border-bottom:1px solid rgba(212,165,55,0.08);
 }
 .group-title{
   font-family:'Playfair Display','Noto Serif SC',serif;
-  font-size:1.25rem;font-weight:800;letter-spacing:0.08em;
-  color:var(--cream);
+  font-size:1.3rem;
+  font-weight:800;
+  letter-spacing:0.08em;
 }
-.group-meta{color:var(--cream-dim);font-size:0.82rem;letter-spacing:0.12em;opacity:0.75}
+.group-meta{
+  color:var(--cream-dim);
+  font-size:0.82rem;
+  letter-spacing:0.08em;
+}
+.card-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(270px,1fr));
+  gap:18px;
+  margin-top:18px;
+}
 .card{
-  background:var(--card);border:1px solid var(--border);
-  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
-  border-radius:16px;padding:28px;
-  cursor:pointer;position:relative;overflow:hidden;
-  transition:all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  text-decoration:none;color:inherit;display:flex;flex-direction:column;
+  position:relative;
+  overflow:hidden;
+  padding:24px;
+  border-radius:22px;
+  background:linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.015));
+  border:1px solid rgba(212,165,55,0.1);
+  text-decoration:none;
+  color:inherit;
+  display:flex;
+  flex-direction:column;
+  min-height:236px;
+  transition:transform .28s ease,border-color .28s ease,background .28s ease,box-shadow .28s ease;
+  animation:fadeInUp .5s ease backwards;
+}
+.card::before{
+  content:'';
+  position:absolute;
+  inset:auto -40px -56px auto;
+  width:120px;
+  height:120px;
+  border-radius:50%;
+  background:radial-gradient(circle,rgba(212,165,55,0.14),transparent 70%);
+  pointer-events:none;
+}
+.card::after{
+  content:'';
+  position:absolute;
+  inset:0 auto auto 24px;
+  width:64px;
+  height:1px;
+  background:linear-gradient(90deg,var(--accent-bright),transparent);
 }
 .card:hover{
+  transform:translateY(-6px);
   border-color:var(--border-hover);
   background:var(--card-hover);
-  transform:translateY(-8px) scale(1.01);
-  box-shadow:0 20px 40px rgba(0,0,0,0.3);
+  box-shadow:0 18px 40px rgba(0,0,0,0.22);
 }
-
-.card-header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}
+.card-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:18px;
+}
 .card-num{
-  font-family:'Playfair Display',serif;font-size:0.8rem;
-  color:var(--accent-dim);letter-spacing:0.12em;
+  color:var(--accent-dim);
+  font-size:0.78rem;
+  letter-spacing:0.18em;
 }
 .card-category{
-  font-size:0.7rem;padding:4px 12px;border-radius:20px;
-  letter-spacing:0.08em;font-weight:600;
+  display:inline-flex;
+  align-items:center;
+  padding:5px 12px;
+  border-radius:999px;
+  border:1px solid transparent;
+  font-size:0.74rem;
+  letter-spacing:0.08em;
+  font-weight:700;
 }
-.cat-game-theory{background:rgba(192,57,43,0.1);color:#f07060;border:1px solid rgba(192,57,43,0.15)}
-.cat-logic{background:rgba(74,122,223,0.1);color:#80a0f0;border:1px solid rgba(74,122,223,0.15)}
-.cat-math{background:rgba(74,154,94,0.1);color:#70d090;border:1px solid rgba(74,154,94,0.15)}
-.cat-strategy{background:rgba(138,90,191,0.1);color:#b080f0;border:1px solid rgba(138,90,191,0.15)}
-.cat-programming{background:rgba(212,165,55,0.1);color:var(--accent-bright);border:1px solid rgba(212,165,55,0.15)}
-
+.cat-game-theory{background:rgba(192,57,43,0.1);color:#f07060;border-color:rgba(192,57,43,0.16)}
+.cat-logic{background:rgba(74,122,223,0.1);color:#88a8f2;border-color:rgba(74,122,223,0.16)}
+.cat-math{background:rgba(74,154,94,0.1);color:#6fd195;border-color:rgba(74,154,94,0.16)}
+.cat-strategy{background:rgba(138,90,191,0.1);color:#b285f1;border-color:rgba(138,90,191,0.16)}
+.cat-programming{background:rgba(212,165,55,0.1);color:var(--accent-bright);border-color:rgba(212,165,55,0.16)}
 .card-title{
-  font-size:1.25rem;font-weight:700;color:var(--cream);
-  margin-bottom:12px;line-height:1.3;
-  transition:color 0.3s;
+  font-size:1.28rem;
+  line-height:1.34;
+  font-weight:800;
+  color:var(--cream);
 }
-.card:hover .card-title{color:var(--accent-bright)}
-
 .card-desc{
-  font-size:0.88rem;color:var(--cream-dim);line-height:1.6;
-  margin-bottom:20px;flex-grow:1;
-  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+  margin-top:12px;
+  color:var(--cream-dim);
+  font-size:0.88rem;
+  line-clamp:3;
+  display:-webkit-box;
+  -webkit-line-clamp:3;
+  -webkit-box-orient:vertical;
+  overflow:hidden;
 }
 .card-footer{
-  display:flex;align-items:center;justify-content:space-between;
-  margin-top:auto;padding-top:16px;border-top:1px solid rgba(212, 165, 55, 0.05);
+  margin-top:auto;
+  padding-top:18px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  border-top:1px solid rgba(212,165,55,0.06);
+}
+.card-stars{
+  display:flex;
+  align-items:center;
+  gap:3px;
+}
+.star{
+  width:12px;
+  height:12px;
+  display:inline-block;
+}
+.star svg{
+  width:100%;
+  height:100%;
+  fill:var(--accent-dim);
+  opacity:0.24;
+}
+.star.filled svg{
+  fill:var(--accent-bright);
+  opacity:1;
+}
+.card-diff{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+}
+.card-diff-label{
+  color:var(--cream-dim);
+  font-size:0.72rem;
+  letter-spacing:0.08em;
 }
 .card-arrow{
-  width:24px;height:24px;display:flex;align-items:center;justify-content:center;
-  border-radius:50%;background:rgba(212, 165, 55, 0.1);
-  color:var(--accent);transition:all 0.3s;
+  width:34px;
+  height:34px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:50%;
+  background:rgba(212,165,55,0.1);
+  color:var(--accent);
+  transition:all .24s ease;
 }
-.card:hover .card-arrow{background:var(--accent);color:var(--bg);transform:translateX(4px)}
-
-/* ===== Stars ===== */
-.card-stars{display:flex;gap:3px;align-items:center}
-.star{width:12px;height:12px;display:inline-block;position:relative}
-.star svg{width:100%;height:100%;fill:var(--accent-dim);opacity:0.25;transition:all 0.3s}
-.star.filled svg{fill:var(--accent-bright);opacity:1}
-.card:hover .star.filled svg{fill:var(--accent-bright);transform:scale(1.1)}
-.card-diff-label{
-  font-size:0.7rem;color:var(--cream-dim);margin-left:8px;letter-spacing:0.04em;opacity:0.6;font-weight:600;
+.card:hover .card-arrow{
+  background:var(--accent);
+  color:var(--bg);
+  transform:translateX(3px);
 }
-
-/* ===== Empty State ===== */
 .empty-state{
-  text-align:center;padding:80px 20px;color:var(--cream-dim);
   display:none;
+  padding:72px 20px;
+  text-align:center;
+  color:var(--cream-dim);
 }
 .empty-state.show{display:block}
-.empty-icon{font-size:2.4rem;margin-bottom:16px;opacity:0.3}
-.empty-text{font-size:0.95rem}
-
-/* ===== Footer ===== */
+.empty-icon{
+  width:58px;
+  height:58px;
+  margin:0 auto 16px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:rgba(212,165,55,0.08);
+  border:1px solid rgba(212,165,55,0.12);
+  color:var(--accent);
+  font-size:1.4rem;
+}
+.loading{
+  text-align:center;
+  padding:64px 0;
+  color:var(--cream-dim);
+}
+.loading-spinner{
+  display:inline-block;
+  width:30px;
+  height:30px;
+  border:2px solid var(--border);
+  border-top-color:var(--accent);
+  border-radius:50%;
+  animation:spin .8s linear infinite;
+}
 footer{
-  text-align:center;padding:48px 0 32px;margin-top:60px;
-  color:rgba(122,116,104,0.3);font-size:0.78rem;
+  text-align:center;
+  padding:52px 0 24px;
+  margin-top:60px;
+  color:rgba(122,116,104,0.38);
+  font-size:0.78rem;
   border-top:1px solid rgba(201,148,62,0.06);
 }
 footer span{color:var(--accent-dim)}
-
-/* ===== Loading ===== */
-.loading{
-  text-align:center;padding:60px;color:var(--cream-dim);
-}
-.loading-spinner{
-  display:inline-block;width:28px;height:28px;
-  border:2px solid var(--border);border-top-color:var(--accent);
-  border-radius:50%;animation:spin 0.8s linear infinite;
-}
 @keyframes spin{to{transform:rotate(360deg)}}
-
-/* ===== Animations ===== */
 @keyframes fadeInUp{
-  from{opacity:0;transform:translateY(20px)}
+  from{opacity:0;transform:translateY(18px)}
   to{opacity:1;transform:translateY(0)}
 }
-.card{animation:fadeInUp 0.5s ease backwards}
-
-/* ===== Responsive ===== */
-@media(max-width:900px){
-  .toolbar{gap:12px}
-  .filter-tag{padding:6px 14px;font-size:0.8rem}
+@media(max-width:1080px){
+  .hero-shell{grid-template-columns:1fr}
+  .toolbar{grid-template-columns:1fr}
+  .toolbar-side{min-width:0}
+  .legend-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:760px){
+  .container{padding:0 16px 36px}
+  .hero{padding:84px 0 28px}
+  .hero-main,.hero-side,.toolbar-shell,.legend,.group-section{border-radius:24px}
+  .hero-main{padding:28px 22px}
+  .hero-side,.legend,.group-section{padding:18px}
+  .toolbar{padding:18px}
+  .toolbar-top{align-items:flex-start}
 }
 @media(max-width:640px){
-  .card-grid{grid-template-columns:1fr;gap:16px}
-  .card{padding:20px 24px}
-  .stats{gap:24px}
-  .stat-item:not(:last-child)::after{right:-12px}
-  .toolbar-container{margin:0 -16px 24px}
-  .toolbar{padding:0 16px;flex-direction:column;align-items:stretch}
-  .search-box{min-width:100%}
-  .filter-tags{justify-content:center}
+  .theme-toggle{top:16px;right:16px}
+  .legend-grid{grid-template-columns:1fr}
+  .card-grid{grid-template-columns:1fr}
+  .stats{grid-template-columns:1fr 1fr}
+  .group-header,.section-head{flex-direction:column;align-items:flex-start}
+  .result-meta{white-space:normal}
 }
 </style>
 </head>
 <body>
-
 <div class="bg-layer"></div>
 
 <div class="container">
-  <button class="theme-toggle" id="themeToggle" title="切换明暗模式">
+  <button class="theme-toggle" id="themeToggle" title="切换明暗模式" aria-label="切换明暗模式">
     <svg class="moon-icon" viewBox="0 0 24 24"><path d="M12.1,22c-4.9,0-9-3.8-9.1-8.7c0-3.1,1.5-6.1,4.1-8c0.2-0.1,0.5-0.1,0.7,0.1c0.2,0.2,0.2,0.5,0.1,0.7c-0.5,0.9-0.7,1.8-0.7,2.8c0,3.5,2.8,6.3,6.3,6.3c1,0,1.9-0.2,2.8-0.7c0.2-0.1,0.5-0.1,0.7,0.1c0.2,0.2,0.2,0.5,0.1,0.7C15.1,20.5,13.6,22,12.1,22z"/></svg>
     <svg class="sun-icon" viewBox="0 0 24 24"><path d="M12,18c-3.3,0-6-2.7-6-6s2.7-6,6-6s6,2.7,6,6S15.3,18,12,18z M12,8c-2.2,0-4,1.8-4,4s1.8,4,4,4s4-1.8,4-4S14.2,8,12,8z M11,1h2v3h-2V1z M11,20h2v3h-2V20z M3.5,4.9l2.1-2.1l1.4,1.4L4.9,6.3L3.5,4.9z M17,18.4l2.1-2.1l1.4,1.4l-2.1,2.1L17,18.4z M1,11h3v2H1V11z M20,11h3v2h-3V11z M4.9,17.7l2.1,2.1l-1.4,1.4l-2.1-2.1L4.9,17.7z M18.4,5.6l2.1-2.1l1.4,1.4l-2.1,2.1L18.4,5.6z"/></svg>
   </button>
-  <header>
-    <h1 class="site-title">Logic Puzzles</h1>
-    <p class="site-subtitle">经 典 逻 辑 思 维 挑 战</p>
-    <div class="header-links">
-      <a class="header-link" href="outline.html">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M8 6h13M8 12h13M8 18h13"/><path d="M3 6h.01M3 12h.01M3 18h.01"/>
-        </svg>
-        <span>目录大纲</span>
-      </a>
+
+  <header class="hero">
+    <div class="hero-shell">
+      <section class="hero-main">
+        <span class="eyebrow">Logic Archive</span>
+        <h1 class="site-title">逻辑题集</h1>
+        <p class="site-subtitle">收录经典逻辑推理、数学思辨与博弈策略问题。以数字档案馆的严谨标准，重塑经典思维谜题的阅读与推演体验，助您随时进入深度的思考心流。</p>
+        <div class="hero-divider"></div>
+        <div class="hero-actions">
+          <a class="hero-link primary" href="#problemExplorer">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+            <span>开始浏览</span>
+          </a>
+          <a class="hero-link secondary" href="outline.html">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M8 6h13M8 12h13M8 18h13"/><path d="M3 6h.01M3 12h.01M3 18h.01"/>
+            </svg>
+            <span>目录大纲</span>
+          </a>
+        </div>
+        <div class="hero-notes">
+          <span class="hero-note">题库持续扩充</span>
+          <span class="hero-note">支持明暗主题</span>
+          <span class="hero-note">按分类与难度浏览</span>
+        </div>
+        <div class="hero-quote">
+          <div class="hero-quote-text">好的逻辑题，不只是“有答案”，而是让人在一步步排除、回看与顿悟中，感到结构本身的美。</div>
+          <div class="hero-quote-meta">Curated Thinking Collection</div>
+        </div>
+      </section>
+
+      <aside class="hero-side">
+        <div class="side-kicker">Curated Collection</div>
+        <div class="side-title">构建纯粹的逻辑推演空间，探寻思维的极致边界。</div>
+        <div class="side-text">摒弃冗余干扰，专注于问题本身的数学结构与博弈本质。无论是轻量级思维热身，还是深度策略推演，这里都是您的专属思考档案馆。</div>
+        <div class="curation-list">
+          <a class="curation-item" href="#problemExplorer">
+            <div class="curation-copy">
+              <div class="curation-name">循序渐进的思维训练</div>
+              <div class="curation-desc">按难度矩阵自由探索，逐步攀升认知阶梯。</div>
+            </div>
+            <span class="curation-arrow">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </span>
+          </a>
+          <a class="curation-item" href="outline.html">
+            <div class="curation-copy">
+              <div class="curation-name">全局视角的知识图谱</div>
+              <div class="curation-desc">通过结构化大纲，俯瞰所有题型与核心逻辑流派。</div>
+            </div>
+            <span class="curation-arrow">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </span>
+          </a>
+        </div>
+        <div class="stats" id="stats">
+          <div class="stat-card">
+            <div class="stat-label">题目总数</div>
+            <div class="stat-num" id="totalCount">-</div>
+            <div class="stat-text">持续补充中</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">分类数</div>
+            <div class="stat-num" id="catCount">-</div>
+            <div class="stat-text">覆盖多种思维模型</div>
+          </div>
+        </div>
+      </aside>
     </div>
   </header>
 
-  <div class="stats" id="stats">
-    <div class="stat-item"><div class="stat-num" id="totalCount">-</div><div class="stat-label">题目总数</div></div>
-    <div class="stat-item"><div class="stat-num" id="catCount">-</div><div class="stat-label">分类数</div></div>
-  </div>
-
-  <details class="legend" id="difficultyLegend" style="margin:10px auto 18px;max-width:920px">
-    <summary style="cursor:pointer;color:var(--cream-dim);letter-spacing:0.12em;font-size:0.86rem;user-select:none">
-      难度说明（1-10）· 点击展开
-    </summary>
-    <div style="margin-top:12px;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px">
-      <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px 14px 12px">
-        <div style="color:var(--accent);font-weight:700">入门（1-3）</div>
-        <div style="color:var(--cream-dim);font-size:0.86rem;margin-top:6px;line-height:1.6">单点洞见，推理链短，适合热身。</div>
-      </div>
-      <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px 14px 12px">
-        <div style="color:var(--accent);font-weight:700">进阶（4-6）</div>
-        <div style="color:var(--cream-dim);font-size:0.86rem;margin-top:6px;line-height:1.6">多步排除与信息整合，开始有结构。</div>
-      </div>
-      <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px 14px 12px">
-        <div style="color:var(--accent);font-weight:700">挑战（7-8）</div>
-        <div style="color:var(--cream-dim);font-size:0.86rem;margin-top:6px;line-height:1.6">公共知识/分类讨论明显，易绕。</div>
-      </div>
-      <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px 14px 12px">
-        <div style="color:var(--accent);font-weight:700">大师（9-10）</div>
-        <div style="color:var(--cream-dim);font-size:0.86rem;margin-top:6px;line-height:1.6">高信息量策略或复杂结构，建议沉浸推演。</div>
-      </div>
-    </div>
-  </details>
-
   <div class="toolbar-container" id="toolbarContainer">
-    <div class="toolbar">
-      <div class="search-box">
-        <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="21" y2="21"/></svg>
-        <input type="text" id="searchInput" placeholder="搜索题目标题或描述..." autocomplete="off">
-      </div>
-      <div class="filter-tags" id="filterTags">
-        <span class="filter-tag active" data-cat="all">全部题目</span>
-      </div>
-      <div class="toolbar-right">
-        <span class="view-hint" id="viewHint">全部：按分类分组 · 组内按难度排序</span>
-        <select class="sort-select" id="sortSelect" title="排序方式">
-          <option value="diff-asc">难度：低 → 高</option>
-          <option value="diff-desc">难度：高 → 低</option>
-          <option value="id-asc">原题编号：小 → 大</option>
-        </select>
-        <a class="toolbar-link" href="outline.html" title="查看整体目录大纲">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M8 6h13M8 12h13M8 18h13"/><path d="M3 6h.01M3 12h.01M3 18h.01"/>
-          </svg>
-          <span>目录大纲</span>
-        </a>
+    <div class="toolbar-shell" id="problemExplorer">
+      <div class="toolbar">
+        <div class="toolbar-main">
+          <div class="toolbar-top">
+            <div class="toolbar-head">
+              <span class="toolbar-badge">Collection View</span>
+              <div>
+              <div class="toolbar-title">题目浏览</div>
+              <div class="view-hint" id="viewHint">全部：按分类分组，组内按当前排序方式展示</div>
+              </div>
+            </div>
+            <div class="result-meta" id="resultMeta">准备载入题库...</div>
+          </div>
+          <div class="search-box">
+            <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3">
+              <circle cx="11" cy="11" r="7"></circle>
+              <line x1="16.5" y1="16.5" x2="21" y2="21"></line>
+            </svg>
+            <input type="text" id="searchInput" placeholder="搜索题目标题或描述..." autocomplete="off">
+          </div>
+          <div class="filter-tags" id="filterTags">
+            <span class="filter-tag active" data-cat="all">全部题目</span>
+          </div>
+        </div>
+
+        <div class="toolbar-side">
+          <select class="sort-select" id="sortSelect" title="排序方式">
+            <option value="diff-asc">难度：低 → 高</option>
+            <option value="diff-desc">难度：高 → 低</option>
+            <option value="id-asc">原题编号：小 → 大</option>
+          </select>
+          <a class="toolbar-link" href="outline.html" title="查看整体目录大纲">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M8 6h13M8 12h13M8 18h13"/><path d="M3 6h.01M3 12h.01M3 18h.01"/>
+            </svg>
+            <span>查看目录大纲</span>
+          </a>
+        </div>
       </div>
     </div>
   </div>
 
-  <div id="grid"></div>
+  <section class="legend" aria-labelledby="legendTitle">
+    <div class="section-head">
+      <div>
+        <div class="section-title" id="legendTitle">难度分层</div>
+        <div class="section-meta">difficulty 1 - 10 的阅读建议</div>
+      </div>
+    </div>
+    <div class="legend-grid">
+      <div class="legend-item">
+        <div class="legend-level">入门（1-3）</div>
+        <div class="legend-desc">单点洞见，推理链短，适合快速进入状态。</div>
+      </div>
+      <div class="legend-item">
+        <div class="legend-level">进阶（4-6）</div>
+        <div class="legend-desc">需要整合信息与多步排除，开始体现结构感。</div>
+      </div>
+      <div class="legend-item">
+        <div class="legend-level">挑战（7-8）</div>
+        <div class="legend-desc">公共知识、逆向思考与分类讨论更加明显。</div>
+      </div>
+      <div class="legend-item">
+        <div class="legend-level">大师（9-10）</div>
+        <div class="legend-desc">高信息量和复杂策略并存，适合沉浸式推演。</div>
+      </div>
+    </div>
+  </section>
+
+  <main id="grid"></main>
+
   <div class="empty-state" id="emptyState">
     <div class="empty-icon">?</div>
-    <div class="empty-text">没有找到匹配的题目</div>
+    <div class="empty-text">没有找到匹配的题目，试试更短的关键词或切换分类。</div>
   </div>
 
   <div class="loading" id="loading">
     <div class="loading-spinner"></div>
   </div>
 
-  <footer><span>&#9670;</span> 逻辑题集 &mdash; 经典思维挑战 <span>&#9670;</span></footer>
+  <footer><span>&#9670;</span> 逻辑题集 · 高级简约版首页 <span>&#9670;</span></footer>
 </div>
 
 <script>
@@ -417,9 +998,9 @@ footer span{color:var(--accent-dim)}
   var loading = document.getElementById('loading');
   var totalCount = document.getElementById('totalCount');
   var catCount = document.getElementById('catCount');
-  var themeToggle = document.getElementById('themeToggle');
   var sortSelect = document.getElementById('sortSelect');
   var viewHint = document.getElementById('viewHint');
+  var resultMeta = document.getElementById('resultMeta');
 
   // 题目数据只维护一份：data/problems.json（本地 file:// 预览时由 data/problems.js 提供兜底）
   var problems = [];
@@ -427,7 +1008,6 @@ footer span{color:var(--accent-dim)}
   var searchQuery = '';
   var sortMode = 'diff-asc';
 
-  // Category display names
   var catNames = {
     'game-theory': '博弈论',
     'logic': '逻辑推理',
@@ -437,22 +1017,23 @@ footer span{color:var(--accent-dim)}
   };
 
   /**
-   * 加载题目数据
-   * 优先尝试从 JSON 文件加载，如果失败（如本地 file:// 协议限制）则使用预埋数据
+   * 加载题目数据。
+   * 优先尝试 JSON，若在 file:// 场景下受限，则回退到预埋数据。
    */
   function loadJSON() {
-    // 如果已经在本地 file:// 协议打开，fetch 可能会被浏览器拦截
     var isLocal = window.location.protocol === 'file:';
-
     var paths = ['data/problems.json', './data/problems.json'];
     var attempts = 0;
 
+    /**
+     * 依次尝试不同的数据路径。
+     */
     function tryLoad() {
       if (attempts >= paths.length) {
-        // fetch 失败：给出清晰错误提示
-        loading.innerHTML = '<p style="color:#c0392b">无法加载题目数据，请确认 data/problems.json 存在，并建议使用本地 HTTP 服务预览（避免 file:// 限制）</p>';
+        loading.innerHTML = '<p style="color:#c0392b">无法加载题目数据，请确认 `data/problems.json` 存在，并建议使用本地 HTTP 服务预览。</p>';
         return;
       }
+
       var path = paths[attempts];
       attempts++;
       fetch(path).then(function(r) {
@@ -468,7 +1049,6 @@ footer span{color:var(--accent-dim)}
     }
 
     if (isLocal && window.__PROBLEMS__ && window.__PROBLEMS__.length) {
-      // file:// 协议下用 data/problems.js 兜底（数据源仍为 problems.json 的构建产物）
       problems = window.__PROBLEMS__;
       loading.style.display = 'none';
       init();
@@ -478,20 +1058,26 @@ footer span{color:var(--accent-dim)}
     tryLoad();
   }
 
+  /**
+   * 初始化首页数据、分类标签和首次渲染。
+   */
   function init() {
+    var cats = {};
+    var catOrder = ['logic', 'math', 'game-theory', 'strategy', 'programming'];
+    var orderedCats;
+
     totalCount.textContent = problems.length;
 
-    // Extract categories
-    var cats = {};
     problems.forEach(function(p) {
       if (p.category) cats[p.category] = true;
     });
     catCount.textContent = Object.keys(cats).length;
 
-    // Build filter tags（按固定顺序展示分类）
-    var catOrder = ['logic', 'math', 'game-theory', 'strategy', 'programming'];
-    var orderedCats = catOrder.filter(function(c){ return cats[c]; });
-    Object.keys(cats).forEach(function(c){
+    orderedCats = catOrder.filter(function(c) {
+      return cats[c];
+    });
+
+    Object.keys(cats).forEach(function(c) {
       if (orderedCats.indexOf(c) === -1) orderedCats.push(c);
     });
 
@@ -507,143 +1093,195 @@ footer span{color:var(--accent-dim)}
     bindEvents();
   }
 
+  /**
+   * 返回当前排序说明文案。
+   * @returns {string}
+   */
+  function getSortLabel() {
+    if (sortMode === 'id-asc') return '按原题编号';
+    if (sortMode === 'diff-desc') return '按难度递减';
+    return '按难度递增';
+  }
+
+  /**
+   * 更新当前筛选结果的辅助文案。
+   * @param {number} count 当前结果数量
+   */
+  function updateResultMeta(count) {
+    var catLabel = activeCategory === 'all' ? '全部分类' : (catNames[activeCategory] || activeCategory);
+    if (!resultMeta) return;
+    resultMeta.textContent = '当前 ' + count + ' 题 · ' + catLabel + ' · ' + getSortLabel();
+  }
+
+  /**
+   * 对题目列表执行排序。
+   * @param {Object} a
+   * @param {Object} b
+   * @returns {number}
+   */
+  function sortComparator(a, b) {
+    var da = Number(a.difficulty || 5);
+    var db = Number(b.difficulty || 5);
+    var ia = Number(a.id || 0);
+    var ib = Number(b.id || 0);
+
+    if (sortMode === 'id-asc') return ia - ib;
+    if (sortMode === 'diff-desc') {
+      if (da !== db) return db - da;
+      return ia - ib;
+    }
+    if (da !== db) return da - db;
+    return ia - ib;
+  }
+
+  /**
+   * 创建难度星级 HTML。
+   * @param {number} difficulty
+   * @returns {string}
+   */
+  function createStarsHTML(difficulty) {
+    var starsHTML = '<div class="card-diff"><div class="card-stars">';
+    var s;
+
+    for (s = 1; s <= 10; s++) {
+      starsHTML += '<span class="star' + (s <= difficulty ? ' filled' : '') + '"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></span>';
+    }
+
+    starsHTML += '</div><span class="card-diff-label">难度 ' + difficulty + '</span></div>';
+    return starsHTML;
+  }
+
+  /**
+   * 创建题目卡片。
+   * @param {Object} problem 题目对象
+   * @param {number} idx 动画序号
+   * @param {number} displayNo 展示编号
+   * @returns {HTMLElement}
+   */
+  function createCard(problem, idx, displayNo) {
+    var card = document.createElement('a');
+    var catClass = 'cat-' + (problem.category || 'logic');
+    var catLabel = catNames[problem.category] || problem.category || '逻辑';
+    var diff = Number(problem.difficulty || 5);
+
+    card.className = 'card';
+    card.href = problem.file;
+    card.style.animationDelay = (idx * 0.04) + 's';
+    card.setAttribute('data-id', problem.id);
+
+    card.innerHTML =
+      '<div class="card-header">' +
+        '<span class="card-num">CASE #' + String(displayNo).padStart(2, '0') + '</span>' +
+        '<span class="card-category ' + catClass + '">' + catLabel + '</span>' +
+      '</div>' +
+      '<div class="card-title">' + escapeHTML(problem.title) + '</div>' +
+      (problem.description ? '<div class="card-desc">' + escapeHTML(problem.description) + '</div>' : '') +
+      '<div class="card-footer">' +
+        createStarsHTML(diff) +
+        '<div class="card-arrow">' +
+          '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>' +
+        '</div>' +
+      '</div>';
+
+    return card;
+  }
+
+  /**
+   * 渲染题目区域。
+   * - 全部分类时分组展示
+   * - 指定分类时单列表展示
+   */
   function render() {
     var filtered = problems.filter(function(p) {
+      var title = String(p.title || '').toLowerCase();
+      var desc = String(p.description || '').toLowerCase();
       var matchCat = activeCategory === 'all' || p.category === activeCategory;
-      var matchSearch = !searchQuery ||
-        p.title.toLowerCase().indexOf(searchQuery) !== -1 ||
-        (p.description && p.description.toLowerCase().indexOf(searchQuery) !== -1);
+      var matchSearch = !searchQuery || title.indexOf(searchQuery) !== -1 || desc.indexOf(searchQuery) !== -1;
       return matchCat && matchSearch;
     });
+    var catOrder = ['logic', 'math', 'game-theory', 'strategy', 'programming'];
+    var cardIndex = 0;
 
     grid.innerHTML = '';
 
     if (filtered.length === 0) {
+      updateResultMeta(0);
       emptyState.classList.add('show');
       return;
     }
     emptyState.classList.remove('show');
-
-    /**
-     * 题目排序：按难度（低→高），再按 id。
-     * @param {Object} a
-     * @param {Object} b
-     * @returns {number}
-     */
-    function sortComparator(a, b) {
-      var da = Number(a.difficulty || 5);
-      var db = Number(b.difficulty || 5);
-      var ia = Number(a.id || 0);
-      var ib = Number(b.id || 0);
-      if (sortMode === 'id-asc') return ia - ib;
-      if (sortMode === 'diff-desc') {
-        if (da !== db) return db - da;
-        return ia - ib;
-      }
-      // diff-asc default
-      if (da !== db) return da - db;
-      return ia - ib;
-    }
-
-    /**
-     * 创建题目卡片。
-     * @param {Object} p 题目
-     * @param {number} idx 全局序号（用于动画延迟）
-     * @returns {HTMLElement}
-     */
-    function createCard(p, idx, displayNo) {
-      var card = document.createElement('a');
-      card.className = 'card';
-      card.href = p.file;
-      card.style.animationDelay = (idx * 0.05) + 's';
-      card.setAttribute('data-id', p.id);
-
-      var catClass = 'cat-' + (p.category || 'logic');
-      var catLabel = catNames[p.category] || p.category || '逻辑';
-      var diff = p.difficulty || 5;
-
-      var starsHTML = '<div class="card-stars">';
-      for (var s = 1; s <= 10; s++) {
-        starsHTML += '<span class="star' + (s <= diff ? ' filled' : '') + '"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></span>';
-      }
-      starsHTML += '</div>';
-
-      card.innerHTML =
-        '<div class="card-header">' +
-          '<span class="card-num">CASE #' + String(displayNo).padStart(2, '0') + '</span>' +
-          '<span class="card-category ' + catClass + '">' + catLabel + '</span>' +
-        '</div>' +
-        '<div class="card-title">' + escapeHTML(p.title) + '</div>' +
-        (p.description ? '<div class="card-desc">' + escapeHTML(p.description) + '</div>' : '') +
-        '<div class="card-footer">' +
-          starsHTML +
-          '<div class="card-arrow">' +
-            '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>' +
-          '</div>' +
-        '</div>';
-      return card;
-    }
-
-    // 分类 + 难度 排布：
-    // - 选择“全部”时：按分类分组展示；组内按难度排序
-    // - 选择具体分类时：直接按难度排序
-    var catOrder = ['logic', 'math', 'game-theory', 'strategy', 'programming'];
-    var cardIndex = 0;
+    updateResultMeta(filtered.length);
 
     if (activeCategory === 'all') {
-      if (viewHint) viewHint.textContent = '全部：按分类分组 · 组内按排序方式';
       var groupMap = {};
+
+      if (viewHint) viewHint.textContent = '全部：按分类分组，组内' + getSortLabel();
+
       filtered.forEach(function(p) {
-        var c = p.category || 'logic';
-        if (!groupMap[c]) groupMap[c] = [];
-        groupMap[c].push(p);
+        var category = p.category || 'logic';
+        if (!groupMap[category]) groupMap[category] = [];
+        groupMap[category].push(p);
       });
 
-      // 额外分类（不在预设顺序里的）追加在末尾
       Object.keys(groupMap).forEach(function(c) {
         if (catOrder.indexOf(c) === -1) catOrder.push(c);
       });
 
       catOrder.forEach(function(cat) {
+        var header;
         var list = groupMap[cat];
+        var sec;
+        var listGrid;
+
         if (!list || !list.length) return;
         list.sort(sortComparator);
 
-        var sec = document.createElement('div');
+        sec = document.createElement('section');
         sec.className = 'group-section';
 
-        var header = document.createElement('div');
+        header = document.createElement('div');
         header.className = 'group-header';
-        var sortLabel = sortMode === 'id-asc' ? '按原题编号' : (sortMode === 'diff-desc' ? '按难度递减' : '按难度递增');
         header.innerHTML =
           '<div class="group-title">' + escapeHTML(catNames[cat] || cat) + '</div>' +
-          '<div class="group-meta">共 ' + list.length + ' 题 · ' + sortLabel + '</div>';
-        sec.appendChild(header);
+          '<div class="group-meta">共 ' + list.length + ' 题 · ' + getSortLabel() + '</div>';
 
-        var g = document.createElement('div');
-        g.className = 'card-grid';
+        listGrid = document.createElement('div');
+        listGrid.className = 'card-grid';
+
         list.forEach(function(p) {
-          g.appendChild(createCard(p, cardIndex, cardIndex + 1));
+          listGrid.appendChild(createCard(p, cardIndex, cardIndex + 1));
           cardIndex++;
         });
-        sec.appendChild(g);
 
+        sec.appendChild(header);
+        sec.appendChild(listGrid);
         grid.appendChild(sec);
       });
+
       return;
     }
 
-    if (viewHint) viewHint.textContent = '分类：单列表展示 · 按排序方式';
+    if (viewHint) viewHint.textContent = (catNames[activeCategory] || '当前分类') + '：单列表展示，' + getSortLabel();
     filtered.sort(sortComparator);
-    var singleGrid = document.createElement('div');
-    singleGrid.className = 'card-grid';
-    filtered.forEach(function(p) {
-      singleGrid.appendChild(createCard(p, cardIndex, cardIndex + 1));
-      cardIndex++;
-    });
-    grid.appendChild(singleGrid);
+
+    (function() {
+      var singleGrid = document.createElement('div');
+      singleGrid.className = 'card-grid';
+
+      filtered.forEach(function(p) {
+        singleGrid.appendChild(createCard(p, cardIndex, cardIndex + 1));
+        cardIndex++;
+      });
+
+      grid.appendChild(singleGrid);
+    })();
   }
 
+  /**
+   * 转义文本，避免动态内容进入 HTML 时破坏结构。
+   * @param {string} str
+   * @returns {string}
+   */
   function escapeHTML(str) {
     var div = document.createElement('div');
     div.textContent = str;
@@ -651,52 +1289,41 @@ footer span{color:var(--accent-dim)}
   }
 
   /**
-   * 绑定交互事件
+   * 绑定首页交互事件。
    */
   function bindEvents() {
-    // Sticky Toolbar
     var toolbarContainer = document.getElementById('toolbarContainer');
+
     window.addEventListener('scroll', function() {
-      if (window.scrollY > 200) {
+      if (window.scrollY > 180) {
         toolbarContainer.classList.add('is-sticky');
       } else {
         toolbarContainer.classList.remove('is-sticky');
       }
     });
 
-    // 主题切换逻辑已抽到 assets/theme.js
-
-    // 搜索功能
     searchInput.addEventListener('input', function() {
       searchQuery = this.value.trim().toLowerCase();
       render();
     });
 
-    // Filter tags
     filterTags.addEventListener('click', function(e) {
       var tag = e.target.closest('.filter-tag');
       if (!tag) return;
-      var cat = tag.getAttribute('data-cat');
-      activeCategory = cat;
+
+      activeCategory = tag.getAttribute('data-cat');
       filterTags.querySelectorAll('.filter-tag').forEach(function(t) {
-        t.classList.toggle('active', t.getAttribute('data-cat') === cat);
+        t.classList.toggle('active', t.getAttribute('data-cat') === activeCategory);
       });
       render();
     });
 
-    // 排序选择
-    if (sortSelect) {
-      sortSelect.addEventListener('change', function() {
-        sortMode = this.value;
-        render();
-      });
-    }
+    sortSelect.addEventListener('change', function() {
+      sortMode = this.value;
+      render();
+    });
   }
 
-  // Start
-  // 说明：
-  // - data/problems.js 使用了 defer，会在 HTML 解析完成后执行。
-  // - 这里用 DOMContentLoaded 触发初始化，确保 __PROBLEMS__ 已经可用，从而兼容 file:// 打开。
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', loadJSON);
   } else {
