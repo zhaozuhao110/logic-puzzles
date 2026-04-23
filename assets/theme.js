@@ -881,9 +881,175 @@
     hero.insertBefore(hookEl, hero.firstChild);
   }
 
+  /**
+   * 为所有题目页自动注入“上一篇/下一篇 + 同类推荐 + 返回题库/回到顶部”区块。
+   * - 目标：统一补齐页尾串联链路，避免阅读死角
+   * - 数据来源：
+   *   1) 优先 fetch ../data/problems.json（http(s) 场景）
+   *   2) 若 fetch 失败，则加载 ../data/problems.js（file:// 场景）并读取 window.__PROBLEMS__
+   */
+  function injectProblemNavigation() {
+    var path = String(window.location.pathname || window.location.href || "");
+    if (path.indexOf("/problems/") === -1 && path.indexOf("problems/") === -1) return;
+
+    // 已存在则不重复注入（例如部分页面已手写“继续探索”）
+    if (document.getElementById("more")) return;
+
+    var main = document.getElementById("main") || document.querySelector("main.container") || document.querySelector(".container");
+    if (!main) return;
+    // 兜底：若页面尚未切换到 main#main 结构，也确保锚点可用
+    if (!main.id) main.id = "main";
+
+    /**
+     * 动态加载脚本（用于 file:// 兜底加载 problems.js）
+     * @param {string} src 脚本地址
+     * @param {Function} cb 回调
+     */
+    function loadScript(src, cb) {
+      var s = document.createElement("script");
+      s.src = src;
+      s.defer = true;
+      s.onload = function () { if (cb) cb(); };
+      s.onerror = function () { if (cb) cb(); };
+      document.head.appendChild(s);
+    }
+
+    /**
+     * 获取题目列表
+     * @param {(list:Array)=>void} cb 回调
+     */
+    function loadProblems(cb) {
+      if (window.__PROBLEMS__ && Array.isArray(window.__PROBLEMS__) && window.__PROBLEMS__.length) {
+        cb(window.__PROBLEMS__);
+        return;
+      }
+
+      var jsonUrl = "../data/problems.json";
+      try {
+        fetch(jsonUrl)
+          .then(function (r) { return r.json(); })
+          .then(function (list) { cb(list || []); })
+          .catch(function () {
+            loadScript("../data/problems.js", function () {
+              cb(window.__PROBLEMS__ || []);
+            });
+          });
+      } catch (e) {
+        loadScript("../data/problems.js", function () {
+          cb(window.__PROBLEMS__ || []);
+        });
+      }
+    }
+
+    /**
+     * 构建同类推荐卡
+     * @param {{title:string,file:string,description:string}} item 题目
+     * @returns {string} HTML
+     */
+    function buildRecoCard(item) {
+      var href = String(item.file || "").split("/").pop();
+      return (
+        '<a class="reco-card" href="' + href + '">' +
+          '<span class="reco-title">' + (item.title || "") + "</span>" +
+          '<span class="reco-desc">' + (item.description || "") + "</span>" +
+        "</a>"
+      );
+    }
+
+    /**
+     * 构建上一篇/下一篇卡
+     * @param {"上一篇"|"下一篇"} label 标签
+     * @param {{title:string,file:string,description:string}} item 题目
+     * @returns {string} HTML
+     */
+    function buildPagerCard(label, item) {
+      var href = String(item.file || "").split("/").pop();
+      return (
+        '<a class="pager-card" href="' + href + '">' +
+          '<span class="pager-kicker">' + label + "</span>" +
+          '<span class="pager-title">' + (item.title || "") + "</span>" +
+          '<span class="pager-desc">' + (item.description || "") + "</span>" +
+        "</a>"
+      );
+    }
+
+    loadProblems(function (list) {
+      if (!Array.isArray(list) || !list.length) return;
+
+      var currentFileName = String(path).split("/").pop();
+      var currentKey = "problems/" + currentFileName;
+      var idx = -1;
+      for (var i = 0; i < list.length; i++) {
+        if (String(list[i].file || "") === currentKey) { idx = i; break; }
+      }
+      if (idx < 0) return;
+
+      var current = list[idx];
+      var prev = list[(idx - 1 + list.length) % list.length];
+      var next = list[(idx + 1) % list.length];
+
+      // 同类推荐：优先同 category、difficulty 相近
+      var same = list.filter(function (x) {
+        if (!x || !x.file) return false;
+        if (x.file === current.file) return false;
+        if (x.file === prev.file || x.file === next.file) return false;
+        return x.category && current.category && x.category === current.category;
+      });
+      same.sort(function (a, b) {
+        var da = Math.abs((a.difficulty || 0) - (current.difficulty || 0));
+        var db = Math.abs((b.difficulty || 0) - (current.difficulty || 0));
+        if (da !== db) return da - db;
+        return (a.id || 0) - (b.id || 0);
+      });
+
+      var recos = same.slice(0, 3);
+      if (recos.length < 3) {
+        var fallback = list.filter(function (x) {
+          if (!x || !x.file) return false;
+          if (x.file === current.file) return false;
+          if (x.file === prev.file || x.file === next.file) return false;
+          return true;
+        });
+        for (var j = 0; j < fallback.length && recos.length < 3; j++) {
+          recos.push(fallback[j]);
+        }
+      }
+
+      var section =
+        '<section id="more" class="more">' +
+          '<span class="label">继续探索 / Next</span>' +
+          '<h2 class="heading">继续做题</h2>' +
+          '<nav class="pager" aria-label="上一篇下一篇">' +
+            buildPagerCard("上一篇", prev) +
+            buildPagerCard("下一篇", next) +
+          "</nav>" +
+          '<div class="reco">' +
+            '<h3 class="subheading">同类推荐</h3>' +
+            '<div class="reco-grid">' +
+              (recos[0] ? buildRecoCard(recos[0]) : "") +
+              (recos[1] ? buildRecoCard(recos[1]) : "") +
+              (recos[2] ? buildRecoCard(recos[2]) : "") +
+            "</div>" +
+          "</div>" +
+          '<div class="more-actions">' +
+            '<a class="btn" href="../index.html">返回题库</a>' +
+            '<a class="btn" href="#main">回到顶部</a>' +
+          "</div>" +
+        "</section>";
+
+      var footer = main.querySelector("footer");
+      if (footer) {
+        footer.insertAdjacentHTML("beforebegin", section);
+      } else {
+        main.insertAdjacentHTML("beforeend", section);
+      }
+    });
+  }
+
   setTheme(getPreferredTheme());
   bindToggle();
   applyProblemBackgroundVariant();
   applyProblemStoryHook();
   applyProblemHeroMark();
+  injectProblemNavigation();
 })();

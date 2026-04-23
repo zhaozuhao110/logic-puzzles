@@ -3,8 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="两句关于未来与过去的对话，联立时间差求出兄弟两人的当前年龄。">
   <title>计算年龄（一） — 经典逻辑推理</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Noto+Serif+SC:wght@300;400;600;700;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../assets/base.css">
   <link rel="stylesheet" href="../assets/problem-gold.css">
@@ -13,17 +15,18 @@
 </head>
 <body>
   <div class="bg"></div>
+  <a class="skip-link" href="#main">跳到正文</a>
 
   <a href="../index.html" class="back-link">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
     <span>返回首页</span>
   </a>
-  <button class="theme-toggle-sub" id="themeToggle" title="切换明暗模式">
+  <button class="theme-toggle-sub" id="themeToggle" title="切换明暗模式" aria-label="切换明暗模式">
     <svg class="moon-icon" viewBox="0 0 24 24"><path d="M12.1,22c-4.9,0-9-3.8-9.1-8.7c0-3.1,1.5-6.1,4.1-8c0.2-0.1,0.5-0.1,0.7,0.1c0.2,0.2,0.2,0.5,0.1,0.7c-0.5,0.9-0.7,1.8-0.7,2.8c0,3.5,2.8,6.3,6.3,6.3c1,0,1.9-0.2,2.8-0.7c0.2-0.1,0.5-0.1,0.7,0.1c0.2,0.2,0.2,0.5,0.1,0.7C15.1,20.5,13.6,22,12.1,22z"/></svg>
     <svg class="sun-icon" viewBox="0 0 24 24"><path d="M12,18c-3.3,0-6-2.7-6-6s2.7-6,6-6s6,2.7,6,6S15.3,18,12,18z M12,8c-2.2,0-4,1.8-4,4s1.8,4,4,4s4-1.8,4-4S14.2,8,12,8z M11,1h2v3h-2V1z M11,20h2v3h-2V20z M3.5,4.9l2.1-2.1l1.4,1.4L4.9,6.3L3.5,4.9z M17,18.4l2.1-2.1l1.4,1.4l-2.1,2.1L17,18.4z M1,11h3v2H1V11z M20,11h3v2h-3V11z M4.9,17.7l2.1,2.1l-1.4,1.4l-2.1-2.1L4.9,17.7z M18.4,5.6l2.1-2.1l1.4,1.4l-2.1,2.1L18.4,5.6z"/></svg>
   </button>
 
-  <div class="container">
+  <main class="container" id="main">
     <section class="hero">
       <div class="hero-icon" aria-hidden="true">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
@@ -33,59 +36,73 @@
         </svg>
       </div>
       <h1>计算年龄（一）</h1>
-      <p class="subtitle">age-puzzle-1</p>
+      <p class="subtitle">年龄推理 | 时间差建模 | 适合入门</p>
       <div class="hero-question">
-        小明对哥哥说：<strong>“我长到你现在这么大的年龄时，你就 31 岁了。”</strong><br>
-        哥哥说：<strong>“是啊，我像你这么大年龄时，你只有 1 岁呢。”</strong><br><br>
+        小明对哥哥说：<strong>"我长到你现在这么大的年龄时，你就 31 岁了。"</strong><br>
+        哥哥说：<strong>"是啊，我像你这么大年龄时，你只有 1 岁呢。"</strong><br><br>
         <strong>问：小明和哥哥现在各几岁？</strong>
       </div>
     </section>
 
     <section id="analysis">
       <span class="label">逻辑解析 / analysis</span>
-      <h2 class="heading">两段“时间差”= 两个方程：设未知，直接联立</h2>
+      <h2 class="heading">两段"时间差"= 两个方程：设未知，直接联立</h2>
       <div class="card">
         <div class="nav">
           <div class="status" id="stepStatus">步骤 1 / 3</div>
+          <div class="step-dots" id="stepDots" role="tablist" aria-label="步骤进度">
+            <button class="dot active" role="tab" aria-selected="true" aria-label="步骤 1" data-step="1"></button>
+            <button class="dot" role="tab" aria-selected="false" aria-label="步骤 2" data-step="2"></button>
+            <button class="dot" role="tab" aria-selected="false" aria-label="步骤 3" data-step="3"></button>
+          </div>
           <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end">
-            <button class="btn" id="btnPrev" disabled>上一步</button>
-            <button class="btn" id="btnNext">下一步</button>
+            <button class="btn btn-ghost" id="btnAll" title="显示全部步骤">全部</button>
+            <button class="btn" id="btnPrev" disabled aria-label="上一步">上一步</button>
+            <button class="btn" id="btnNext" aria-label="下一步">下一步</button>
           </div>
         </div>
 
-        <div class="steps" id="steps">
-          <div class="step-card" data-step="1">
+        <div class="steps" id="steps" aria-live="polite" aria-atomic="true">
+          <div class="step-card visible active" data-step="1">
             <div class="step-title"><div class="badge">1</div><h3>设小明 x 岁，哥哥 y 岁（当前）</h3></div>
-            <p>题目给的是两个“未来/过去的对照”，最稳妥的做法是设当前年龄为变量：小明 x，哥哥 y。</p>
+            <p>题目给的是两个"未来/过去的对照"，最稳妥的做法是设当前年龄为变量：小明 x，哥哥 y。</p>
           </div>
 
           <div class="step-card" data-step="2">
-            <div class="step-title"><div class="badge">2</div><h3>由第一句话得到：2y - x = 31</h3></div>
-            <p>“我长到你现在这么大”意味着过了 (y - x) 年。那时哥哥年龄为 y + (y - x) = 2y - x，题目说等于 31：<br><strong>2y - x = 31</strong>。</p>
+            <div class="step-title"><div class="badge">2</div><h3>由第一句话得到：<span class="formula">2y - x = 31</span></h3></div>
+            <p>"我长到你现在这么大"意味着过了 <span class="formula-inline">(y - x)</span> 年。那时哥哥年龄为 y + (y - x) = <span class="formula-inline">2y - x</span>，题目说等于 31：<br><span class="formula">2y - x = 31</span></p>
           </div>
 
           <div class="step-card" data-step="3">
-            <div class="step-title"><div class="badge">3</div><h3>由第二句话得到：2x - y = 1，并解出答案</h3></div>
-            <p>“哥哥像你这么大时”意味着回到 (y - x) 年前。那时小明年龄是 x - (y - x) = 2x - y，题目说那时小明 1 岁：<br><strong>2x - y = 1</strong>。<br><br>
-              联立两式解得：x=11，y=21。<br><strong>结论：小明 11 岁，哥哥 21 岁。</strong></p>
+            <div class="step-title"><div class="badge">3</div><h3>由第二句话得到：<span class="formula">2x - y = 1</span>，并解出答案</h3></div>
+            <p>"哥哥像你这么大时"意味着回到 <span class="formula-inline">(y - x)</span> 年前。那时小明年龄是 x - (y - x) = <span class="formula-inline">2x - y</span>，题目说那时小明 1 岁：<br><span class="formula">2x - y = 1</span></p>
+            <div class="answer-card">
+              <div class="answer-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>
+              </div>
+              <div class="answer-text">
+                <strong>联立两式解得：x=11，y=21</strong>
+                <p>结论：小明 <span class="highlight">11</span> 岁，哥哥 <span class="highlight">21</span> 岁</p>
+              </div>
+            </div>
           </div>
         </div>
 
         <div class="insight">
           <span class="label">洞见总结 / insight</span>
           <ul>
-            <li>年龄题的第一步往往是把“到那时/当年”统一成同一个<strong>时间差</strong>（这里都是 y-x）。</li>
-            <li>翻译成代数后就很直接：一句话一个方程。</li>
-            <li>最后记得做常识校验：差 10 岁，确实符合对话。</li>
+            <li><span class="insight-icon" aria-hidden="true">→</span>年龄题的第一步往往是把"到那时/当年"统一成同一个<strong>时间差</strong>（这里都是 y-x）。</li>
+            <li><span class="insight-icon" aria-hidden="true">→</span>翻译成代数后就很直接：一句话一个方程。</li>
+            <li><span class="insight-icon" aria-hidden="true">→</span>最后记得做常识校验：差 10 岁，确实符合对话。</li>
           </ul>
         </div>
       </div>
     </section>
-  </div>
+  </main>
 
   <script>
     /**
-     * 页面初始化：启用“步骤推进器”轻交互。
+     * 页面初始化：启用"步骤推进器"轻交互。
      */
     function initPage(){
       if (window.initProblemStepper) window.initProblemStepper();

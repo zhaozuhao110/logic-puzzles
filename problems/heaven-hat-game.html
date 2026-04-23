@@ -3,168 +3,32 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="外圈视线被遮挡，蒙眼少年仅凭他人的沉默推断自己戴的是白帽。">
   <title>天堂里的游戏 — 经典逻辑推理</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Noto+Serif+SC:wght@300;400;600;700;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../assets/base.css">
   <link rel="stylesheet" href="../assets/problem-gold.css">
-  <style>
-    /* ===== 六边形星图 ===== */
-    .hex-diagram{
-      display:flex;justify-content:center;margin:0 auto 18px;
-      max-width:520px;width:100%;
-    }
-    .hex-diagram svg{width:100%;height:auto;}
-    .hex-diagram g{transition:opacity 0.45s ease;}
-
-    /* 星图装饰 */
-    .outer-ring{fill:none;stroke:var(--gold-dim,#8a6d1b);stroke-width:0.6;stroke-dasharray:2 6;opacity:0.25}
-    .star-dot{fill:var(--gold-mid,#d4a537);opacity:0.3;transition:opacity 0.6s}
-    .star-dot.twinkle{animation:twinkle 4s ease-in-out infinite}
-    .sight-line{stroke:rgba(240,201,77,0.12);stroke-width:0.5;opacity:0.5}
-    .halo-ring{fill:none;stroke:var(--gold-dim,#8a6d1b);stroke-width:0.5;opacity:0.1;animation:haloPulse 5s ease-in-out infinite}
-    .halo-ring:nth-child(2){animation-delay:1.2s}
-    .halo-ring:nth-child(3){animation-delay:2.4s}
-    @keyframes haloPulse{0%,100%{opacity:0.06}50%{opacity:0.18}}
-    @keyframes twinkle{0%,100%{opacity:0.2}50%{opacity:0.6}}
-
-    /* 对面连线 */
-    .opp-line{fill:none;stroke:var(--gold-dim,#8a6d1b);stroke-width:0.8;stroke-dasharray:4 3;opacity:0.35;transition:all 0.4s}
-
-    /* 人物圈 */
-    .person-c{fill:var(--gold-surface,#1a1712);stroke:var(--gold-dim,#8a6d1b);stroke-width:1.5;transition:stroke 0.35s,stroke-width 0.35s}
-    .person-g-c{fill:rgba(212,165,55,0.14);stroke:var(--gold-bright,#f0c94d);stroke-width:2}
-    .person-lbl{fill:var(--cream,#e8dcc8);font-size:13px;font-weight:700;text-anchor:middle;font-family:'Playfair Display','Noto Serif SC',serif}
-    .person-g-lbl{fill:var(--gold-bright,#f0c94d);font-size:14px;font-weight:900;text-anchor:middle;font-family:'Playfair Display','Noto Serif SC',serif}
-
-    /* 蒙眼布 */
-    .blindfold{fill:var(--cream,#e8dcc8);opacity:0.55;rx:2.5}
-
-    /* 帽子：未知态 */
-    .hat-crown-unk{fill:rgba(212,165,55,0.08);stroke:var(--gold-mid,#d4a537);stroke-width:1.2}
-    .hat-brim-unk{fill:rgba(212,165,55,0.08);stroke:var(--gold-mid,#d4a537);stroke-width:1.2;rx:1.5}
-    .hat-q{fill:var(--cream-dim,#9e9483);font-size:10px;text-anchor:middle;font-family:'Noto Serif SC',serif;opacity:0.5}
-
-    /* 帽子：黑帽态 */
-    .hat-crown-blk{fill:#2a2420;stroke:#8a6d1b;stroke-width:1.5}
-    .hat-brim-blk{fill:#2a2420;stroke:#8a6d1b;stroke-width:1.5;rx:1.5}
-
-    /* 帽子：白帽态（G结论） */
-    .hat-crown-wht{fill:#f0c94d;stroke:#d4a537;stroke-width:0.6}
-    .hat-brim-wht{fill:#f0c94d;stroke:#d4a537;stroke-width:0.6;rx:1.5}
-
-    /* 覆盖指标 */
-    .cover-glow{fill:none;stroke:var(--gold-bright,#f0c94d);stroke-width:2.5;opacity:0.55;transition:opacity 0.4s}
-    .warn-ring{fill:none;stroke:#e74c3c;stroke-width:2;stroke-dasharray:5 3;opacity:0.6;transition:opacity 0.4s}
-    .cover-lbl{fill:var(--gold-bright,#f0c94d);font-size:10px;font-weight:700;text-anchor:middle;font-family:'Noto Serif SC',serif;opacity:0.65}
-    .warn-lbl{fill:#e74c3c;font-size:9px;font-family:'Noto Serif SC',serif;opacity:0.7}
-    .cover-arc{fill:none;stroke:var(--gold-bright,#f0c94d);stroke-width:0.8;stroke-dasharray:5 4;opacity:0.3}
-
-    /* 爆发环 */
-    .reveal-ring{fill:none;stroke:var(--gold-bright,#f0c94d);stroke-width:3;opacity:0;transition:opacity 0.3s}
-
-    /* 图注 */
-    .diagram-note{fill:var(--cream-dim,#9e9483);font-size:10px;text-anchor:middle;font-family:'Noto Serif SC',serif;opacity:0.6;transition:all 0.4s}
-
-    /* ===== 明亮主题 ===== */
-    [data-theme="light"] .person-c{fill:#fff;stroke:#8a6528}
-    [data-theme="light"] .person-g-c{fill:rgba(176,130,53,0.10);stroke:#d4a537}
-    [data-theme="light"] .person-lbl{fill:#1a1410}
-    [data-theme="light"] .person-g-lbl{fill:#d4a537}
-    [data-theme="light"] .blindfold{fill:#5a5550;opacity:0.5}
-    [data-theme="light"] .hat-crown-blk{fill:#3a3028;stroke:#b08235}
-    [data-theme="light"] .hat-brim-blk{fill:#3a3028;stroke:#b08235}
-    [data-theme="light"] .hat-crown-unk{fill:rgba(176,130,53,0.06);stroke:#b08235}
-    [data-theme="light"] .hat-brim-unk{fill:rgba(176,130,53,0.06);stroke:#b08235}
-    [data-theme="light"] .hat-q{fill:#5a5550}
-    [data-theme="light"] .hat-crown-wht{fill:#d4a537;stroke:#b08235}
-    [data-theme="light"] .hat-brim-wht{fill:#d4a537;stroke:#b08235}
-    [data-theme="light"] .outer-ring{stroke:#b08235;opacity:0.2}
-    [data-theme="light"] .star-dot{fill:#b08235}
-    [data-theme="light"] .sight-line{stroke:rgba(176,130,53,0.10)}
-    [data-theme="light"] .halo-ring{stroke:#b08235}
-    [data-theme="light"] .opp-line{stroke:#8a6528}
-    [data-theme="light"] .cover-glow{stroke:#d4a537}
-    [data-theme="light"] .cover-lbl{fill:#d4a537}
-    [data-theme="light"] .warn-ring{stroke:#c0392b}
-    [data-theme="light"] .warn-lbl{fill:#c0392b}
-    [data-theme="light"] .cover-arc{stroke:#d4a537}
-    [data-theme="light"] .reveal-ring{stroke:#d4a537}
-    [data-theme="light"] .diagram-note{fill:#5a5550}
-
-    /* ===== 图注 & 配额徽章 ===== */
-    .diagram-caption{text-align:center;font-size:0.82rem;color:var(--cream-dim);margin-bottom:6px;line-height:1.6}
-    .diagram-caption strong{color:var(--gold-mid)}
-    .hat-quota{
-      display:flex;justify-content:center;gap:6px;align-items:center;
-      margin-bottom:16px;font-size:0.84rem;color:var(--cream-dim);letter-spacing:0.04em;
-    }
-    .hat-quota .qw{color:var(--gold-bright);font-weight:700}
-    .hat-quota .qb{color:var(--cream-dim);font-weight:700}
-    .hat-quota .qt{color:var(--cream);font-weight:900;font-size:0.92rem}
-
-    /* ===== 图表脉冲 ===== */
-    .diagram-pulse{animation:diagPulse 0.7s ease-out}
-    @keyframes diagPulse{
-      0%{filter:drop-shadow(0 0 0 rgba(240,201,77,0))}
-      40%{filter:drop-shadow(0 0 14px rgba(240,201,77,0.18))}
-      100%{filter:drop-shadow(0 0 0 rgba(240,201,77,0))}
-    }
-    [data-theme="light"] .diagram-pulse{animation:diagPulseL 0.7s ease-out}
-    @keyframes diagPulseL{
-      0%{filter:drop-shadow(0 0 0 rgba(176,130,53,0))}
-      40%{filter:drop-shadow(0 0 14px rgba(176,130,53,0.15))}
-      100%{filter:drop-shadow(0 0 0 rgba(176,130,53,0))}
-    }
-
-    /* ===== 覆盖表 ===== */
-    .cover-table{
-      width:100%;border-collapse:separate;border-spacing:3px;margin:14px 0;font-size:0.86rem;
-    }
-    .cover-table th,.cover-table td{
-      padding:7px 9px;border-radius:6px;text-align:center;
-      background:rgba(0,0,0,0.06);color:var(--cream-dim);
-    }
-    .cover-table th{background:rgba(212,165,55,0.08);color:var(--gold-mid);font-weight:700;font-size:0.82rem}
-    .cover-table .cell-yes{background:rgba(240,201,77,0.10);color:var(--gold-bright);font-weight:700}
-    .cover-table .cell-no{background:rgba(231,76,60,0.06);color:#e74c3c;font-weight:600;opacity:0.85}
-    .cover-table .cell-dim{opacity:0.25}
-    .cover-table .cell-result{background:rgba(240,201,77,0.14);color:var(--gold-bright);font-weight:900;font-size:0.92rem}
-    [data-theme="light"] .cover-table th,.cover-table td{background:rgba(0,0,0,0.02)}
-    [data-theme="light"] .cover-table th{background:rgba(176,130,53,0.06)}
-    [data-theme="light"] .cover-table .cell-yes{background:rgba(176,130,53,0.08);color:#d4a537}
-    [data-theme="light"] .cover-table .cell-no{background:rgba(192,57,43,0.06);color:#c0392b}
-    [data-theme="light"] .cover-table .cell-result{background:rgba(176,130,53,0.10);color:#d4a537}
-
-    /* ===== 结论块 ===== */
-    .conclusion{
-      margin-top:18px;padding:18px 20px;
-      background:rgba(240,201,77,0.06);border:1px solid rgba(212,165,55,0.28);
-      border-radius:10px;
-    }
-    .conclusion strong{color:var(--gold-bright);font-weight:900;font-size:1.02rem}
-    .conclusion p{color:var(--cream);font-size:0.94rem;line-height:1.75;margin:6px 0 0}
-
-    /* ===== 步骤标题微调 ===== */
-    .step-card h3{font-size:1rem;color:var(--gold-mid);font-weight:800;line-height:1.35}
-    .step-card p{font-size:0.92rem;color:var(--cream-dim);line-height:1.85}
-  </style>
+  <link rel="stylesheet" href="../assets/problems/heaven-hat-game.css">
   <script src="../assets/theme.js" defer></script>
   <script src="../assets/problem-stepper.js" defer></script>
+  <script src="../assets/problems/heaven-hat-game.js" defer></script>
 </head>
 <body>
   <div class="bg"></div>
+  <a class="skip-link" href="#main">跳到正文</a>
 
   <a href="../index.html" class="back-link">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
     <span>返回首页</span>
   </a>
-  <button class="theme-toggle-sub" id="themeToggle" title="切换明暗模式">
+  <button class="theme-toggle-sub" id="themeToggle" title="切换明暗模式" aria-label="切换明暗模式">
     <svg class="moon-icon" viewBox="0 0 24 24"><path d="M12.1,22c-4.9,0-9-3.8-9.1-8.7c0-3.1,1.5-6.1,4.1-8c0.2-0.1,0.5-0.1,0.7,0.1c0.2,0.2,0.2,0.5,0.1,0.7c-0.5,0.9-0.7,1.8-0.7,2.8c0,3.5,2.8,6.3,6.3,6.3c1,0,1.9-0.2,2.8-0.7c0.2-0.1,0.5-0.1,0.7,0.1c0.2,0.2,0.2,0.5,0.1,0.7C15.1,20.5,13.6,22,12.1,22z"/></svg>
     <svg class="sun-icon" viewBox="0 0 24 24"><path d="M12,18c-3.3,0-6-2.7-6-6s2.7-6,6-6s6,2.7,6,6S15.3,18,12,18z M12,8c-2.2,0-4,1.8-4,4s1.8,4,4,4s4-1.8,4-4S14.2,8,12,8z M11,1h2v3h-2V1z M11,20h2v3h-2V20z M3.5,4.9l2.1-2.1l1.4,1.4L4.9,6.3L3.5,4.9z M17,18.4l2.1-2.1l1.4,1.4l-2.1,2.1L17,18.4z M1,11h3v2H1V11z M20,11h3v2h-3V11z M4.9,17.7l2.1,2.1l-1.4,1.4l-2.1-2.1L4.9,17.7z M18.4,5.6l2.1-2.1l1.4,1.4l-2.1,2.1L18.4,5.6z"/></svg>
   </button>
 
-  <div class="container">
+  <main class="container" id="main">
     <section class="hero">
       <div class="hero-icon" aria-hidden="true">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
@@ -172,7 +36,7 @@
         </svg>
       </div>
       <h1>天堂里的游戏</h1>
-      <p class="subtitle">heaven-hat-game</p>
+      <p class="subtitle">帽子推理 | 递归沉默 | 难度 7/10（高难）</p>
       <div class="hero-question">
         六个少年 A、B、C、D、E、F 按六边形围坐，少年 G 用毛巾蒙着眼睛坐在中间。<br>
         有人给每人戴一顶帽子：<strong>四顶白帽</strong>、<strong>三顶黑帽</strong>。由于 G 挡住视线，六个少年都<strong>看不见自己正对面的人</strong>戴的帽子颜色。<br><br>
@@ -443,162 +307,7 @@
         </div>
       </div>
     </section>
-  </div>
+  </main>
 
-  <script>
-    /* ── 图注文案 ── */
-    var notes = {
-      1: '每人的盲区 = 自己 + 对面 = 看不见的2顶帽子',
-      2: '反设：G戴黑帽 → 外圈只剩2顶黑帽',
-      3: '猜不出来 → 每人盲区必须含至少1顶外圈黑帽',
-      4: '2顶黑帽最多覆盖4人盲区 ≠ 6人 → 矛盾！',
-      5: '结论：G戴白帽 ✓'
-    };
-
-    /* ── 帽子态切换 ── */
-    function setHat(id, state) {
-      var hat = document.getElementById(id);
-      if (!hat) return;
-      var states = id === 'hatG' ? ['unk','blk','wht'] : ['unk','blk'];
-      states.forEach(function(s) {
-        var g = document.getElementById(id + '_' + s);
-        if (g) g.setAttribute('opacity', s === state ? '1' : '0');
-      });
-    }
-
-    /* ── 对面线模式 ── */
-    function setOppLines(mode) {
-      ['oppAD','oppBE','oppCF'].forEach(function(id) {
-        var el = document.getElementById(id);
-        if (!el) return;
-        if (mode === 'highlight') {
-          el.setAttribute('stroke-width', '2');
-          el.setAttribute('stroke-dasharray', '6 4');
-          el.setAttribute('opacity', '0.7');
-          el.setAttribute('stroke', '#f0c94d');
-        } else {
-          el.setAttribute('stroke-width', '0.8');
-          el.setAttribute('stroke-dasharray', '4 3');
-          el.setAttribute('opacity', '0.35');
-          el.setAttribute('stroke', '#8a6d1b');
-        }
-      });
-    }
-
-    /* ── 人物圈标记 ── */
-    function markCircle(id, type) {
-      var c = document.getElementById('circle' + id);
-      if (!c) return;
-      if (type === 'covered') {
-        c.setAttribute('stroke', '#f0c94d');
-        c.setAttribute('stroke-width', '3');
-      } else if (type === 'uncovered') {
-        c.setAttribute('stroke', '#e74c3c');
-        c.setAttribute('stroke-width', '2.5');
-        c.setAttribute('stroke-dasharray', '5 3');
-      } else {
-        c.setAttribute('stroke', '#8a6d1b');
-        c.setAttribute('stroke-width', '1.5');
-        c.setAttribute('stroke-dasharray', 'none');
-      }
-    }
-
-    /* ── 爆发环动画 ── */
-    function animateBurst() {
-      var configs = [
-        { el: 'revealBurst1', startR: 26, endR: 120, dur: 1500, maxOp: 0.6 },
-        { el: 'revealBurst2', startR: 26, endR: 85, dur: 1200, maxOp: 0.4, delay: 180 }
-      ];
-      var now = performance.now();
-      configs.forEach(function(cfg) {
-        var el = document.getElementById(cfg.el);
-        if (!el) return;
-        var t0 = now + (cfg.delay || 0);
-        function frame(ts) {
-          var p = (ts - t0) / cfg.dur;
-          if (p < 0) { requestAnimationFrame(frame); return; }
-          if (p > 1) { el.setAttribute('opacity','0'); return; }
-          var r = cfg.startR + (cfg.endR - cfg.startR) * p;
-          var op = cfg.maxOp * Math.pow(1 - p, 2);
-          el.setAttribute('r', String(Math.max(1, r)));
-          el.setAttribute('opacity', String(Math.max(0, op)));
-          requestAnimationFrame(frame);
-        }
-        requestAnimationFrame(frame);
-      });
-    }
-
-    /* ── 图表脉冲 ── */
-    function pulseDiagram() {
-      var d = document.getElementById('hexDiagram');
-      d.classList.remove('diagram-pulse');
-      void d.offsetWidth;
-      d.classList.add('diagram-pulse');
-    }
-
-    /* ── 同步图表到当前步骤 ── */
-    function syncDiagram() {
-      var active = document.querySelector('.step-card.active');
-      if (!active) return;
-      var step = parseInt(active.getAttribute('data-step') || '1');
-
-      /* 重置 */
-      setHat('hatG','unk'); setHat('hatA','unk'); setHat('hatB','unk');
-      setOppLines('default');
-      ['A','B','C','D','E','F'].forEach(function(id){ markCircle(id,'default'); });
-      var cov = document.getElementById('coverageGroup');
-      if (cov) cov.setAttribute('opacity','0');
-      var b1 = document.getElementById('revealBurst1');
-      var b2 = document.getElementById('revealBurst2');
-      if (b1) b1.setAttribute('opacity','0');
-      if (b2) b2.setAttribute('opacity','0');
-
-      /* 步骤态 */
-      switch(step) {
-        case 1: setOppLines('highlight'); break;
-        case 2: setHat('hatG','blk'); break;
-        case 3: setHat('hatG','blk'); setOppLines('highlight'); break;
-        case 4:
-          setHat('hatG','blk'); setHat('hatA','blk'); setHat('hatB','blk');
-          if (cov) cov.setAttribute('opacity','1');
-          ['A','B','D','E'].forEach(function(id){ markCircle(id,'covered'); });
-          ['C','F'].forEach(function(id){ markCircle(id,'uncovered'); });
-          break;
-        case 5:
-          setHat('hatG','wht');
-          animateBurst();
-          break;
-      }
-
-      /* 图注 */
-      var noteEl = document.getElementById('diagramNote');
-      if (noteEl && notes[step]) noteEl.textContent = notes[step];
-
-      pulseDiagram();
-    }
-
-    /* ── 初始化 ── */
-    function initDiagramSync() {
-      var btnPrev = document.getElementById('btnPrev');
-      var btnNext = document.getElementById('btnNext');
-      if (btnPrev) btnPrev.addEventListener('click', syncDiagram);
-      if (btnNext) btnNext.addEventListener('click', syncDiagram);
-      var cards = document.querySelectorAll('.step-card');
-      for (var i = 0; i < cards.length; i++) {
-        cards[i].addEventListener('click', syncDiagram);
-      }
-      syncDiagram();
-    }
-
-    function initPage() {
-      function run() { initDiagramSync(); }
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', run);
-      } else {
-        run();
-      }
-    }
-    initPage();
-  </script>
 </body>
 </html>

@@ -3,10 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="你让工人为你工作 7 天，给工人的回报是一根金条。金条平分成相连的 7 段，你必须在每天结束时给他们一段金条。如果只许你两次把金条弄断，你如何给你的工人付费？">
 <title>分割金条 — 经典逻辑推理</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Noto+Serif+SC:wght@300;400;600;700;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../assets/base.css">
+  <link rel="stylesheet" href="../assets/problem-gold.css">
 <script src="../assets/theme.js" defer></script>
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
@@ -99,8 +102,8 @@ section{padding:60px 0}
   border-radius:50%;display:flex;align-items:center;justify-content:center;
   font-size:0.7rem;font-weight:900;
 }
-.step-title{font-weight:700;color:var(--gold-mid);margin-bottom:4px}
-.step-desc{font-size:0.9rem;color:var(--cream-dim)}
+
+
 
 .bar-visual{
   display:flex;gap:4px;margin:30px 0;justify-content:center;
@@ -119,23 +122,24 @@ section{padding:60px 0}
 </head>
 <body>
 <div class="bg"></div>
+<a class="skip-link" href="#main">跳到正文</a>
 
 <a href="../index.html" class="back-link">
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
   <span>返回首页</span>
 </a>
-<button class="theme-toggle-sub" id="themeToggle" title="切换明暗模式">
+<button class="theme-toggle-sub" id="themeToggle" title="切换明暗模式" aria-label="切换明暗模式">
   <svg class="moon-icon" viewBox="0 0 24 24"><path d="M12.1,22c-4.9,0-9-3.8-9.1-8.7c0-3.1,1.5-6.1,4.1-8c0.2-0.1,0.5-0.1,0.7,0.1c0.2,0.2,0.2,0.5,0.1,0.7c-0.5,0.9-0.7,1.8-0.7,2.8c0,3.5,2.8,6.3,6.3,6.3c1,0,1.9-0.2,2.8-0.7c0.2-0.1,0.5-0.1,0.7,0.1c0.2,0.2,0.2,0.5,0.1,0.7C15.1,20.5,13.6,22,12.1,22z"/></svg>
   <svg class="sun-icon" viewBox="0 0 24 24"><path d="M12,18c-3.3,0-6-2.7-6-6s2.7-6,6-6s6,2.7,6,6S15.3,18,12,18z M12,8c-2.2,0-4,1.8-4,4s1.8,4,4,4s4-1.8,4-4S14.2,8,12,8z M11,1h2v3h-2V1z M11,20h2v3h-2V20z M3.5,4.9l2.1-2.1l1.4,1.4L4.9,6.3L3.5,4.9z M17,18.4l2.1-2.1l1.4,1.4l-2.1,2.1L17,18.4z M1,11h3v2H1V11z M20,11h3v2h-3V11z M4.9,17.7l2.1,2.1l-1.4,1.4l-2.1-2.1L4.9,17.7z M18.4,5.6l2.1-2.1l1.4,1.4l-2.1,2.1L18.4,5.6z"/></svg>
 </button>
 
-<div class="container">
+<main class="container" id="main">
   <section class="hero">
     <div class="hero-icon">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
     </div>
     <h1>分割金条</h1>
-    <p class="subtitle">THE GOLD BAR PUZZLE</p>
+    <p class="subtitle">分配策略 | 1-2-4 切割 | 难度 4/10（入门）</p>
     <div class="hero-question">
       你让工人为你工作 7 天，给工人的回报是一根金条。金条平分成相连的 7 段，你必须在每天结束时给他们一段金条。
       <strong>如果只许你两次把金条弄断</strong>，你如何给你的工人付费？
@@ -149,7 +153,7 @@ section{padding:60px 0}
     <div class="solution-card">
       <div class="step-item" data-day="切">
         <div class="step-title">第一步：如何切割</div>
-        <div class="step-desc">将金条切割两次，得到长度分别为 <strong>1段、2段、4段</strong> 的三个部分。这就像二进制中的 1, 2, 4 位，可以组合出 1 到 7 的任何数字。</div>
+        <p>将金条切割两次，得到长度分别为 <strong>1段、2段、4段</strong> 的三个部分。这就像二进制中的 1, 2, 4 位，可以组合出 1 到 7 的任何数字。</p>
         <div class="bar-visual">
           <div class="segment seg-1">1</div>
           <div class="segment seg-2">2</div>
@@ -159,41 +163,41 @@ section{padding:60px 0}
 
       <div class="step-item" data-day="1">
         <div class="step-title">第一天：支付 1 段</div>
-        <div class="step-desc">直接给工人 <strong>1段</strong>。 (工人持有: 1)</div>
+        <p>直接给工人 <strong>1段</strong>。 (工人持有: 1)</p>
       </div>
 
       <div class="step-item" data-day="2">
         <div class="step-title">第二天：支付 2 段，找回 1 段</div>
-        <div class="step-desc">给工人 <strong>2段</strong>，让他找回 <strong>1段</strong>。 (工人持有: 2)</div>
+        <p>给工人 <strong>2段</strong>，让他找回 <strong>1段</strong>。 (工人持有: 2)</p>
       </div>
 
       <div class="step-item" data-day="3">
         <div class="step-title">第三天：再次支付 1 段</div>
-        <div class="step-desc">给工人 <strong>1段</strong>。 (工人持有: 2+1=3)</div>
+        <p>给工人 <strong>1段</strong>。 (工人持有: 2+1=3)</p>
       </div>
 
       <div class="step-item" data-day="4">
         <div class="step-title">第四天：支付 4 段，找回 3 段</div>
-        <div class="step-desc">给工人 <strong>4段</strong>，让他找回 <strong>2段和1段</strong>。 (工人持有: 4)</div>
+        <p>给工人 <strong>4段</strong>，让他找回 <strong>2段和1段</strong>。 (工人持有: 4)</p>
       </div>
 
       <div class="step-item" data-day="5">
         <div class="step-title">第五天：再次支付 1 段</div>
-        <div class="step-desc">给工人 <strong>1段</strong>。 (工人持有: 4+1=5)</div>
+        <p>给工人 <strong>1段</strong>。 (工人持有: 4+1=5)</p>
       </div>
 
       <div class="step-item" data-day="6">
         <div class="step-title">第六天：支付 2 段，找回 1 段</div>
-        <div class="step-desc">给工人 <strong>2段</strong>，让他找回 <strong>1段</strong>。 (工人持有: 4+2=6)</div>
+        <p>给工人 <strong>2段</strong>，让他找回 <strong>1段</strong>。 (工人持有: 4+2=6)</p>
       </div>
 
       <div class="step-item" data-day="7">
         <div class="step-title">第七天：支付最后 1 段</div>
-        <div class="step-desc">给工人最后 <strong>1段</strong>。 (工人持有: 4+2+1=7)</div>
+        <p>给工人最后 <strong>1段</strong>。 (工人持有: 4+2+1=7)</p>
       </div>
     </div>
   </section>
-</div>
+</main>
 
 <script>
 // 预留：这里可以增加简单的交互逻辑，比如点击天数高亮对应的金条组合

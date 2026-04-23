@@ -3,10 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="用 5 夸脱、3 夸脱、2 夸脱勺把 8 夸脱酒分成两桶各 4 夸脱。">
 <title>舀酒难题 — 经典逻辑推理</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Noto+Serif+SC:wght@300;400;600;700;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../assets/base.css">
+  <link rel="stylesheet" href="../assets/problem-gold.css">
 <script src="../assets/theme.js" defer></script>
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
@@ -288,17 +291,18 @@ footer span{color:var(--accent-dim)}
 </head>
 <body>
 <div class="bg"></div>
+<a class="skip-link" href="#main">跳到正文</a>
 
 <a href="../index.html" class="back-link">
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
   <span>返回首页</span>
 </a>
-<button class="theme-toggle-sub" id="themeToggle" title="切换明暗模式">
+<button class="theme-toggle-sub" id="themeToggle" title="切换明暗模式" aria-label="切换明暗模式">
   <svg class="moon-icon" viewBox="0 0 24 24"><path d="M12.1,22c-4.9,0-9-3.8-9.1-8.7c0-3.1,1.5-6.1,4.1-8c0.2-0.1,0.5-0.1,0.7,0.1c0.2,0.2,0.2,0.5,0.1,0.7c-0.5,0.9-0.7,1.8-0.7,2.8c0,3.5,2.8,6.3,6.3,6.3c1,0,1.9-0.2,2.8-0.7c0.2-0.1,0.5-0.1,0.7,0.1c0.2,0.2,0.2,0.5,0.1,0.7C15.1,20.5,13.6,22,12.1,22z"/></svg>
   <svg class="sun-icon" viewBox="0 0 24 24"><path d="M12,18c-3.3,0-6-2.7-6-6s2.7-6,6-6s6,2.7,6,6S15.3,18,12,18z M12,8c-2.2,0-4,1.8-4,4s1.8,4,4,4s4-1.8,4-4S14.2,8,12,8z M11,1h2v3h-2V1z M11,20h2v3h-2V20z M3.5,4.9l2.1-2.1l1.4,1.4L4.9,6.3L3.5,4.9z M17,18.4l2.1-2.1l1.4,1.4l-2.1,2.1L17,18.4z M1,11h3v2H1V11z M20,11h3v2h-3V11z M4.9,17.7l2.1,2.1l-1.4,1.4l-2.1-2.1L4.9,17.7z M18.4,5.6l2.1-2.1l1.4,1.4l-2.1,2.1L18.4,5.6z"/></svg>
 </button>
 
-<div class="container">
+<main class="container" id="main">
   <section class="hero">
     <div class="hero-icon">
       <svg viewBox="0 0 24 24" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
@@ -310,7 +314,7 @@ footer span{color:var(--accent-dim)}
       </svg>
     </div>
     <h1>舀酒难题</h1>
-    <p class="subtitle">THE WINE LADLE PUZZLE</p>
+    <p class="subtitle">容器倒酒 | 状态迁移 | 难度 6/10（进阶）</p>
     <div class="hero-question">
       店里只有两个舀酒的勺子，容量分别是 <strong>7 两</strong> 和 <strong>11 两</strong>。客人却偏要买 <strong>2 两酒</strong>。<br><br>
       不允许刻度作弊，老板娘只能在酒缸里舀酒、倒空、再把两个勺子互相倒来倒去。<br><br>
@@ -407,7 +411,7 @@ footer span{color:var(--accent-dim)}
   </section>
 
   <footer><span>◆</span> 舀酒难题 — 经典逻辑推理 <span>◆</span></footer>
-</div>
+</main>
 
 <script>
 var steps = [

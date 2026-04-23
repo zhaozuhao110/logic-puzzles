@@ -3,10 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="鬼谷子从 2 到 99 中选出两个不同整数，把积告诉孙膑、把和告诉庞涓。三轮对白之后，他们为何都能锁定答案？">
 <title>鬼谷考徒 — 经典逻辑推理</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Noto+Serif+SC:wght@300;400;600;700;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../assets/base.css">
+  <link rel="stylesheet" href="../assets/problem-gold.css">
 <script src="../assets/theme.js" defer></script>
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
@@ -454,21 +457,22 @@ footer span{color:var(--accent-dim)}
 </head>
 <body>
 <div class="bg"></div>
+<a class="skip-link" href="#main">跳到正文</a>
 
 <a href="../index.html" class="back-link">
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
   <span>返回首页</span>
 </a>
-<button class="theme-toggle-sub" id="themeToggle" title="切换明暗模式">
+<button class="theme-toggle-sub" id="themeToggle" title="切换明暗模式" aria-label="切换明暗模式">
   <svg class="moon-icon" viewBox="0 0 24 24"><path d="M12.1,22c-4.9,0-9-3.8-9.1-8.7c0-3.1,1.5-6.1,4.1-8c0.2-0.1,0.5-0.1,0.7,0.1c0.2,0.2,0.2,0.5,0.1,0.7c-0.5,0.9-0.7,1.8-0.7,2.8c0,3.5,2.8,6.3,6.3,6.3c1,0,1.9-0.2,2.8-0.7c0.2-0.1,0.5-0.1,0.7,0.1c0.2,0.2,0.2,0.5,0.1,0.7C15.1,20.5,13.6,22,12.1,22z"/></svg>
   <svg class="sun-icon" viewBox="0 0 24 24"><path d="M12,18c-3.3,0-6-2.7-6-6s2.7-6,6-6s6,2.7,6,6S15.3,18,12,18z M12,8c-2.2,0-4,1.8-4,4s1.8,4,4,4s4-1.8,4-4S14.2,8,12,8z M11,1h2v3h-2V1z M11,20h2v3h-2V20z M3.5,4.9l2.1-2.1l1.4,1.4L4.9,6.3L3.5,4.9z M17,18.4l2.1-2.1l1.4,1.4l-2.1,2.1L17,18.4z M1,11h3v2H1V11z M20,11h3v2h-3V11z M4.9,17.7l2.1,2.1l-1.4,1.4l-2.1-2.1L4.9,17.7z M18.4,5.6l2.1-2.1l1.4,1.4l-2.1,2.1L18.4,5.6z"/></svg>
 </button>
 
-<div class="container">
+<main class="container" id="main">
   <section class="hero">
     <div class="hero-seal">鬼谷</div>
     <h1>鬼谷考徒</h1>
-    <p class="subtitle">SUM AND PRODUCT PUZZLE</p>
+    <p class="subtitle">和积推理 | 公共知识递推 | 难度 10/10（极限）</p>
     <div class="hero-question">
       孙膑知道两个不同整数的<strong>积</strong>，庞涓知道它们的<strong>和</strong>。鬼谷子只透露这两个数都在 <strong>2 到 99</strong> 之间。<br><br>
       庞涓先说：<strong>“我虽然不能确定这两个数，但我肯定你也不知道。”</strong><br>
@@ -694,7 +698,7 @@ footer span{color:var(--accent-dim)}
   </section>
 
   <footer><span>◆</span> 鬼谷考徒 — 经典逻辑推理 <span>◆</span></footer>
-</div>
+</main>
 
 <script>
 /**

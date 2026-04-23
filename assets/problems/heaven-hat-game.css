@@ -1,0 +1,158 @@
+/* =========================================================
+ * 天堂里的游戏（题目页补充样式）
+ * - 仅包含本题特有的“六边形星图/覆盖可视化”样式
+ * - 公共骨架请使用 assets/base.css + assets/problem-gold.css
+ * ========================================================= */
+
+/* ===== 六边形星图 ===== */
+.hex-diagram{
+  display:flex;
+  justify-content:center;
+  margin:0 auto 18px;
+  max-width:520px;
+  width:100%;
+}
+.hex-diagram svg{width:100%;height:auto;}
+.hex-diagram g{transition:opacity 0.45s ease;}
+
+/* 星图装饰 */
+.outer-ring{fill:none;stroke:var(--gold-dim,#8a6d1b);stroke-width:0.6;stroke-dasharray:2 6;opacity:0.25}
+.star-dot{fill:var(--gold-mid,#d4a537);opacity:0.3;transition:opacity 0.6s}
+.star-dot.twinkle{animation:twinkle 4s ease-in-out infinite}
+.sight-line{stroke:rgba(240,201,77,0.12);stroke-width:0.5;opacity:0.5}
+.halo-ring{fill:none;stroke:var(--gold-dim,#8a6d1b);stroke-width:0.5;opacity:0.1;animation:haloPulse 5s ease-in-out infinite}
+.halo-ring:nth-child(2){animation-delay:1.2s}
+.halo-ring:nth-child(3){animation-delay:2.4s}
+@keyframes haloPulse{0%,100%{opacity:0.06}50%{opacity:0.18}}
+@keyframes twinkle{0%,100%{opacity:0.2}50%{opacity:0.6}}
+
+/* 对面连线 */
+.opp-line{fill:none;stroke:var(--gold-dim,#8a6d1b);stroke-width:0.8;stroke-dasharray:4 3;opacity:0.35;transition:all 0.4s}
+
+/* 人物圈 */
+.person-c{fill:var(--gold-surface,#1a1712);stroke:var(--gold-dim,#8a6d1b);stroke-width:1.5;transition:stroke 0.35s,stroke-width 0.35s}
+.person-g-c{fill:rgba(212,165,55,0.14);stroke:var(--gold-bright,#f0c94d);stroke-width:2}
+.person-lbl{fill:var(--cream,#e8dcc8);font-size:13px;font-weight:700;text-anchor:middle;font-family:'Playfair Display','Noto Serif SC',serif}
+.person-g-lbl{fill:var(--gold-bright,#f0c94d);font-size:14px;font-weight:900;text-anchor:middle;font-family:'Playfair Display','Noto Serif SC',serif}
+
+/* 蒙眼布 */
+.blindfold{fill:var(--cream,#e8dcc8);opacity:0.55;rx:2.5}
+
+/* 帽子：未知态 */
+.hat-crown-unk{fill:rgba(212,165,55,0.08);stroke:var(--gold-mid,#d4a537);stroke-width:1.2}
+.hat-brim-unk{fill:rgba(212,165,55,0.08);stroke:var(--gold-mid,#d4a537);stroke-width:1.2;rx:1.5}
+.hat-q{fill:var(--cream-dim,#9e9483);font-size:10px;text-anchor:middle;font-family:'Noto Serif SC',serif;opacity:0.5}
+
+/* 帽子：黑帽态 */
+.hat-crown-blk{fill:#2a2420;stroke:#8a6d1b;stroke-width:1.5}
+.hat-brim-blk{fill:#2a2420;stroke:#8a6d1b;stroke-width:1.5;rx:1.5}
+
+/* 帽子：白帽态（G结论） */
+.hat-crown-wht{fill:#f0c94d;stroke:#d4a537;stroke-width:0.6}
+.hat-brim-wht{fill:#f0c94d;stroke:#d4a537;stroke-width:0.6;rx:1.5}
+
+/* 覆盖指标 */
+.cover-glow{fill:none;stroke:var(--gold-bright,#f0c94d);stroke-width:2.5;opacity:0.55;transition:opacity 0.4s}
+.warn-ring{fill:none;stroke:#e74c3c;stroke-width:2;stroke-dasharray:5 3;opacity:0.6;transition:opacity 0.4s}
+.cover-lbl{fill:var(--gold-bright,#f0c94d);font-size:10px;font-weight:700;text-anchor:middle;font-family:'Noto Serif SC',serif;opacity:0.65}
+.warn-lbl{fill:#e74c3c;font-size:9px;font-family:'Noto Serif SC',serif;opacity:0.7}
+.cover-arc{fill:none;stroke:var(--gold-bright,#f0c94d);stroke-width:0.8;stroke-dasharray:5 4;opacity:0.3}
+
+/* 爆发环 */
+.reveal-ring{fill:none;stroke:var(--gold-bright,#f0c94d);stroke-width:3;opacity:0;transition:opacity 0.3s}
+
+/* 图注 */
+.diagram-note{fill:var(--cream-dim,#9e9483);font-size:10px;text-anchor:middle;font-family:'Noto Serif SC',serif;opacity:0.6;transition:all 0.4s}
+
+/* ===== 明亮主题 ===== */
+[data-theme="light"] .person-c{fill:#fff;stroke:#8a6528}
+[data-theme="light"] .person-g-c{fill:rgba(176,130,53,0.10);stroke:#d4a537}
+[data-theme="light"] .person-lbl{fill:#1a1410}
+[data-theme="light"] .person-g-lbl{fill:#d4a537}
+[data-theme="light"] .blindfold{fill:#5a5550;opacity:0.5}
+[data-theme="light"] .hat-crown-blk{fill:#3a3028;stroke:#b08235}
+[data-theme="light"] .hat-brim-blk{fill:#3a3028;stroke:#b08235}
+[data-theme="light"] .hat-crown-unk{fill:rgba(176,130,53,0.06);stroke:#b08235}
+[data-theme="light"] .hat-brim-unk{fill:rgba(176,130,53,0.06);stroke:#b08235}
+[data-theme="light"] .hat-q{fill:#5a5550}
+[data-theme="light"] .hat-crown-wht{fill:#d4a537;stroke:#b08235}
+[data-theme="light"] .hat-brim-wht{fill:#d4a537;stroke:#b08235}
+[data-theme="light"] .outer-ring{stroke:#b08235;opacity:0.2}
+[data-theme="light"] .star-dot{fill:#b08235}
+[data-theme="light"] .sight-line{stroke:rgba(176,130,53,0.10)}
+[data-theme="light"] .halo-ring{stroke:#b08235}
+[data-theme="light"] .opp-line{stroke:#8a6528}
+[data-theme="light"] .cover-glow{stroke:#d4a537}
+[data-theme="light"] .cover-lbl{fill:#d4a537}
+[data-theme="light"] .warn-ring{stroke:#c0392b}
+[data-theme="light"] .warn-lbl{fill:#c0392b}
+[data-theme="light"] .cover-arc{stroke:#d4a537}
+[data-theme="light"] .reveal-ring{stroke:#d4a537}
+[data-theme="light"] .diagram-note{fill:#5a5550}
+
+/* ===== 图注 & 配额徽章 ===== */
+.diagram-caption{text-align:center;font-size:0.82rem;color:var(--cream-dim);margin-bottom:6px;line-height:1.6}
+.diagram-caption strong{color:var(--gold-mid)}
+.hat-quota{
+  display:flex;justify-content:center;gap:6px;align-items:center;
+  margin-bottom:16px;font-size:0.84rem;color:var(--cream-dim);letter-spacing:0.04em;
+}
+.hat-quota .qw{color:var(--gold-bright);font-weight:700}
+.hat-quota .qb{color:var(--cream-dim);font-weight:700}
+.hat-quota .qt{color:var(--cream);font-weight:900;font-size:0.92rem}
+
+/* ===== 图表脉冲 ===== */
+.diagram-pulse{animation:diagPulse 0.7s ease-out}
+@keyframes diagPulse{
+  0%{filter:drop-shadow(0 0 0 rgba(240,201,77,0))}
+  40%{filter:drop-shadow(0 0 14px rgba(240,201,77,0.18))}
+  100%{filter:drop-shadow(0 0 0 rgba(240,201,77,0))}
+}
+[data-theme="light"] .diagram-pulse{animation:diagPulseL 0.7s ease-out}
+@keyframes diagPulseL{
+  0%{filter:drop-shadow(0 0 0 rgba(176,130,53,0))}
+  40%{filter:drop-shadow(0 0 14px rgba(176,130,53,0.15))}
+  100%{filter:drop-shadow(0 0 0 rgba(176,130,53,0))}
+}
+
+/* ===== 覆盖表 ===== */
+.cover-table{
+  width:100%;
+  border-collapse:separate;
+  border-spacing:3px;
+  margin:14px 0;
+  font-size:0.86rem;
+}
+.cover-table th,.cover-table td{
+  padding:7px 9px;
+  border-radius:6px;
+  text-align:center;
+  background:rgba(0,0,0,0.06);
+  color:var(--cream-dim);
+}
+.cover-table th{background:rgba(212,165,55,0.08);color:var(--gold-mid);font-weight:700;font-size:0.82rem}
+.cover-table .cell-yes{background:rgba(240,201,77,0.10);color:var(--gold-bright);font-weight:700}
+.cover-table .cell-no{background:rgba(231,76,60,0.06);color:#e74c3c;font-weight:600;opacity:0.85}
+.cover-table .cell-dim{opacity:0.25}
+.cover-table .cell-result{background:rgba(240,201,77,0.14);color:var(--gold-bright);font-weight:900;font-size:0.92rem}
+[data-theme="light"] .cover-table th,.cover-table td{background:rgba(0,0,0,0.02)}
+[data-theme="light"] .cover-table th{background:rgba(176,130,53,0.06)}
+[data-theme="light"] .cover-table .cell-yes{background:rgba(176,130,53,0.08);color:#d4a537}
+[data-theme="light"] .cover-table .cell-no{background:rgba(192,57,43,0.06);color:#c0392b}
+[data-theme="light"] .cover-table .cell-result{background:rgba(176,130,53,0.10);color:#d4a537}
+
+/* ===== 结论块（本题需强提示） ===== */
+.conclusion{
+  margin-top:18px;
+  padding:18px 20px;
+  background:rgba(240,201,77,0.06);
+  border:1px solid rgba(212,165,55,0.28);
+  border-radius:10px;
+}
+.conclusion strong{color:var(--gold-bright);font-weight:900;font-size:1.02rem}
+.conclusion p{color:var(--cream);font-size:0.94rem;line-height:1.75;margin:6px 0 0}
+
+/* ===== 步骤标题微调 ===== */
+.step-card h3{font-size:1rem;color:var(--gold-mid);font-weight:800;line-height:1.35}
+.step-card p{font-size:0.92rem;color:var(--cream-dim);line-height:1.85}
+

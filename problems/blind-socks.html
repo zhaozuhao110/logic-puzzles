@@ -3,16 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="通过盲人分袜的互动演示，理解如何利用商标纸连接的同色配对，用对称平分消除颜色不可见带来的不确定性。">
   <title>盲人分袜 — 经典逻辑推理</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Noto+Serif+SC:wght@300;400;600;700;900&family=EB+Garamond:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../assets/base.css">
+  <link rel="stylesheet" href="../assets/problem-gold.css">
   <link rel="stylesheet" href="../assets/problems/blind-socks.css">
   <script src="../assets/theme.js" defer></script>
 </head>
 <body>
   <div class="bg"></div>
+  <a class="skip-link" href="#main">跳到正文</a>
 
   <a href="../index.html" class="back-link">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
@@ -24,9 +27,15 @@
     <svg class="sun-icon" viewBox="0 0 24 24"><path d="M12,18c-3.3,0-6-2.7-6-6s2.7-6,6-6s6,2.7,6,6S15.3,18,12,18z M12,8c-2.2,0-4,1.8-4,4s1.8,4,4,4s4-1.8,4-4S14.2,8,12,8z M11,1h2v3h-2V1z M11,20h2v3h-2V20z M3.5,4.9l2.1-2.1l1.4,1.4L4.9,6.3L3.5,4.9z M17,18.4l2.1-2.1l1.4,1.4l-2.1,2.1L17,18.4z M1,11h3v2H1V11z M20,11h3v2h-3V11z M4.9,17.7l2.1,2.1l-1.4,1.4l-2.1-2.1L4.9,17.7z M18.4,5.6l2.1-2.1l1.4,1.4l-2.1,2.1L18.4,5.6z"/></svg>
   </button>
 
-  <div class="container">
+  <main class="container" id="main">
+    <nav class="breadcrumb" aria-label="面包屑导航">
+      <a class="breadcrumb-link" href="../index.html">题库</a>
+      <span class="breadcrumb-sep" aria-hidden="true">/</span>
+      <span class="breadcrumb-current" aria-current="page">盲人分袜</span>
+    </nav>
+
     <!-- ═══ HERO ═══ -->
-    <section class="hero">
+    <section class="hero" id="problem">
       <div class="hero-watermark">
         <svg viewBox="0 0 200 200" fill="none" stroke="rgba(201,160,53,0.6)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
           <path d="M60 40c-4-20 10-34 30-34s28 14 24 34"/>
@@ -51,55 +60,113 @@
       </div>
 
       <h1 class="fade-up">盲人分袜</h1>
-      <p class="subtitle fade-up">The Symmetry of Uncertainty</p>
+      <p class="subtitle fade-up">黑暗中的对称解法 | The Symmetry of Uncertainty</p>
+
+      <div class="meta-row fade-up" aria-label="题目标签与难度">
+        <span class="meta-chip">互动模拟型</span>
+        <span class="meta-chip">逻辑推理</span>
+        <span class="meta-chip">难度 2/10</span>
+      </div>
+
+      <p class="hero-lead fade-up">
+        看不见颜色，也分不出材质时，怎样才能让两个人最终拿到完全相同的黑袜与白袜？
+      </p>
+
+      <div class="hero-summary fade-up" aria-label="题目关键信息">
+        <div class="summary-chip">
+          <span>限制条件</span>
+          <strong>无法辨别颜色</strong>
+        </div>
+        <div class="summary-chip">
+          <span>干扰项</span>
+          <strong>材质尺寸一致</strong>
+        </div>
+        <div class="summary-chip">
+          <span>破局点</span>
+          <strong>商标纸连接同色袜</strong>
+        </div>
+      </div>
 
       <div class="hero-question fade-up">
         两位盲人各自购买了<strong>两对黑袜</strong>与<strong>两对白袜</strong>。这八对袜子的材质、尺寸完全一致，每对袜子都由一张<strong>商标纸</strong>连接着。
         <br><br>
         在回家的路上，八对袜子不慎混杂在了一起。在完全无法辨别颜色的情况下，他们该如何准确取回属于自己的那份袜子？
       </div>
+
+      <div class="hero-clue fade-up">
+        <span class="hero-clue-label">关键线索</span>
+        <h2>不要先分颜色，先把每一对由商标纸连接的同色袜当作最小单位。</h2>
+        <p>只要逐对撕开并机械平分，每一步都在复制同一种对称结构，最后的公平结果就会自动出现。</p>
+      </div>
+
+      <div class="hero-actions fade-up">
+        <a class="hero-btn" href="#demo">开始分袜演示</a>
+        <a class="hero-btn secondary" href="#conditions">先看困境条件</a>
+      </div>
     </section>
 
-    <!-- ═══ SOLUTION ═══ -->
-    <section id="solution">
+    <section id="conditions" class="conditions">
+      <span class="label">题目困境 / Constraints</span>
+      <h2 class="heading">真正难的不是颜色，而是在黑暗中找到可操作的最小单位</h2>
+      <div class="conditions-grid">
+        <article class="condition-card">
+          <span class="condition-kicker">困境 01</span>
+          <h3>颜色不可见</h3>
+          <p>两位盲人无法区分黑袜和白袜，任何依赖颜色分类的思路都失效。</p>
+        </article>
+        <article class="condition-card">
+          <span class="condition-kicker">困境 02</span>
+          <h3>触感无法提供额外信息</h3>
+          <p>袜子的材质、尺寸与厚度完全一致，手感不能帮助他们把袜子分成黑白两类。</p>
+        </article>
+        <article class="condition-card highlight">
+          <span class="condition-kicker">破局线索</span>
+          <h3>商标纸让“同色一对”变成了可触摸的单位</h3>
+          <p>他们虽然看不见颜色，却能摸到每一对同色袜之间的连接关系，因此可以改做“逐对平分”。</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- ═══ ANALYSIS ═══ -->
+    <section id="analysis">
       <span class="label">逻辑解析 / Analysis</span>
-      <h2 class="heading">利用对称性，消除不确定性</h2>
+      <h2 class="heading">先识别配对单位，再用对称平分消除不确定性</h2>
 
       <div class="solution-card">
         <ol class="steps" id="steps">
           <li class="step-item">
-            <button class="step" type="button" data-step="1" aria-pressed="false">
+            <button class="step-card" type="button" data-step="1" aria-pressed="false">
               <div>
                 <span class="step-num">1</span>
                 <span class="step-title">识别"配对"而非"颜色"</span>
               </div>
-              <div class="step-desc">
+              <p>
                 虽然看不见颜色，但盲人可以<strong>摸到连接两只袜子的商标纸</strong>。这意味着他们能将这堆混乱的袜子整理成 8 个配对单位——每对由商标纸相连的两只同色袜子。
-              </div>
+              </p>
             </button>
           </li>
 
           <li class="step-item">
-            <button class="step" type="button" data-step="2" aria-pressed="false">
+            <button class="step-card" type="button" data-step="2" aria-pressed="false">
               <div>
                 <span class="step-num">2</span>
                 <span class="step-title">执行"逐对平分"策略</span>
               </div>
-              <div class="step-desc">
+              <p>
                 对于每一对被商标纸连接的袜子：<strong>撕开商标纸</strong>，盲人 A 拿走其中一只，盲人 B 拿走另一只。重复 8 次，直到所有配对都被平分。
-              </div>
+              </p>
             </button>
           </li>
 
           <li class="step-item">
-            <button class="step" type="button" data-step="3" aria-pressed="false">
+            <button class="step-card" type="button" data-step="3" aria-pressed="false">
               <div>
                 <span class="step-num">3</span>
                 <span class="step-title">必然的均衡结果</span>
               </div>
-              <div class="step-desc">
+              <p>
                 由于每对袜子内部颜色相同，平分每一对就意味着：每个人都从 4 对黑袜中各拿了一只（共 <strong>4 只黑袜</strong>），从 4 对白袜中各拿了一只（共 <strong>4 只白袜</strong>）。<br>不需要看见颜色，结果天然公平。
-              </div>
+              </p>
             </button>
           </li>
         </ol>
@@ -110,14 +177,33 @@
             这道题的精妙之处在于<strong>将"分类问题"转化为"平分问题"</strong>。当个体无法识别特定属性时，只要该属性在最小单位内部是冗余的（同色配对），就可以通过物理上的对称分割，确保宏观总量上的绝对均衡。
           </p>
         </div>
+      </div>
+    </section>
 
-        <!-- ═══ INTERACTIVE DEMO ═══ -->
+    <!-- ═══ DEMO ═══ -->
+    <section id="demo">
+      <span class="label">互动演示 / Demo</span>
+      <h2 class="heading">先进入“看不见”，再体验“必然公平”</h2>
+
+      <div class="solution-card">
         <div class="demo">
+          <div class="demo-guide">
+            <span class="demo-guide-label">推荐顺序</span>
+            <p>先切换到 <strong>盲人视角</strong>，再点击 <strong>逐对平分</strong>，最后观察双方统计是否始终同步增长。</p>
+            <div class="demo-guide-steps">
+              <span>1. 感受看不见</span>
+              <span>2. 逐对撕开商标纸</span>
+              <span>3. 看见公平结果</span>
+            </div>
+          </div>
+
           <div class="panel">
             <div class="panel-title">
               <h3>分袜演示</h3>
+              <div class="demo-phase" id="demoPhase">阶段：未开始</div>
               <div class="controls">
                 <button class="btn secondary" id="btnReset" type="button">重置</button>
+                <button class="btn secondary" id="btnAuto" type="button">自动完成</button>
                 <button class="btn" id="btnSplit" type="button">逐对平分</button>
               </div>
             </div>
@@ -162,8 +248,79 @@
       </div>
     </section>
 
+    <!-- ═══ CONCLUSION ═══ -->
+    <section id="conclusion">
+      <span class="label">结论 / Conclusion</span>
+      <h2 class="heading">局部平分，整体必然均衡</h2>
+
+      <div class="result-panel" id="resultPanel">
+        <div class="result-header">
+          <span class="result-kicker">最终结果 / Symmetry</span>
+          <h3>公平不是运气，而是每一对都被同样地平分</h3>
+        </div>
+        <div class="result-grid">
+          <div class="result-card" id="resultCardA">
+            <span class="result-side-label">盲人 A</span>
+            <div class="result-equality" id="resultA">等待演示开始</div>
+            <p>每次都从同色单位中拿走一只。</p>
+          </div>
+          <div class="result-divider">=</div>
+          <div class="result-card" id="resultCardB">
+            <span class="result-side-label">盲人 B</span>
+            <div class="result-equality" id="resultB">等待演示开始</div>
+            <p>每次都从同色单位中拿走另一只。</p>
+          </div>
+        </div>
+        <div class="result-summary" id="resultSummary">
+          还没开始分配时，答案看起来像是一个分类问题；一旦改成“逐对平分”，它就变成了稳定的结构问题。
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ MORE ═══ -->
+    <section id="more" class="more">
+      <span class="label">继续探索 / Next</span>
+      <h2 class="heading">把这套“对称性思维”用到更多题目</h2>
+
+      <nav class="pager" aria-label="上一篇下一篇">
+        <a class="pager-card prev" href="einstein-puzzle.html">
+          <span class="pager-kicker">上一篇</span>
+          <span class="pager-title">爱因斯坦的谜题</span>
+          <span class="pager-desc">5栋房子5种颜色…谁养鱼？</span>
+        </a>
+        <a class="pager-card next" href="king-prophet.html">
+          <span class="pager-kicker">下一篇</span>
+          <span class="pager-title">国王与预言家</span>
+          <span class="pager-desc">一句话让国王陷入无法自洽的判决悖论。</span>
+        </a>
+      </nav>
+
+      <div class="reco">
+        <h3 class="subheading">同类推荐</h3>
+        <div class="reco-grid">
+          <a class="reco-card" href="three-bulbs.html">
+            <span class="reco-title">三个灯泡</span>
+            <span class="reco-desc">用“亮/灭 + 余温”一次进门锁定对应关系。</span>
+          </a>
+          <a class="reco-card" href="soda-bottle.html">
+            <span class="reco-title">汽水瓶难题</span>
+            <span class="reco-desc">用状态变化与逆向思考，把“看似随机”变成确定流程。</span>
+          </a>
+          <a class="reco-card" href="heaven-hat-game.html">
+            <span class="reco-title">天堂帽子游戏</span>
+            <span class="reco-desc">公共知识与递归推断：从沉默里读出确定答案。</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="more-actions">
+        <a class="hero-btn secondary" href="../index.html">返回题库</a>
+        <a class="hero-btn" href="#problem">回到题目顶部</a>
+      </div>
+    </section>
+
     <footer>Logic Site · 探索逻辑的对称之美</footer>
-  </div>
+  </main>
 
   <script>
   (function() {
@@ -183,7 +340,7 @@
      * @param {string} colorClass 颜色类别：unknown | black | white
      * @returns {string} SVG 字符串
      */
-    function sockSVG(colorClass) {
+    function sockSVG(colorClass, patternId) {
       // Realistic sock shape: cuff, leg, heel, foot, toe
       var bodyFill = colorClass === 'unknown' ? 'rgba(255,255,255,0.04)' :
                      colorClass === 'black' ? 'var(--sock-black)' : 'var(--sock-white)';
@@ -192,7 +349,7 @@
 
       return '<svg class="sock-svg ' + colorClass + '" viewBox="0 0 48 58" fill="none" xmlns="http://www.w3.org/2000/svg">' +
         '<defs>' +
-          '<pattern id="knit-' + colorClass + '" width="6" height="6" patternUnits="userSpaceOnUse">' +
+          '<pattern id="' + patternId + '" width="6" height="6" patternUnits="userSpaceOnUse">' +
             '<line x1="0" y1="3" x2="6" y2="3" stroke="' + strokeColor + '" stroke-width="0.4" opacity="0.5"/>' +
             '<line x1="3" y1="0" x2="3" y2="6" stroke="' + strokeColor + '" stroke-width="0.4" opacity="0.3"/>' +
           '</pattern>' +
@@ -204,7 +361,7 @@
           'C28 57 22 58 18 57 C12 55 8 50 8 44 ' +
           'C8 38 10 34 12 30 C14 26 14 22 14 18 Z' +
         '" fill="' + bodyFill + '" stroke="' + strokeColor + '" stroke-width="1"/>' +
-        '<rect class="sock-knit" x="15" y="3" width="18" height="14" fill="url(#knit-' + colorClass + ')" opacity="0.12" rx="1"/>' +
+        '<rect class="sock-knit" x="15" y="3" width="18" height="14" fill="url(#' + patternId + ')" opacity="0.12" rx="1"/>' +
         '<path d="M14 18 L34 18" stroke="' + strokeColor + '" stroke-width="0.5" opacity="0.3"/>' +
         '<ellipse cx="24" cy="4" rx="8" ry="2" fill="none" stroke="' + strokeColor + '" stroke-width="0.6" opacity="0.4"/>' +
       '</svg>';
@@ -250,17 +407,19 @@
 
         var reveal = !state.blindMode;
         var colorClass = reveal ? p.color : 'unknown';
+        var leftPatternId = 'knit-' + p.id + '-' + idx + '-left';
+        var rightPatternId = 'knit-' + p.id + '-' + idx + '-right';
 
         el.innerHTML =
           '<span class="pair-id">PAIR ' + String(p.id).padStart(2, '0') + '</span>' +
           '<div class="sock-row">' +
             '<div class="sock-wrap left">' +
-              sockSVG(colorClass) +
+              sockSVG(colorClass, leftPatternId) +
               '<span class="sock-label">A</span>' +
             '</div>' +
             tagSVG() +
             '<div class="sock-wrap right">' +
-              sockSVG(colorClass) +
+              sockSVG(colorClass, rightPatternId) +
               '<span class="sock-label">B</span>' +
             '</div>' +
           '</div>';
@@ -283,6 +442,12 @@
       var statNote = document.getElementById('statNote');
       var statACard = document.getElementById('statA');
       var statBCard = document.getElementById('statB');
+      var demoPhase = document.getElementById('demoPhase');
+      var resultA = document.getElementById('resultA');
+      var resultB = document.getElementById('resultB');
+      var resultSummary = document.getElementById('resultSummary');
+      var resultCardA = document.getElementById('resultCardA');
+      var resultCardB = document.getElementById('resultCardB');
 
       var done = state.splitIndex + 1;
       var total = state.pairs.length;
@@ -297,6 +462,12 @@
         statACard.classList.remove('highlight');
         statBCard.classList.remove('highlight');
         statNote.textContent = '点击"逐对平分"开始演示。每次撕开一对商标纸，每人各取一只。';
+        demoPhase.textContent = '阶段：未开始';
+        resultA.textContent = '等待演示开始';
+        resultB.textContent = '等待演示开始';
+        resultSummary.textContent = '还没开始分配时，答案看起来像是一个分类问题；一旦改成“逐对平分”，它就变成了稳定的结构问题。';
+        resultCardA.classList.remove('ready');
+        resultCardB.classList.remove('ready');
         return;
       }
 
@@ -313,6 +484,8 @@
 
       statACard.classList.add('highlight');
       statBCard.classList.add('highlight');
+      resultA.innerHTML = '黑 <strong>' + aB + '</strong> / 白 <strong>' + aW + '</strong>';
+      resultB.innerHTML = '黑 <strong>' + bB + '</strong> / 白 <strong>' + bW + '</strong>';
 
       // Mini sock icons for A
       socksA.innerHTML = '';
@@ -335,12 +508,20 @@
       }
 
       if (done === total) {
+        demoPhase.textContent = '阶段：分配完成';
+        resultSummary.innerHTML = '每一对同色袜都被平均拆开，于是双方同步拿到 <strong>4 只黑袜</strong> 和 <strong>4 只白袜</strong>。公平来自结构对称，而不是颜色可见。';
+        resultCardA.classList.add('ready');
+        resultCardB.classList.add('ready');
         if (state.blindMode) {
           statNote.textContent = '分配完毕！虽然看不见，但每人恰好各得 4 只黑袜和 4 只白袜——这就是对称性的力量。';
         } else {
           statNote.innerHTML = '分配完毕！每人各得 <strong>4 只黑袜</strong>和 <strong>4 只白袜</strong>，完全公平。不需要看见颜色，对称性保证了一切。';
         }
       } else {
+        demoPhase.textContent = '阶段：正在平分第 ' + done + ' 对';
+        resultSummary.textContent = '已经平分 ' + done + ' 对袜子。只要每一步都从同色单位中各取一只，双方的总量就会始终保持同步。';
+        resultCardA.classList.remove('ready');
+        resultCardB.classList.remove('ready');
         statNote.textContent = '已分配 ' + done + '/' + total + ' 对。继续点击"逐对平分"…';
       }
     }
@@ -393,6 +574,19 @@
     }
 
     /**
+     * 自动完成全部分配演示
+     */
+    function splitAll() {
+      if (state.splitting) return;
+      if (state.splitIndex >= state.pairs.length - 1) return;
+
+      splitNext();
+      if (state.splitIndex < state.pairs.length - 1) {
+        setTimeout(splitAll, 760);
+      }
+    }
+
+    /**
      * 设置盲人视角开关状态（视觉模拟）
      * @param {boolean} enabled 是否开启
      */
@@ -412,7 +606,7 @@
      * @param {HTMLElement} activeEl 当前激活的按钮
      */
     function setActiveStep(activeEl) {
-      document.querySelectorAll('.step').forEach(function(s) {
+      document.querySelectorAll('.step-card').forEach(function(s) {
         var isActive = s === activeEl;
         s.classList.toggle('active', isActive);
         s.setAttribute('aria-pressed', isActive ? 'true' : 'false');
@@ -429,6 +623,7 @@
 
     /* ── Event Bindings ── */
     document.getElementById('btnSplit').addEventListener('click', splitNext);
+    document.getElementById('btnAuto').addEventListener('click', splitAll);
     document.getElementById('btnReset').addEventListener('click', function() {
       document.body.classList.remove('blind-mode');
       setBlindMode(false);
@@ -436,7 +631,7 @@
     });
 
     document.getElementById('steps').addEventListener('click', function(e) {
-      var step = e.target.closest('.step');
+      var step = e.target.closest('.step-card');
       if (!step) return;
       setActiveStep(step);
     });
