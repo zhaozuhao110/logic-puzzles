@@ -433,6 +433,36 @@ body{
   align-items:center;
   gap:12px;
   flex-wrap:wrap;
+  flex:1;
+}
+.toolbar-toggle-btn{
+  display:none; /* hidden on desktop */
+  appearance:none;
+  background:transparent;
+  border:1px solid rgba(212,165,55,0.15);
+  color:var(--accent-bright);
+  padding:6px;
+  border-radius:8px;
+  cursor:pointer;
+  transition:all 0.3s ease;
+}
+.toolbar-toggle-btn svg{
+  transition:transform 0.3s ease;
+}
+.toolbar-container.is-collapsed .toolbar-toggle-btn svg{
+  transform:rotate(-180deg);
+}
+@media (max-width:768px){
+  .toolbar-toggle-btn{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .toolbar-container.is-collapsed .search-box,
+  .toolbar-container.is-collapsed .filter-tags,
+  .toolbar-container.is-collapsed .toolbar-side {
+    display:none;
+  }
 }
 .toolbar-badge{
   display:inline-flex;
@@ -949,6 +979,11 @@ footer span{color:var(--accent-dim)}
               <div class="view-hint" id="viewHint">全部：按分类分组，组内按当前排序方式展示</div>
               </div>
             </div>
+            <button class="toolbar-toggle-btn" id="toolbarToggleBtn" aria-label="收起/展开工具栏">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18 15l-6-6-6 6"/>
+              </svg>
+            </button>
             <div class="result-meta" id="resultMeta">准备载入题库...</div>
           </div>
           <div class="search-box">
@@ -1325,6 +1360,18 @@ footer span{color:var(--accent-dim)}
    */
   function bindEvents() {
     var toolbarContainer = document.getElementById('toolbarContainer');
+    var toolbarToggleBtn = document.getElementById('toolbarToggleBtn');
+
+    // 默认在移动端收起工具栏
+    if (window.innerWidth <= 768) {
+      toolbarContainer.classList.add('is-collapsed');
+    }
+
+    if (toolbarToggleBtn) {
+      toolbarToggleBtn.addEventListener('click', function() {
+        toolbarContainer.classList.toggle('is-collapsed');
+      });
+    }
 
     window.addEventListener('scroll', function() {
       if (window.scrollY > 180) {
