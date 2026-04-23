@@ -427,6 +427,7 @@ body{
   justify-content:space-between;
   gap:14px;
   flex-wrap:wrap;
+  position:relative;
 }
 .toolbar-head{
   display:flex;
@@ -445,6 +446,10 @@ body{
   border-radius:8px;
   cursor:pointer;
   transition:all 0.3s ease;
+  position:absolute;
+  right:0;
+  top:50%;
+  transform:translateY(-50%);
 }
 .toolbar-toggle-btn svg{
   transition:transform 0.3s ease;
@@ -457,6 +462,9 @@ body{
     display:flex;
     align-items:center;
     justify-content:center;
+  }
+  .toolbar-head{
+    padding-right:40px; /* space for toggle button */
   }
   .toolbar-container.is-collapsed .search-box,
   .toolbar-container.is-collapsed .filter-tags,
@@ -975,8 +983,8 @@ footer span{color:var(--accent-dim)}
             <div class="toolbar-head">
               <span class="toolbar-badge">Collection View</span>
               <div>
-              <div class="toolbar-title">题目浏览</div>
-              <div class="view-hint" id="viewHint">全部：按分类分组，组内按当前排序方式展示</div>
+                <div class="toolbar-title">题目浏览</div>
+                <div class="view-hint" id="viewHint">全部：按分类分组，组内按当前排序方式展示</div>
               </div>
             </div>
             <button class="toolbar-toggle-btn" id="toolbarToggleBtn" aria-label="收起/展开工具栏">
