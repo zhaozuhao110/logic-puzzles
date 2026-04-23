@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>盲人分袜 — 经典逻辑推理</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Noto+Serif+SC:wght@300;400;600;700;900&family=EB+Garamond:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/base.css">
+  <link rel="stylesheet" href="../assets/problems/blind-socks.css">
+  <script src="../assets/theme.js" defer></script>
+</head>
+<body>
+  <div class="bg"></div>
+
+  <a href="../index.html" class="back-link">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    <span>返回首页</span>
+  </a>
+
+  <button class="theme-toggle-sub" id="themeToggle" title="切换明暗模式" aria-label="切换明暗模式">
+    <svg class="moon-icon" viewBox="0 0 24 24"><path d="M12.1,22c-4.9,0-9-3.8-9.1-8.7c0-3.1,1.5-6.1,4.1-8c0.2-0.1,0.5-0.1,0.7,0.1c0.2,0.2,0.2,0.5,0.1,0.7c-0.5,0.9-0.7,1.8-0.7,2.8c0,3.5,2.8,6.3,6.3,6.3c1,0,1.9-0.2,2.8-0.7c0.2-0.1,0.5-0.1,0.7,0.1c0.2,0.2,0.2,0.5,0.1,0.7C15.1,20.5,13.6,22,12.1,22z"/></svg>
+    <svg class="sun-icon" viewBox="0 0 24 24"><path d="M12,18c-3.3,0-6-2.7-6-6s2.7-6,6-6s6,2.7,6,6S15.3,18,12,18z M12,8c-2.2,0-4,1.8-4,4s1.8,4,4,4s4-1.8,4-4S14.2,8,12,8z M11,1h2v3h-2V1z M11,20h2v3h-2V20z M3.5,4.9l2.1-2.1l1.4,1.4L4.9,6.3L3.5,4.9z M17,18.4l2.1-2.1l1.4,1.4l-2.1,2.1L17,18.4z M1,11h3v2H1V11z M20,11h3v2h-3V11z M4.9,17.7l2.1,2.1l-1.4,1.4l-2.1-2.1L4.9,17.7z M18.4,5.6l2.1-2.1l1.4,1.4l-2.1,2.1L18.4,5.6z"/></svg>
+  </button>
+
+  <div class="container">
+    <!-- ═══ HERO ═══ -->
+    <section class="hero">
+      <div class="hero-watermark">
+        <svg viewBox="0 0 200 200" fill="none" stroke="rgba(201,160,53,0.6)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M60 40c-4-20 10-34 30-34s28 14 24 34"/>
+          <path d="M50 40c-16 0-28 14-28 34s12 56 28 72c12 12 24 16 34 16s22-4 34-16c16-16 28-42 28-72S96 40 80 40"/>
+          <path d="M72 40c0-8 8-16 18-16s18 8 18 16"/>
+          <line x1="84" y1="24" x2="84" y2="8" stroke-dasharray="2 3"/>
+          <circle cx="84" cy="6" r="2"/>
+          <path d="M66 64h52M66 80h52M66 96h40M66 112h48" opacity="0.3"/>
+          <path d="M54 128c-8 6-12 16-12 26 0 14 12 26 28 26s28-12 28-26c0-10-4-20-12-26" opacity="0.4"/>
+          <path d="M70 136c0 8 6 14 14 14s14-6 14-14" opacity="0.3"/>
+        </svg>
+      </div>
+
+      <div class="hero-icon fade-up">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="5" r="2"/>
+          <path d="M12 7v4"/>
+          <path d="M9 11c-3 0-6 2-6 5v5h18v-5c0-3-3-5-6-5"/>
+          <path d="M8 21v-2a4 4 0 0 1 8 0v2"/>
+          <line x1="3" y1="3" x2="21" y2="21" stroke-dasharray="2 2" opacity="0.4"/>
+        </svg>
+      </div>
+
+      <h1 class="fade-up">盲人分袜</h1>
+      <p class="subtitle fade-up">The Symmetry of Uncertainty</p>
+
+      <div class="hero-question fade-up">
+        两位盲人各自购买了<strong>两对黑袜</strong>与<strong>两对白袜</strong>。这八对袜子的材质、尺寸完全一致，每对袜子都由一张<strong>商标纸</strong>连接着。
+        <br><br>
+        在回家的路上，八对袜子不慎混杂在了一起。在完全无法辨别颜色的情况下，他们该如何准确取回属于自己的那份袜子？
+      </div>
+    </section>
+
+    <!-- ═══ SOLUTION ═══ -->
+    <section id="solution">
+      <span class="label">逻辑解析 / Analysis</span>
+      <h2 class="heading">利用对称性，消除不确定性</h2>
+
+      <div class="solution-card">
+        <ol class="steps" id="steps">
+          <li class="step-item">
+            <button class="step" type="button" data-step="1" aria-pressed="false">
+              <div>
+                <span class="step-num">1</span>
+                <span class="step-title">识别"配对"而非"颜色"</span>
+              </div>
+              <div class="step-desc">
+                虽然看不见颜色，但盲人可以<strong>摸到连接两只袜子的商标纸</strong>。这意味着他们能将这堆混乱的袜子整理成 8 个配对单位——每对由商标纸相连的两只同色袜子。
+              </div>
+            </button>
+          </li>
+
+          <li class="step-item">
+            <button class="step" type="button" data-step="2" aria-pressed="false">
+              <div>
+                <span class="step-num">2</span>
+                <span class="step-title">执行"逐对平分"策略</span>
+              </div>
+              <div class="step-desc">
+                对于每一对被商标纸连接的袜子：<strong>撕开商标纸</strong>，盲人 A 拿走其中一只，盲人 B 拿走另一只。重复 8 次，直到所有配对都被平分。
+              </div>
+            </button>
+          </li>
+
+          <li class="step-item">
+            <button class="step" type="button" data-step="3" aria-pressed="false">
+              <div>
+                <span class="step-num">3</span>
+                <span class="step-title">必然的均衡结果</span>
+              </div>
+              <div class="step-desc">
+                由于每对袜子内部颜色相同，平分每一对就意味着：每个人都从 4 对黑袜中各拿了一只（共 <strong>4 只黑袜</strong>），从 4 对白袜中各拿了一只（共 <strong>4 只白袜</strong>）。<br>不需要看见颜色，结果天然公平。
+              </div>
+            </button>
+          </li>
+        </ol>
+
+        <div class="insight">
+          <h3>核心洞见：对称性思维</h3>
+          <p>
+            这道题的精妙之处在于<strong>将"分类问题"转化为"平分问题"</strong>。当个体无法识别特定属性时，只要该属性在最小单位内部是冗余的（同色配对），就可以通过物理上的对称分割，确保宏观总量上的绝对均衡。
+          </p>
+        </div>
+
+        <!-- ═══ INTERACTIVE DEMO ═══ -->
+        <div class="demo">
+          <div class="panel">
+            <div class="panel-title">
+              <h3>分袜演示</h3>
+              <div class="controls">
+                <button class="btn secondary" id="btnReset" type="button">重置</button>
+                <button class="btn" id="btnSplit" type="button">逐对平分</button>
+              </div>
+            </div>
+
+            <div class="pairs" id="pairs"></div>
+
+            <button class="mode-toggle" id="modeToggle" type="button" aria-pressed="false">
+              <div class="toggle-track" id="toggleTrack" aria-hidden="true">
+                <div class="toggle-thumb"></div>
+              </div>
+              <span class="toggle-label" id="toggleLabel">盲人视角</span>
+            </button>
+          </div>
+
+          <div class="panel panel-stats">
+            <div class="panel-title">
+              <h3>分配统计</h3>
+            </div>
+            <div class="stats-grid">
+              <div class="stat-card" id="statA">
+                <div class="stat-label">盲人 A</div>
+                <div class="stat-value" id="counterA">等待分配…</div>
+                <div class="stat-socks" id="socksA"></div>
+              </div>
+              <div class="stat-card" id="statB">
+                <div class="stat-label">盲人 B</div>
+                <div class="stat-value" id="counterB">等待分配…</div>
+                <div class="stat-socks" id="socksB"></div>
+              </div>
+              <div class="progress-wrap">
+                <div class="progress-label">分配进度</div>
+                <div class="progress-bar">
+                  <div class="progress-fill" id="progressFill"></div>
+                </div>
+              </div>
+              <div class="stat-note" id="statNote">
+                点击"逐对平分"开始演示。每次撕开一对商标纸，每人各取一只。
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer>Logic Site · 探索逻辑的对称之美</footer>
+  </div>
+
+  <script>
+  (function() {
+    'use strict';
+
+    var state = {
+      pairs: [],
+      splitIndex: -1,
+      splitting: false,
+      blindMode: false,
+      aBlack: 0, aWhite: 0,
+      bBlack: 0, bWhite: 0
+    };
+
+    /**
+     * 生成袜子 SVG 字符串
+     * @param {string} colorClass 颜色类别：unknown | black | white
+     * @returns {string} SVG 字符串
+     */
+    function sockSVG(colorClass) {
+      // Realistic sock shape: cuff, leg, heel, foot, toe
+      var bodyFill = colorClass === 'unknown' ? 'rgba(255,255,255,0.04)' :
+                     colorClass === 'black' ? 'var(--sock-black)' : 'var(--sock-white)';
+      var strokeColor = colorClass === 'unknown' ? 'var(--sock-stroke)' :
+                        colorClass === 'black' ? 'rgba(100,100,120,0.3)' : 'rgba(180,170,150,0.4)';
+
+      return '<svg class="sock-svg ' + colorClass + '" viewBox="0 0 48 58" fill="none" xmlns="http://www.w3.org/2000/svg">' +
+        '<defs>' +
+          '<pattern id="knit-' + colorClass + '" width="6" height="6" patternUnits="userSpaceOnUse">' +
+            '<line x1="0" y1="3" x2="6" y2="3" stroke="' + strokeColor + '" stroke-width="0.4" opacity="0.5"/>' +
+            '<line x1="3" y1="0" x2="3" y2="6" stroke="' + strokeColor + '" stroke-width="0.4" opacity="0.3"/>' +
+          '</pattern>' +
+        '</defs>' +
+        '<path class="sock-body" d="' +
+          'M14 2 C14 0 18 0 24 0 C30 0 34 0 34 2 ' +
+          'L34 18 C34 22 36 26 38 30 ' +
+          'C40 34 42 38 42 42 C42 48 38 54 32 56 ' +
+          'C28 57 22 58 18 57 C12 55 8 50 8 44 ' +
+          'C8 38 10 34 12 30 C14 26 14 22 14 18 Z' +
+        '" fill="' + bodyFill + '" stroke="' + strokeColor + '" stroke-width="1"/>' +
+        '<rect class="sock-knit" x="15" y="3" width="18" height="14" fill="url(#knit-' + colorClass + ')" opacity="0.12" rx="1"/>' +
+        '<path d="M14 18 L34 18" stroke="' + strokeColor + '" stroke-width="0.5" opacity="0.3"/>' +
+        '<ellipse cx="24" cy="4" rx="8" ry="2" fill="none" stroke="' + strokeColor + '" stroke-width="0.6" opacity="0.4"/>' +
+      '</svg>';
+    }
+
+    /**
+     * 生成“商标纸”结构 HTML 字符串
+     * @returns {string} HTML 字符串
+     */
+    function tagSVG() {
+      return '<div class="tag-wrap">' +
+        '<div class="tag">' +
+          '<span style="font-size:0.45rem;letter-spacing:0.02em">商标</span>' +
+          '<div class="tag-tear"></div>' +
+        '</div>' +
+      '</div>';
+    }
+
+    /**
+     * 原地打乱数组（Fisher–Yates）
+     * @param {Array} arr 待打乱数组
+     */
+    function shuffle(arr) {
+      for (var i = arr.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var tmp = arr[i]; arr[i] = arr[j]; arr[j] = tmp;
+      }
+    }
+
+    /**
+     * 渲染袜子配对区域
+     */
+    function render() {
+      var host = document.getElementById('pairs');
+      host.innerHTML = '';
+
+      state.pairs.forEach(function(p, idx) {
+        var el = document.createElement('div');
+        var cls = 'pair';
+        if (idx < state.splitIndex) cls += ' done';
+        else if (idx === state.splitIndex) cls += ' splitting';
+        el.className = cls;
+
+        var reveal = !state.blindMode;
+        var colorClass = reveal ? p.color : 'unknown';
+
+        el.innerHTML =
+          '<span class="pair-id">PAIR ' + String(p.id).padStart(2, '0') + '</span>' +
+          '<div class="sock-row">' +
+            '<div class="sock-wrap left">' +
+              sockSVG(colorClass) +
+              '<span class="sock-label">A</span>' +
+            '</div>' +
+            tagSVG() +
+            '<div class="sock-wrap right">' +
+              sockSVG(colorClass) +
+              '<span class="sock-label">B</span>' +
+            '</div>' +
+          '</div>';
+
+        host.appendChild(el);
+      });
+
+      updateStats();
+    }
+
+    /**
+     * 刷新统计信息（A/B 已拿到的袜子与进度条）
+     */
+    function updateStats() {
+      var counterA = document.getElementById('counterA');
+      var counterB = document.getElementById('counterB');
+      var socksA = document.getElementById('socksA');
+      var socksB = document.getElementById('socksB');
+      var progressFill = document.getElementById('progressFill');
+      var statNote = document.getElementById('statNote');
+      var statACard = document.getElementById('statA');
+      var statBCard = document.getElementById('statB');
+
+      var done = state.splitIndex + 1;
+      var total = state.pairs.length;
+      var progress = (done / total) * 100;
+      progressFill.style.width = progress + '%';
+
+      if (done === 0) {
+        counterA.textContent = '等待分配…';
+        counterB.textContent = '等待分配…';
+        socksA.innerHTML = '';
+        socksB.innerHTML = '';
+        statACard.classList.remove('highlight');
+        statBCard.classList.remove('highlight');
+        statNote.textContent = '点击"逐对平分"开始演示。每次撕开一对商标纸，每人各取一只。';
+        return;
+      }
+
+      var aB = state.aBlack, aW = state.aWhite;
+      var bB = state.bBlack, bW = state.bWhite;
+
+      if (state.blindMode) {
+        counterA.textContent = '已取 ' + done + ' 只（颜色未知）';
+        counterB.textContent = '已取 ' + done + ' 只（颜色未知）';
+      } else {
+        counterA.innerHTML = '黑 <strong>' + aB + '</strong> / 白 <strong>' + aW + '</strong>';
+        counterB.innerHTML = '黑 <strong>' + bB + '</strong> / 白 <strong>' + bW + '</strong>';
+      }
+
+      statACard.classList.add('highlight');
+      statBCard.classList.add('highlight');
+
+      // Mini sock icons for A
+      socksA.innerHTML = '';
+      for (var i = 0; i < done; i++) {
+        var s = document.createElement('div');
+        var c = state.blindMode ? 'hidden' :
+                (i < aB ? 'black' : 'white');
+        s.className = 'stat-sock ' + c + ' revealed';
+        socksA.appendChild(s);
+      }
+
+      // Mini sock icons for B
+      socksB.innerHTML = '';
+      for (var i = 0; i < done; i++) {
+        var s = document.createElement('div');
+        var c = state.blindMode ? 'hidden' :
+                (i < bB ? 'black' : 'white');
+        s.className = 'stat-sock ' + c + ' revealed';
+        socksB.appendChild(s);
+      }
+
+      if (done === total) {
+        if (state.blindMode) {
+          statNote.textContent = '分配完毕！虽然看不见，但每人恰好各得 4 只黑袜和 4 只白袜——这就是对称性的力量。';
+        } else {
+          statNote.innerHTML = '分配完毕！每人各得 <strong>4 只黑袜</strong>和 <strong>4 只白袜</strong>，完全公平。不需要看见颜色，对称性保证了一切。';
+        }
+      } else {
+        statNote.textContent = '已分配 ' + done + '/' + total + ' 对。继续点击"逐对平分"…';
+      }
+    }
+
+    /**
+     * 初始化演示状态
+     */
+    function init() {
+      state.splitIndex = -1;
+      state.splitting = false;
+      state.aBlack = 0; state.aWhite = 0;
+      state.bBlack = 0; state.bWhite = 0;
+      state.pairs = [];
+      for (var i = 1; i <= 8; i++) {
+        state.pairs.push({ id: i, color: i <= 4 ? 'black' : 'white' });
+      }
+      shuffle(state.pairs);
+      render();
+      document.getElementById('btnSplit').disabled = false;
+    }
+
+    /**
+     * 逐对平分：推进一次分配动画与统计
+     */
+    function splitNext() {
+      if (state.splitting) return;
+      if (state.splitIndex >= state.pairs.length - 1) return;
+
+      state.splitting = true;
+      state.splitIndex++;
+
+      var pair = state.pairs[state.splitIndex];
+      state.aBlack += (pair.color === 'black' ? 1 : 0);
+      state.aWhite += (pair.color === 'white' ? 1 : 0);
+      state.bBlack += (pair.color === 'black' ? 1 : 0);
+      state.bWhite += (pair.color === 'white' ? 1 : 0);
+
+      // First show splitting state
+      render();
+
+      // Then animate to done
+      setTimeout(function() {
+        state.splitting = false;
+        render();
+
+        if (state.splitIndex >= state.pairs.length - 1) {
+          document.getElementById('btnSplit').disabled = true;
+        }
+      }, 600);
+    }
+
+    /**
+     * 设置盲人视角开关状态（视觉模拟）
+     * @param {boolean} enabled 是否开启
+     */
+    function setBlindMode(enabled) {
+      state.blindMode = !!enabled;
+      toggleTrack.classList.toggle('active', state.blindMode);
+      toggleLabel.textContent = state.blindMode ? '盲人视角（开启）' : '盲人视角';
+      document.body.classList.toggle('blind-mode', state.blindMode);
+
+      var modeToggleBtn = document.getElementById('modeToggle');
+      modeToggleBtn.setAttribute('aria-pressed', state.blindMode ? 'true' : 'false');
+      render();
+    }
+
+    /**
+     * 设置步骤高亮（同时维护 aria-pressed）
+     * @param {HTMLElement} activeEl 当前激活的按钮
+     */
+    function setActiveStep(activeEl) {
+      document.querySelectorAll('.step').forEach(function(s) {
+        var isActive = s === activeEl;
+        s.classList.toggle('active', isActive);
+        s.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+      });
+    }
+
+    /* ── Blind Mode Toggle ── */
+    var toggleTrack = document.getElementById('toggleTrack');
+    var toggleLabel = document.getElementById('toggleLabel');
+
+    document.getElementById('modeToggle').addEventListener('click', function() {
+      setBlindMode(!state.blindMode);
+    });
+
+    /* ── Event Bindings ── */
+    document.getElementById('btnSplit').addEventListener('click', splitNext);
+    document.getElementById('btnReset').addEventListener('click', function() {
+      document.body.classList.remove('blind-mode');
+      setBlindMode(false);
+      init();
+    });
+
+    document.getElementById('steps').addEventListener('click', function(e) {
+      var step = e.target.closest('.step');
+      if (!step) return;
+      setActiveStep(step);
+    });
+
+    /* ── Boot ── */
+    init();
+  })();
+  </script>
+</body>
+</html>

@@ -43,9 +43,24 @@ body{
 }
 
 .bg{
-  position:fixed;inset:0;z-index:0;pointer-events:none;
-  background:radial-gradient(ellipse 60% 50% at 50% 10%,rgba(212,165,55,0.05),transparent),var(--gold-bg);
-}
+    position:fixed;inset:0;z-index:0;pointer-events:none;
+    background:radial-gradient(ellipse 60% 50% at 50% 10%,rgba(212,165,55,0.05),transparent),var(--gold-bg);
+  }
+  /* 金属质感/切割线背景 */
+  .bg::before {
+    content: ''; position: absolute; inset: 0;
+    background: 
+      linear-gradient(135deg, transparent 45%, var(--border) 49%, var(--gold-dim) 50%, var(--border) 51%, transparent 55%),
+      linear-gradient(45deg, transparent 45%, var(--border) 49%, var(--gold-dim) 50%, var(--border) 51%, transparent 55%);
+    background-size: 60px 60px;
+    opacity: 0.1;
+  }
+  .bg::after {
+    content: ''; position: absolute; inset: 0;
+    background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.6' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    opacity: 0.05;
+    mix-blend-mode: color-dodge;
+  }
 
 .container{position:relative;z-index:2;max-width:800px;margin:0 auto;padding:0 24px}
 

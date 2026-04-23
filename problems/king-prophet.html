@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>国王与预言家 — 经典逻辑推理</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Noto+Serif+SC:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/base.css">
+  <script src="../assets/theme.js" defer></script>
+  <style>
+  *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+  :root{
+    --bg:#07070b;
+    --surface:#0f0f18;
+    --card:rgba(18,18,26,0.62);
+    --card-2:rgba(28,28,40,0.45);
+    --accent:#d4a537;
+    --accent-bright:#f0c94d;
+    --accent-dim:#8a6d1b;
+    --cream:#e8e0d4;
+    --cream-dim:#8a847a;
+    --border:rgba(212,165,55,0.16);
+    --shadow:rgba(0,0,0,0.35);
+    --red:#c0392b;
+    --green:#4a9a5e;
+    --blue:#4a7adf;
+  }
+  [data-theme="light"]{
+    --bg:#f3f4f8;
+    --surface:#ffffff;
+    --card:rgba(255,255,255,0.92);
+    --card-2:rgba(255,255,255,0.78);
+    --accent:#b08235;
+    --accent-bright:#d4a537;
+    --accent-dim:#8a6528;
+    --cream:#1a1a1c;
+    --cream-dim:#5a5a5e;
+    --border:rgba(176,130,53,0.18);
+    --shadow:rgba(0,0,0,0.08);
+    --red:#c0392b;
+    --green:#2d7d47;
+    --blue:#2d63d6;
+  }
+  html{scroll-behavior:smooth}
+  body{
+    font-family:'Noto Serif SC',serif;
+    background:var(--bg);
+    color:var(--cream);
+    min-height:100vh;
+    overflow-x:hidden;
+    line-height:1.85;
+  }
+  .bg{
+    position:fixed;inset:0;z-index:0;pointer-events:none;
+    background:
+      radial-gradient(ellipse 62% 54% at 25% 12%,rgba(212,165,55,0.06),transparent),
+      radial-gradient(ellipse 48% 40% at 85% 85%,rgba(74,122,223,0.06),transparent),
+      var(--bg);
+  }
+  .container{position:relative;z-index:2;max-width:980px;margin:0 auto;padding:0 24px}
+
+  /* ===== Hero ===== */
+  .hero{
+    min-height:78vh;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    text-align:center;padding:42px 0;
+  }
+  .hero-icon{width:68px;height:68px;margin-bottom:22px;color:var(--accent);opacity:0.9}
+  .hero h1{
+    font-family:'Playfair Display','Noto Serif SC',serif;
+    font-size:clamp(2rem,5.2vw,3.3rem);
+    font-weight:900;
+    background:linear-gradient(135deg,var(--accent-bright),var(--accent),var(--accent-dim));
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+    letter-spacing:0.06em;line-height:1.15;margin-bottom:10px;
+  }
+  .hero .subtitle{
+    font-size:clamp(0.9rem,2vw,1.1rem);
+    color:var(--cream-dim);
+    font-weight:300;
+    letter-spacing:0.22em;
+    margin-bottom:34px;
+  }
+  .hero-question{
+    max-width:720px;text-align:left;
+    background:var(--card);
+    border:1px solid var(--border);
+    padding:24px 28px;
+    border-radius:14px;
+    font-size:0.95rem;
+    color:var(--cream-dim);
+    box-shadow:0 18px 46px var(--shadow);
+  }
+  .hero-question strong{color:var(--accent-bright);font-weight:700}
+
+  /* ===== Sections ===== */
+  section{padding:54px 0}
+  .label{
+    display:inline-block;
+    font-size:0.75rem;
+    letter-spacing:0.2em;
+    color:var(--accent-dim);
+    margin-bottom:12px;
+    text-transform:uppercase;
+  }
+  .heading{
+    font-size:clamp(1.5rem,3vw,2.05rem);
+    color:var(--cream);
+    font-weight:900;
+    margin-bottom:18px;
+  }
+
+  .card{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:16px;
+    padding:22px 20px;
+    box-shadow:0 16px 36px rgba(0,0,0,0.18);
+  }
+
+  .steps{display:grid;gap:14px;margin-top:16px}
+  .step{
+    padding:16px 16px 16px 18px;
+    border:1px solid rgba(212,165,55,0.10);
+    background:linear-gradient(180deg,rgba(212,165,55,0.06),transparent);
+    border-radius:14px;
+    transition:transform .25s ease,border-color .25s ease,background .25s ease;
+    cursor:pointer;
+  }
+  .step:hover{
+    transform:translateY(-2px);
+    border-color:rgba(212,165,55,0.25);
+    background:linear-gradient(180deg,rgba(212,165,55,0.10),transparent);
+  }
+  .step.active{
+    border-color:rgba(240,201,77,0.55);
+    box-shadow:0 10px 24px rgba(212,165,55,0.12);
+  }
+  .step-title{font-weight:900;color:var(--accent);margin-bottom:6px}
+  .step-desc{color:var(--cream-dim);font-size:0.92rem}
+
+  .insight{
+    margin-top:20px;
+    padding:18px 18px 18px 18px;
+    border-left:3px solid var(--accent);
+    background:rgba(212,165,55,0.06);
+    border-radius:14px;
+  }
+  .insight h3{font-size:1rem;color:var(--cream);margin-bottom:6px}
+  .insight p{color:var(--cream-dim);font-size:0.92rem}
+
+  /* ===== Simulator ===== */
+  .sim{
+    margin-top:18px;
+    display:grid;
+    grid-template-columns:1.05fr 0.95fr;
+    gap:16px;
+    align-items:start;
+  }
+  @media (max-width:900px){.sim{grid-template-columns:1fr}}
+
+  .panel{
+    background:var(--card-2);
+    border:1px solid rgba(212,165,55,0.12);
+    border-radius:16px;
+    padding:16px;
+  }
+  .panel-title{
+    display:flex;align-items:center;justify-content:space-between;
+    gap:12px;margin-bottom:12px;
+  }
+  .panel-title h3{font-size:0.95rem;color:var(--cream);letter-spacing:0.06em}
+
+  .choice{
+    display:grid;gap:10px;
+  }
+  .radio{
+    display:flex;align-items:flex-start;gap:10px;
+    padding:12px 12px;
+    border-radius:14px;
+    border:1px solid rgba(212,165,55,0.14);
+    background:rgba(255,255,255,0.02);
+    cursor:pointer;
+    transition:border-color .2s ease, background .2s ease, transform .2s ease;
+  }
+  .radio:hover{
+    transform:translateY(-1px);
+    border-color:rgba(212,165,55,0.28);
+    background:rgba(212,165,55,0.06);
+  }
+  .radio input{margin-top:4px;accent-color:var(--accent)}
+  .radio .t{font-weight:900;color:var(--cream);margin-bottom:4px}
+  .radio .d{font-size:0.88rem;color:var(--cream-dim)}
+
+  .btn-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+  .btn{
+    appearance:none;border:none;cursor:pointer;
+    padding:10px 14px;border-radius:12px;
+    font-family:'Noto Serif SC',serif;
+    font-size:0.88rem;
+    color:var(--bg);
+    background:linear-gradient(135deg,var(--accent-bright),var(--accent));
+    box-shadow:0 10px 24px rgba(212,165,55,0.18);
+    transition:transform .2s ease, filter .2s ease;
+  }
+  .btn:active{transform:translateY(1px)}
+  .btn.secondary{
+    background:transparent;
+    color:var(--cream);
+    border:1px solid rgba(212,165,55,0.25);
+    box-shadow:none;
+  }
+
+  .result{
+    margin-top:12px;
+    padding:12px 14px;
+    border-radius:14px;
+    background:rgba(212,165,55,0.06);
+    border:1px solid rgba(212,165,55,0.16);
+    color:var(--cream-dim);
+    font-size:0.9rem;
+  }
+  .result strong{color:var(--accent-bright)}
+
+  .pill{
+    display:inline-flex;align-items:center;gap:8px;
+    padding:6px 10px;border-radius:999px;
+    border:1px solid rgba(212,165,55,0.22);
+    background:rgba(212,165,55,0.08);
+    font-size:0.82rem;color:var(--cream);
+    letter-spacing:0.06em;
+  }
+  .dot{width:8px;height:8px;border-radius:50%}
+  .dot.ok{background:var(--green)}
+  .dot.bad{background:var(--red)}
+  .dot.neu{background:var(--blue)}
+
+  footer{padding:42px 0 70px;text-align:center;color:var(--cream-dim);opacity:0.7}
+  </style>
+</head>
+<body>
+  <div class="bg"></div>
+
+  <a href="../index.html" class="back-link">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    <span>返回首页</span>
+  </a>
+  <button class="theme-toggle-sub" id="themeToggle" title="切换明暗模式">
+    <svg class="moon-icon" viewBox="0 0 24 24"><path d="M12.1,22c-4.9,0-9-3.8-9.1-8.7c0-3.1,1.5-6.1,4.1-8c0.2-0.1,0.5-0.1,0.7,0.1c0.2,0.2,0.2,0.5,0.1,0.7c-0.5,0.9-0.7,1.8-0.7,2.8c0,3.5,2.8,6.3,6.3,6.3c1,0,1.9-0.2,2.8-0.7c0.2-0.1,0.5-0.1,0.7,0.1c0.2,0.2,0.2,0.5,0.1,0.7C15.1,20.5,13.6,22,12.1,22z"/></svg>
+    <svg class="sun-icon" viewBox="0 0 24 24"><path d="M12,18c-3.3,0-6-2.7-6-6s2.7-6,6-6s6,2.7,6,6S15.3,18,12,18z M12,8c-2.2,0-4,1.8-4,4s1.8,4,4,4s4-1.8,4-4S14.2,8,12,8z M11,1h2v3h-2V1z M11,20h2v3h-2V20z M3.5,4.9l2.1-2.1l1.4,1.4L4.9,6.3L3.5,4.9z M17,18.4l2.1-2.1l1.4,1.4l-2.1,2.1L17,18.4z M1,11h3v2H1V11z M20,11h3v2h-3V11z M4.9,17.7l2.1,2.1l-1.4,1.4l-2.1-2.1L4.9,17.7z M18.4,5.6l2.1-2.1l1.4,1.4l-2.1,2.1L18.4,5.6z"/></svg>
+  </button>
+
+  <div class="container">
+    <section class="hero">
+      <div class="hero-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M6 3h12"></path>
+          <path d="M8 3v6"></path>
+          <path d="M16 3v6"></path>
+          <path d="M7 9h10"></path>
+          <path d="M6 9l-2 3"></path>
+          <path d="M18 9l2 3"></path>
+          <path d="M12 12v9"></path>
+          <path d="M9 21h6"></path>
+        </svg>
+      </div>
+      <h1>国王与预言家</h1>
+      <p class="subtitle">THE SELF-TRAP PROPHECY</p>
+      <div class="hero-question">
+        在临上刑场前，国王对预言家说：<br>
+        “你预言一下<strong>今天我将如何处死你</strong>。你如果预言对了，我就让你<strong>服毒死</strong>；否则，我就<strong>绞死你</strong>。”<br><br>
+        但预言家的回答，使得国王无论如何也无法将他处死。请问，他是如何预言的？
+      </div>
+    </section>
+
+    <section id="solution">
+      <span class="label">逻辑解析 / ANALYSIS</span>
+      <h2 class="heading">一句话，把国王的规则“反咬”回去</h2>
+
+      <div class="card">
+        <div class="steps" id="steps">
+          <div class="step" data-step="1">
+            <div class="step-title">关键预言</div>
+            <div class="step-desc">预言家说：<strong>“你会绞死我。”</strong></div>
+          </div>
+          <div class="step" data-step="2">
+            <div class="step-title">国王若选择绞死</div>
+            <div class="step-desc">则预言为真。按国王规则：<strong>预言对了 → 必须服毒</strong>，与“绞死”冲突。</div>
+          </div>
+          <div class="step" data-step="3">
+            <div class="step-title">国王若选择服毒</div>
+            <div class="step-desc">则预言为假。按国王规则：<strong>预言错了 → 必须绞死</strong>，又与“服毒”冲突。</div>
+          </div>
+          <div class="step" data-step="4">
+            <div class="step-title">结论</div>
+            <div class="step-desc">无论国王怎么选，都会导致“行动”与“规则要求的行动”不一致，因此国王无法在规则框架内完成处死。</div>
+          </div>
+        </div>
+
+        <div class="insight">
+          <h3>方法为什么成立？</h3>
+          <p>
+            这是一类“自指陷阱”：预言并不是在描述世界，而是在利用国王的<strong>判定规则</strong>制造悖论。
+            一旦规则把“真假”与“执行方式”硬绑定，就可能被一句话逼入无法自洽的分支。
+          </p>
+        </div>
+
+        <div class="sim">
+          <div class="panel">
+            <div class="panel-title">
+              <h3>判决模拟器</h3>
+              <span class="pill"><span class="dot neu"></span>选择预言并尝试判决</span>
+            </div>
+
+            <div class="choice" id="choice">
+              <label class="radio">
+                <input type="radio" name="prophecy" value="hang" checked>
+                <div>
+                  <div class="t">预言：你会绞死我</div>
+                  <div class="d">经典做法：让国王两条路都走不通。</div>
+                </div>
+              </label>
+              <label class="radio">
+                <input type="radio" name="prophecy" value="poison">
+                <div>
+                  <div class="t">预言：你会让我服毒死</div>
+                  <div class="d">对照组：这句不制造悖论，国王可照规则执行。</div>
+                </div>
+              </label>
+            </div>
+
+            <div class="btn-row">
+              <button class="btn" id="btnHang" type="button">国王：绞死</button>
+              <button class="btn" id="btnPoison" type="button">国王：服毒</button>
+              <button class="btn secondary" id="btnReset" type="button">重置</button>
+            </div>
+
+            <div class="result" id="result">
+              请选择预言，然后点击“绞死/服毒”尝试执行。系统会显示该选择是否与国王规则自洽。
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-title">
+              <h3>规则检验</h3>
+              <span class="pill"><span class="dot neu"></span>真假 → 对应处置</span>
+            </div>
+            <div class="result">
+              国王规则：<br>
+              <strong>预言为真</strong> → 服毒；<br>
+              <strong>预言为假</strong> → 绞死。
+            </div>
+            <div class="result" id="audit">
+              等待你的选择……
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer>Logic Site · 经典题解页面</footer>
+  </div>
+
+  <script>
+  /**
+   * 计算“预言”在给定处决方式下是否为真。
+   * @param {'hang'|'poison'} prophecy 预言内容
+   * @param {'hang'|'poison'} action 国王实际选择的处决方式
+   * @returns {boolean} 预言真假
+   */
+  function isProphecyTrue(prophecy, action) {
+    return prophecy === action;
+  }
+
+  /**
+   * 根据“预言真假”推导国王规则要求的处决方式。
+   * @param {boolean} truth 预言真假
+   * @returns {'hang'|'poison'} 规则要求的处决方式
+   */
+  function requiredActionByRule(truth) {
+    return truth ? 'poison' : 'hang';
+  }
+
+  /**
+   * 将内部枚举值转换为中文动作文本。
+   * @param {'hang'|'poison'} action 行为
+   * @returns {string} 中文文本
+   */
+  function actionToText(action) {
+    return action === 'hang' ? '绞死' : '服毒';
+  }
+
+  /**
+   * 渲染模拟器输出：显示预言真假、规则要求、是否自洽。
+   * @param {'hang'|'poison'} prophecy 预言
+   * @param {'hang'|'poison'} action 国王选择
+   */
+  function renderDecision(prophecy, action) {
+    var truth = isProphecyTrue(prophecy, action);
+    var required = requiredActionByRule(truth);
+
+    var ok = required === action;
+    var result = document.getElementById('result');
+    var audit = document.getElementById('audit');
+
+    var truthText = truth ? '真' : '假';
+    var verdict = ok ? '自洽' : '矛盾';
+
+    result.innerHTML =
+      '你选择的预言：<strong>' + (prophecy === 'hang' ? '你会绞死我' : '你会让我服毒死') + '</strong><br>' +
+      '国王实际执行：<strong>' + actionToText(action) + '</strong><br>' +
+      '于是预言为：<strong>' + truthText + '</strong> → 规则要求：<strong>' + actionToText(required) + '</strong><br>' +
+      '最终判定：<strong style="color:' + (ok ? 'var(--green)' : 'var(--red)') + '">' + verdict + '</strong>';
+
+    audit.innerHTML =
+      (ok
+        ? '<span class="pill"><span class="dot ok"></span>规则可执行</span>：本次选择不会自相矛盾。'
+        : '<span class="pill"><span class="dot bad"></span>规则被反噬</span>：你的执行方式与规则要求不一致，国王无法“按自己的规则”完成处决。');
+  }
+
+  /**
+   * 获取当前选中的预言。
+   * @returns {'hang'|'poison'} 预言枚举
+   */
+  function getSelectedProphecy() {
+    var checked = document.querySelector('input[name="prophecy"]:checked');
+    return checked ? checked.value : 'hang';
+  }
+
+  /**
+   * 初始化步骤高亮与模拟器交互。
+   */
+  function initPage() {
+    var steps = document.getElementById('steps');
+    var btnHang = document.getElementById('btnHang');
+    var btnPoison = document.getElementById('btnPoison');
+    var btnReset = document.getElementById('btnReset');
+    var result = document.getElementById('result');
+    var audit = document.getElementById('audit');
+
+    steps.addEventListener('click', function(e) {
+      var item = e.target.closest('.step');
+      if (!item) return;
+      steps.querySelectorAll('.step').forEach(function(s) {
+        s.classList.toggle('active', s === item);
+      });
+    });
+
+    btnHang.addEventListener('click', function() {
+      renderDecision(getSelectedProphecy(), 'hang');
+    });
+    btnPoison.addEventListener('click', function() {
+      renderDecision(getSelectedProphecy(), 'poison');
+    });
+    btnReset.addEventListener('click', function() {
+      result.textContent = '请选择预言，然后点击“绞死/服毒”尝试执行。系统会显示该选择是否与国王规则自洽。';
+      audit.textContent = '等待你的选择……';
+      steps.querySelectorAll('.step').forEach(function(s) { s.classList.remove('active'); });
+    });
+  }
+
+  initPage();
+  </script>
+</body>
+</html>

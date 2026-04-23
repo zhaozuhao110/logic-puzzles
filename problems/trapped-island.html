@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>被困小岛 — 经典逻辑推理</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Noto+Serif+SC:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/base.css">
+  <link rel="stylesheet" href="../assets/problem-gold.css">
+  <script src="../assets/theme.js" defer></script>
+  <script src="../assets/problem-stepper.js" defer></script>
+</head>
+<body>
+  <div class="bg"></div>
+
+  <a href="../index.html" class="back-link">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    <span>返回首页</span>
+  </a>
+  <button class="theme-toggle-sub" id="themeToggle" title="切换明暗模式">
+    <svg class="moon-icon" viewBox="0 0 24 24"><path d="M12.1,22c-4.9,0-9-3.8-9.1-8.7c0-3.1,1.5-6.1,4.1-8c0.2-0.1,0.5-0.1,0.7,0.1c0.2,0.2,0.2,0.5,0.1,0.7c-0.5,0.9-0.7,1.8-0.7,2.8c0,3.5,2.8,6.3,6.3,6.3c1,0,1.9-0.2,2.8-0.7c0.2-0.1,0.5-0.1,0.7,0.1c0.2,0.2,0.2,0.5,0.1,0.7C15.1,20.5,13.6,22,12.1,22z"/></svg>
+    <svg class="sun-icon" viewBox="0 0 24 24"><path d="M12,18c-3.3,0-6-2.7-6-6s2.7-6,6-6s6,2.7,6,6S15.3,18,12,18z M12,8c-2.2,0-4,1.8-4,4s1.8,4,4,4s4-1.8,4-4S14.2,8,12,8z M11,1h2v3h-2V1z M11,20h2v3h-2V20z M3.5,4.9l2.1-2.1l1.4,1.4L4.9,6.3L3.5,4.9z M17,18.4l2.1-2.1l1.4,1.4l-2.1,2.1L17,18.4z M1,11h3v2H1V11z M20,11h3v2h-3V11z M4.9,17.7l2.1,2.1l-1.4,1.4l-2.1-2.1L4.9,17.7z M18.4,5.6l2.1-2.1l1.4,1.4l-2.1,2.1L18.4,5.6z"/></svg>
+  </button>
+
+  <div class="container">
+    <section class="hero">
+      <div class="hero-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 20h18"/>
+          <path d="M6 20V9l6-4 6 4v11"/>
+          <path d="M9 20v-6h6v6"/>
+        </svg>
+      </div>
+      <h1>被困小岛</h1>
+      <p class="subtitle">trapped-island</p>
+      <div class="hero-question">
+        恒河中心有一个流沙堆积起来的小岛，岛上有一座古老的桥与河岸相连，但桥已破烂不堪。<br>
+        有个人散步时走到岛上，返回时走了两三步桥就嘎嘎响像要断，他只好退回岛上。这个人不会游泳，呼救也无人理会。<br>
+        他在岛上困了十天，到第十一天却顺利过桥回到河岸。<br><br>
+        <strong>问：这是怎么回事？</strong>
+      </div>
+    </section>
+
+    <section id="analysis">
+      <span class="label">逻辑解析 / analysis</span>
+      <h2 class="heading">从“桥快断”推回去：变化的不是桥，而是人的重量</h2>
+      <div class="card">
+        <div class="nav">
+          <div class="status" id="stepStatus">步骤 1 / 3</div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end">
+            <button class="btn" id="btnPrev" disabled>上一步</button>
+            <button class="btn" id="btnNext">下一步</button>
+          </div>
+        </div>
+
+        <div class="steps" id="steps">
+          <div class="step-card" data-step="1">
+            <div class="step-title"><div class="badge">1</div><h3>桥“嘎嘎响”说明桥还能撑一部分重量</h3></div>
+            <p>如果桥完全断了，他根本无法走回去；“像要断”暗示桥处于<strong>临界承重</strong>：对当时的体重来说太危险，但并非一定立刻断裂。</p>
+          </div>
+
+          <div class="step-card" data-step="2">
+            <div class="step-title"><div class="badge">2</div><h3>困在岛上十天 ⇒ 饮食不足 ⇒ 体重显著下降</h3></div>
+            <p>岛上条件恶劣，他只能“搜肠刮肚”勉强维持，十天后体重变轻，使得过桥时对桥的负载明显下降。</p>
+          </div>
+
+          <div class="step-card" data-step="3">
+            <div class="step-title"><div class="badge">3</div><h3>第十一天能过桥：因为他已经瘦到桥能承受</h3></div>
+            <p>当体重降到桥的安全承重以下时，他就能小心通过。<br><strong>结论：十天的饥饿让他变轻，从而能过桥。</strong></p>
+          </div>
+        </div>
+
+        <div class="insight">
+          <span class="label">洞见总结 / insight</span>
+          <ul>
+            <li>这类题的关键是识别“临界状态”：桥没断但很危险 ⇒ 存在<strong>阈值</strong>。</li>
+            <li>故事里的“十天”不是背景，是提示：发生了<strong>可累积的变化</strong>（体重）。</li>
+            <li>水平思考题常用“改变变量而非改变环境”的方式解。</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    /**
+     * 页面初始化：启用“步骤推进器”轻交互。
+     */
+    function initPage(){
+      if (window.initProblemStepper) window.initProblemStepper();
+    }
+    initPage();
+  </script>
+</body>
+</html>

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>帽子的颜色（二） — 经典逻辑推理</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Noto+Serif+SC:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/base.css">
+  <link rel="stylesheet" href="../assets/problem-gold.css">
+  <script src="../assets/theme.js" defer></script>
+  <script src="../assets/problem-stepper.js" defer></script>
+</head>
+<body>
+  <div class="bg"></div>
+
+  <a href="../index.html" class="back-link">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    <span>返回首页</span>
+  </a>
+  <button class="theme-toggle-sub" id="themeToggle" title="切换明暗模式">
+    <svg class="moon-icon" viewBox="0 0 24 24"><path d="M12.1,22c-4.9,0-9-3.8-9.1-8.7c0-3.1,1.5-6.1,4.1-8c0.2-0.1,0.5-0.1,0.7,0.1c0.2,0.2,0.2,0.5,0.1,0.7c-0.5,0.9-0.7,1.8-0.7,2.8c0,3.5,2.8,6.3,6.3,6.3c1,0,1.9-0.2,2.8-0.7c0.2-0.1,0.5-0.1,0.7,0.1c0.2,0.2,0.2,0.5,0.1,0.7C15.1,20.5,13.6,22,12.1,22z"/></svg>
+    <svg class="sun-icon" viewBox="0 0 24 24"><path d="M12,18c-3.3,0-6-2.7-6-6s2.7-6,6-6s6,2.7,6,6S15.3,18,12,18z M12,8c-2.2,0-4,1.8-4,4s1.8,4,4,4s4-1.8,4-4S14.2,8,12,8z M11,1h2v3h-2V1z M11,20h2v3h-2V20z M3.5,4.9l2.1-2.1l1.4,1.4L4.9,6.3L3.5,4.9z M17,18.4l2.1-2.1l1.4,1.4l-2.1,2.1L17,18.4z M1,11h3v2H1V11z M20,11h3v2h-3V11z M4.9,17.7l2.1,2.1l-1.4,1.4l-2.1-2.1L4.9,17.7z M18.4,5.6l2.1-2.1l1.4,1.4l-2.1,2.1L18.4,5.6z"/></svg>
+  </button>
+
+  <div class="container">
+    <section class="hero">
+      <div class="hero-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M6 10c0-4 3-7 6-7s6 3 6 7"/>
+          <path d="M5 10h14l-1 10H6L5 10z"/>
+          <path d="M9 14h6"/>
+        </svg>
+      </div>
+      <h1>帽子的颜色（二）</h1>
+      <p class="subtitle">hat-color-2</p>
+      <div class="hero-question">
+        你和另外 4 人（共 5 人）都很聪明。共有<strong>5 顶白帽、2 顶红帽、2 顶黑帽</strong>，随机给每人戴 1 顶。<br>
+        每人都能看到其他 4 人帽子的颜色，却看不到自己的。<br><br>
+        你看到其他 4 人的帽子颜色<strong>全是白色</strong>，并且大家一时都沉默无言。<br>
+        于是你猜出了自己帽子的颜色。<br><br>
+        <strong>问：你猜的是什么颜色？推理过程是什么？</strong>
+      </div>
+    </section>
+
+    <section id="analysis">
+      <span class="label">逻辑解析 / analysis</span>
+      <h2 class="heading">把“沉默”理解为：没人能从看到的信息中立刻排除到唯一颜色</h2>
+      <div class="card">
+        <div class="nav">
+          <div class="status" id="stepStatus">步骤 1 / 3</div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end">
+            <button class="btn" id="btnPrev" disabled>上一步</button>
+            <button class="btn" id="btnNext">下一步</button>
+          </div>
+        </div>
+
+        <div class="steps" id="steps">
+          <div class="step-card" data-step="1">
+            <div class="step-title"><div class="badge">1</div><h3>你眼中的候选：自己的帽子只可能是白/红/黑</h3></div>
+            <p>你看到其他 4 顶都是白帽，所以你知道：<strong>所有非白帽（若存在）只能在你头上</strong>。因此你的帽子在三色中待定。</p>
+          </div>
+
+          <div class="step-card" data-step="2">
+            <div class="step-title"><div class="badge">2</div><h3>若你是红或黑，会给别人制造“更强信息”</h3></div>
+            <p>假设你戴的是红帽（或黑帽），那么其余 4 人每个人都能看到：<strong>“有人戴了非白帽”</strong>。这会显著缩小他们对自己帽色的猜测空间——至少可以确定“非白帽确实出现了”，并据此更快触发进一步推理。<br>
+              但现实是大家都沉默，说明并没有出现能让任何人迅速收敛到唯一解的强信息。</p>
+          </div>
+
+          <div class="step-card" data-step="3">
+            <div class="step-title"><div class="badge">3</div><h3>最保守且与沉默一致的结论：你也是白帽</h3></div>
+            <p>当你也戴白帽时，全场 5 人互相看到的都是白帽，所有人的信息结构完全对称，没有人能凭“看到的一顶有色帽”率先突破。<br>
+              因此，与“你看到 4 人白帽 + 大家沉默”最一致的结论是：<br><strong>你戴的是白帽。</strong></p>
+            <p class="note">注：这类题的核心是把“沉默”当成一次公共公告，并与“若出现有色帽会带来的信息差”对照。</p>
+          </div>
+        </div>
+
+        <div class="insight">
+          <span class="label">洞见总结 / insight</span>
+          <ul>
+            <li>当你看到“其他人全同色”时，你的帽色往往承担了<strong>全局信息差</strong>。</li>
+            <li>把“没人开口”视为<strong>公共公告</strong>，能进一步排除不稳定的假设。</li>
+            <li>遇到多人同时推理题，优先找<strong>信息不对称</strong>是否会导致某人更早确定。</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    /**
+     * 页面初始化：启用“步骤推进器”轻交互。
+     */
+    function initPage(){
+      if (window.initProblemStepper) window.initProblemStepper();
+    }
+    initPage();
+  </script>
+</body>
+</html>

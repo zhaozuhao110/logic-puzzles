@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>细菌分裂 — 经典逻辑推理</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Noto+Serif+SC:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/base.css">
+  <link rel="stylesheet" href="../assets/problem-gold.css">
+  <script src="../assets/theme.js" defer></script>
+  <script src="../assets/problem-stepper.js" defer></script>
+</head>
+<body>
+  <div class="bg"></div>
+
+  <a href="../index.html" class="back-link">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    <span>返回首页</span>
+  </a>
+  <button class="theme-toggle-sub" id="themeToggle" title="切换明暗模式">
+    <svg class="moon-icon" viewBox="0 0 24 24"><path d="M12.1,22c-4.9,0-9-3.8-9.1-8.7c0-3.1,1.5-6.1,4.1-8c0.2-0.1,0.5-0.1,0.7,0.1c0.2,0.2,0.2,0.5,0.1,0.7c-0.5,0.9-0.7,1.8-0.7,2.8c0,3.5,2.8,6.3,6.3,6.3c1,0,1.9-0.2,2.8-0.7c0.2-0.1,0.5-0.1,0.7,0.1c0.2,0.2,0.2,0.5,0.1,0.7C15.1,20.5,13.6,22,12.1,22z"/></svg>
+    <svg class="sun-icon" viewBox="0 0 24 24"><path d="M12,18c-3.3,0-6-2.7-6-6s2.7-6,6-6s6,2.7,6,6S15.3,18,12,18z M12,8c-2.2,0-4,1.8-4,4s1.8,4,4,4s4-1.8,4-4S14.2,8,12,8z M11,1h2v3h-2V1z M11,20h2v3h-2V20z M3.5,4.9l2.1-2.1l1.4,1.4L4.9,6.3L3.5,4.9z M17,18.4l2.1-2.1l1.4,1.4l-2.1,2.1L17,18.4z M1,11h3v2H1V11z M20,11h3v2h-3V11z M4.9,17.7l2.1,2.1l-1.4,1.4l-2.1-2.1L4.9,17.7z M18.4,5.6l2.1-2.1l1.4,1.4l-2.1,2.1L18.4,5.6z"/></svg>
+  </button>
+
+  <div class="container">
+    <section class="hero">
+      <div class="hero-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M8 8c2-2 6-2 8 0"/>
+          <path d="M8 16c2 2 6 2 8 0"/>
+          <path d="M9 10h.01M15 10h.01M9 14h.01M15 14h.01"/>
+        </svg>
+      </div>
+      <h1>细菌分裂</h1>
+      <p class="subtitle">bacteria-split</p>
+      <div class="hero-question">
+        有一种细菌：<strong>每 1 分钟分裂为 2 个</strong>，再过 1 分钟，每个又分裂为 2 个……<br>
+        已知从 1 个细菌开始，分裂到<strong>装满一瓶</strong>需要 <strong>1 小时</strong>。<br><br>
+        同样的细菌，如果从 <strong>2 个</strong>开始分裂，分裂成一瓶需要几分钟？
+      </div>
+    </section>
+
+    <section id="analysis">
+      <span class="label">逻辑解析 / analysis</span>
+      <h2 class="heading">指数增长的“倒数一分钟”：满瓶前一分钟刚好半瓶</h2>
+      <div class="card">
+        <div class="nav">
+          <div class="status" id="stepStatus">步骤 1 / 3</div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end">
+            <button class="btn" id="btnPrev" disabled>上一步</button>
+            <button class="btn" id="btnNext">下一步</button>
+          </div>
+        </div>
+
+        <div class="steps" id="steps">
+          <div class="step-card" data-step="1">
+            <div class="step-title"><div class="badge">1</div><h3>每分钟翻倍 ⇒ 满瓶前 1 分钟一定是半瓶</h3></div>
+            <p>既然每分钟数量翻倍，那么如果第 60 分钟满瓶，第 59 分钟一定是<strong>半瓶</strong>，第 58 分钟是四分之一瓶……</p>
+          </div>
+
+          <div class="step-card" data-step="2">
+            <div class="step-title"><div class="badge">2</div><h3>从 2 个开始，相当于比 1 个快 1 次翻倍</h3></div>
+            <p>“从 2 个开始”就是“从 1 个开始并已经过了 1 分钟”的状态，因为 1 个经过 1 分钟恰好变 2 个。</p>
+          </div>
+
+          <div class="step-card" data-step="3">
+            <div class="step-title"><div class="badge">3</div><h3>答案：59 分钟</h3></div>
+            <p>所以从 2 个开始装满一瓶，比从 1 个开始少 1 分钟：<br><strong>需要 59 分钟。</strong></p>
+          </div>
+        </div>
+
+        <div class="insight">
+          <span class="label">洞见总结 / insight</span>
+          <ul>
+            <li>指数增长题常用“<strong>倒推一分钟</strong>”快速破题。</li>
+            <li>起点翻倍一次，就等价于节省 1 个周期。</li>
+            <li>别被“来回分裂很多次”吓到：关键只在最后几分钟的结构。</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    /**
+     * 页面初始化：启用“步骤推进器”轻交互。
+     */
+    function initPage(){
+      if (window.initProblemStepper) window.initProblemStepper();
+    }
+    initPage();
+  </script>
+</body>
+</html>

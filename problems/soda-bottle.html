@@ -52,13 +52,27 @@ body{
   min-height:100vh;overflow-x:hidden;line-height:1.8;
 }
 .bg{
-  position:fixed;inset:0;z-index:0;pointer-events:none;
-  background:
-    radial-gradient(ellipse 70% 40% at 70% 80%,rgba(255,77,138,0.06),transparent),
-    radial-gradient(ellipse 50% 50% at 30% 60%,rgba(45,212,191,0.04),transparent),
-    radial-gradient(ellipse 80% 40% at 50% 100%,rgba(255,136,68,0.05),transparent),
-    var(--sky);
-}
+    position:fixed;inset:0;z-index:0;pointer-events:none;
+    background:
+      radial-gradient(ellipse 70% 40% at 70% 80%,rgba(255,77,138,0.06),transparent),
+      radial-gradient(ellipse 50% 50% at 30% 60%,rgba(45,212,191,0.04),transparent),
+      radial-gradient(ellipse 80% 40% at 50% 100%,rgba(255,136,68,0.05),transparent),
+      var(--sky);
+  }
+  /* 汽水气泡背景 */
+  .bg::before{
+    content:'';position:absolute;inset:0;
+    background-image: 
+      radial-gradient(circle at 20% 30%, rgba(103, 232, 249, 0.1) 0, rgba(103, 232, 249, 0.1) 2px, transparent 2px),
+      radial-gradient(circle at 80% 70%, rgba(103, 232, 249, 0.08) 0, rgba(103, 232, 249, 0.08) 3px, transparent 3px),
+      radial-gradient(circle at 40% 90%, rgba(103, 232, 249, 0.12) 0, rgba(103, 232, 249, 0.12) 1.5px, transparent 1.5px);
+    background-size: 100px 100px, 150px 150px, 80px 80px;
+    animation: bubbleFloat 20s linear infinite;
+  }
+  @keyframes bubbleFloat {
+    from { background-position: 0 0, 0 0, 0 0; }
+    to { background-position: 0 -100px, 0 -150px, 0 -80px; }
+  }
 .container{position:relative;z-index:2;max-width:880px;margin:0 auto;padding:0 24px}
 
 /* ===== Hero ===== */

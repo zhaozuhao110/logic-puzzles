@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>奇怪的村庄 — 经典逻辑推理</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Noto+Serif+SC:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/base.css">
+  <link rel="stylesheet" href="../assets/problem-gold.css">
+  <script src="../assets/theme.js" defer></script>
+  <script src="../assets/problem-stepper.js" defer></script>
+  <style>
+    /* ===== 七日枚举表 ===== */
+    .day-table{
+      width:100%;border-collapse:separate;border-spacing:3px;margin:14px 0;font-size:0.86rem;
+    }
+    .day-table th,.day-table td{
+      padding:7px 9px;border-radius:6px;text-align:center;
+      background:rgba(0,0,0,0.06);color:var(--cream-dim);
+    }
+    .day-table th{background:rgba(212,165,55,0.08);color:var(--gold-mid);font-weight:700;font-size:0.82rem}
+    .day-table .cell-lie{background:rgba(212,165,55,0.10);color:var(--gold-mid);font-weight:600}
+    .day-table .cell-truth{background:rgba(0,0,0,0.04);color:var(--cream-dim);opacity:0.7}
+    .day-table .cell-yes{background:rgba(240,201,77,0.14);color:var(--gold-bright);font-weight:900}
+    .day-table .cell-no{background:rgba(231,76,60,0.06);color:#e74c3c;font-weight:600;opacity:0.85}
+    .day-table .cell-highlight{background:rgba(240,201,77,0.20);color:var(--gold-bright);font-weight:900;border:1px solid rgba(212,165,55,0.35)}
+    .day-table .cell-dim{opacity:0.3}
+    [data-theme="light"] .day-table th,.day-table td{background:rgba(0,0,0,0.02)}
+    [data-theme="light"] .day-table th{background:rgba(176,130,53,0.06)}
+    [data-theme="light"] .day-table .cell-lie{background:rgba(176,130,53,0.08);color:#d4a537}
+    [data-theme="light"] .day-table .cell-truth{background:rgba(0,0,0,0.01);color:#5a5550}
+    [data-theme="light"] .day-table .cell-yes{background:rgba(176,130,53,0.10);color:#d4a537}
+    [data-theme="light"] .day-table .cell-no{background:rgba(192,57,43,0.06);color:#c0392b}
+    [data-theme="light"] .day-table .cell-highlight{background:rgba(176,130,53,0.14);color:#d4a537;border-color:rgba(176,130,53,0.3)}
+
+    /* ===== 结论块 ===== */
+    .conclusion{
+      margin-top:18px;padding:18px 20px;
+      background:rgba(240,201,77,0.06);border:1px solid rgba(212,165,55,0.28);
+      border-radius:10px;
+    }
+    .conclusion strong{color:var(--gold-bright);font-weight:900;font-size:1.02rem}
+    .conclusion p{color:var(--cream);font-size:0.94rem;line-height:1.75;margin:6px 0 0}
+
+    /* ===== 村庄标签 ===== */
+    .village-tag{
+      display:inline-block;padding:3px 10px;border-radius:20px;font-size:0.82rem;
+      font-weight:700;margin:0 2px;letter-spacing:0.04em;
+    }
+    .village-tag-zhang{background:rgba(74,122,223,0.10);color:rgba(74,122,223,0.85);border:1px solid rgba(74,122,223,0.2)}
+    .village-tag-li{background:rgba(240,201,77,0.10);color:var(--gold-mid);border:1px solid rgba(212,165,55,0.2)}
+    [data-theme="light"] .village-tag-zhang{background:rgba(74,122,223,0.06);color:rgba(74,122,223,0.7)}
+    [data-theme="light"] .village-tag-li{background:rgba(176,130,53,0.06);color:#d4a537}
+  </style>
+</head>
+<body>
+  <div class="bg"></div>
+
+  <a href="../index.html" class="back-link">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    <span>返回首页</span>
+  </a>
+  <button class="theme-toggle-sub" id="themeToggle" title="切换明暗模式">
+    <svg class="moon-icon" viewBox="0 0 24 24"><path d="M12.1,22c-4.9,0-9-3.8-9.1-8.7c0-3.1,1.5-6.1,4.1-8c0.2-0.1,0.5-0.1,0.7,0.1c0.2,0.2,0.2,0.5,0.1,0.7c-0.5,0.9-0.7,1.8-0.7,2.8c0,3.5,2.8,6.3,6.3,6.3c1,0,1.9-0.2,2.8-0.7c0.2-0.1,0.5-0.1,0.7,0.1c0.2,0.2,0.2,0.5,0.1,0.7C15.1,20.5,13.6,22,12.1,22z"/></svg>
+    <svg class="sun-icon" viewBox="0 0 24 24"><path d="M12,18c-3.3,0-6-2.7-6-6s2.7-6,6-6s6,2.7,6,6S15.3,18,12,18z M12,8c-2.2,0-4,1.8-4,4s1.8,4,4,4s4-1.8,4-4S14.2,8,12,8z M11,1h2v3h-2V1z M11,20h2v3h-2V20z M3.5,4.9l2.1-2.1l1.4,1.4L4.9,6.3L3.5,4.9z M17,18.4l2.1-2.1l1.4,1.4l-2.1,2.1L17,18.4z M1,11h3v2H1V11z M20,11h3v2h-3V11z M4.9,17.7l2.1,2.1l-1.4,1.4l-2.1-2.1L4.9,17.7z M18.4,5.6l2.1-2.1l1.4,1.4l-2.1,2.1L18.4,5.6z"/></svg>
+  </button>
+
+  <div class="container">
+    <section class="hero">
+      <div class="hero-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 21v-6h6v6"/>
+          <circle cx="12" cy="11" r="1.5" fill="currentColor" stroke="none"/>
+          <path d="M4 7h16" stroke-width="1" opacity="0.4"/>
+        </svg>
+      </div>
+      <h1>奇怪的村庄</h1>
+      <p class="subtitle">strange-villages</p>
+      <div class="hero-question">
+        <span class="village-tag village-tag-zhang">张庄</span>的人星期一、三、五说谎；<span class="village-tag village-tag-li">李村</span>的人星期二、四、六说谎，其他日子说真话。<br><br>
+        一天外地人见到两个人，问日期。两个人都说：<strong>"前天是我说谎的日子。"</strong><br><br>
+        如果这两人分别来自张庄和李村，那么这一天是<strong>星期几</strong>？
+      </div>
+    </section>
+
+    <section id="analysis">
+      <span class="label">逻辑解析 / analysis</span>
+      <h2 class="heading">逐日枚举：让"今天说真/谎"与"前天是否说谎日"对齐</h2>
+      <div class="card">
+        <div class="nav">
+          <div class="status" id="stepStatus">步骤 1 / 4</div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end">
+            <button class="btn" id="btnPrev" disabled>上一步</button>
+            <button class="btn" id="btnNext">下一步</button>
+          </div>
+        </div>
+
+        <div class="steps" id="steps">
+          <div class="step-card" data-step="1">
+            <div class="step-title"><div class="badge">1</div><h3>先列清两村的说谎日 / 真话日</h3></div>
+            <table class="day-table">
+              <tr><th>星期</th><th>一</th><th>二</th><th>三</th><th>四</th><th>五</th><th>六</th><th>日</th></tr>
+              <tr>
+                <th><span class="village-tag village-tag-zhang">张庄</span></th>
+                <td class="cell-lie">谎</td><td class="cell-truth">真</td><td class="cell-lie">谎</td><td class="cell-truth">真</td><td class="cell-lie">谎</td><td class="cell-truth">真</td><td class="cell-truth">真</td>
+              </tr>
+              <tr>
+                <th><span class="village-tag village-tag-li">李村</span></th>
+                <td class="cell-truth">真</td><td class="cell-lie">谎</td><td class="cell-truth">真</td><td class="cell-lie">谎</td><td class="cell-truth">真</td><td class="cell-lie">谎</td><td class="cell-truth">真</td>
+              </tr>
+            </table>
+            <p>说谎日 = 当天说的每句话内容都取反；真话日 = 说的每句话都如实。判断"前天是我说谎日"是否自洽，要同时看<strong>今天说的是真还是谎</strong>，以及<strong>前天是否确实是说谎日</strong>。</p>
+          </div>
+
+          <div class="step-card" data-step="2">
+            <div class="step-title"><div class="badge">2</div><h3>逐日检查张庄人：哪天他说的这句话能自洽？</h3></div>
+            <table class="day-table">
+              <tr><th>今天</th><th>今天态度</th><th>前天</th><th>前天是谎日?</th><th>句子内容</th><th>自洽?</th></tr>
+              <tr>
+                <th class="cell-highlight">星期一</th>
+                <td class="cell-lie">谎</td>
+                <td>星期六</td>
+                <td class="cell-no">否(真话日)</td>
+                <td>"前天是谎日" → 取反 → 前天<strong>不是</strong>谎日</td>
+                <td class="cell-yes">✓ 吻合</td>
+              </tr>
+              <tr>
+                <th>星期二</th><td class="cell-truth">真</td><td>星期日</td><td class="cell-no">否(真话日)</td>
+                <td>"前天是谎日" → 如实 → 前天<strong>是</strong>谎日</td><td class="cell-no">✗ 不吻合</td>
+              </tr>
+              <tr>
+                <th>星期三</th><td class="cell-lie">谎</td><td>星期一</td><td class="cell-yes">是(谎日)</td>
+                <td>"前天是谎日" → 取反 → 前天<strong>不是</strong>谎日</td><td class="cell-no">✗ 不吻合</td>
+              </tr>
+              <tr>
+                <th>星期四</th><td class="cell-truth">真</td><td>星期二</td><td class="cell-yes">是(谎日)</td>
+                <td>"前天是谎日" → 如实 → 前天<strong>是</strong>谎日</td><td class="cell-yes">✓ 吻合</td>
+              </tr>
+              <tr>
+                <th>星期五</th><td class="cell-lie">谎</td><td>星期三</td><td class="cell-yes">是(谎日)</td>
+                <td>"前天是谎日" → 取反 → 前天<strong>不是</strong>谎日</td><td class="cell-no">✗ 不吻合</td>
+              </tr>
+              <tr>
+                <th>星期六</th><td class="cell-truth">真</td><td>星期四</td><td class="cell-yes">是(谎日)</td>
+                <td>"前天是谎日" → 如实 → 前天<strong>是</strong>谎日</td><td class="cell-yes">✓ 吻合</td>
+              </tr>
+              <tr>
+                <th class="cell-highlight">星期日</th><td class="cell-truth">真</td><td>星期五</td><td class="cell-yes">是(谎日)</td>
+                <td>"前天是谎日" → 如实 → 前天<strong>是</strong>谎日</td><td class="cell-yes">✓ 吻合</td>
+              </tr>
+            </table>
+            <p>张庄人能说出这句话的日期：<strong>星期一</strong>和<strong>星期日</strong>。</p>
+          </div>
+
+          <div class="step-card" data-step="3">
+            <div class="step-title"><div class="badge">3</div><h3>逐日检查李村人：哪天他说的这句话能自洽？</h3></div>
+            <table class="day-table">
+              <tr><th>今天</th><th>今天态度</th><th>前天</th><th>前天是谎日?</th><th>句子内容</th><th>自洽?</th></tr>
+              <tr>
+                <th class="cell-highlight">星期一</th><td class="cell-truth">真</td><td>星期六</td><td class="cell-yes">是(谎日)</td>
+                <td>"前天是谎日" → 如实 → 前天<strong>是</strong>谎日</td><td class="cell-yes">✓ 吻合</td>
+              </tr>
+              <tr>
+                <th class="cell-highlight">星期二</th><td class="cell-lie">谎</td><td>星期日</td><td class="cell-no">否(真话日)</td>
+                <td>"前天是谎日" → 取反 → 前天<strong>不是</strong>谎日</td><td class="cell-yes">✓ 吻合</td>
+              </tr>
+              <tr>
+                <th>星期三</th><td class="cell-truth">真</td><td>星期一</td><td class="cell-no">否(真话日)</td>
+                <td>"前天是谎日" → 如实 → 前天<strong>是</strong>谎日</td><td class="cell-no">✗ 不吻合</td>
+              </tr>
+              <tr>
+                <th>星期四</th><td class="cell-lie">谎</td><td>星期二</td><td class="cell-yes">是(谎日)</td>
+                <td>"前天是谎日" → 取反 → 前天<strong>不是</strong>谎日</td><td class="cell-no">✗ 不吻合</td>
+              </tr>
+              <tr>
+                <th>星期五</th><td class="cell-truth">真</td><td>星期三</td><td class="cell-no">否(真话日)</td>
+                <td>"前天是谎日" → 如实 → 前天<strong>是</strong>谎日</td><td class="cell-no">✗ 不吻合</td>
+              </tr>
+              <tr>
+                <th>星期六</th><td class="cell-lie">谎</td><td>星期四</td><td class="cell-yes">是(谎日)</td>
+                <td>"前天是谎日" → 取反 → 前天<strong>不是</strong>谎日</td><td class="cell-no">✗ 不吻合</td>
+              </tr>
+              <tr>
+                <th>星期日</th><td class="cell-truth">真</td><td>星期五</td><td class="cell-no">否(真话日)</td>
+                <td>"前天是谎日" → 如实 → 前天<strong>是</strong>谎日</td><td class="cell-no">✗ 不吻合</td>
+              </tr>
+            </table>
+            <p>李村人能说出这句话的日期：<strong>星期一</strong>和<strong>星期二</strong>。</p>
+          </div>
+
+          <div class="step-card" data-step="4">
+            <div class="step-title"><div class="badge">4</div><h3>取交集：只有星期一同时成立</h3></div>
+            <div class="conclusion">
+              <strong>答案是星期一。</strong>
+              <p>张庄可行日 = {周一, 周日}；李村可行日 = {周一, 周二}。<br>
+                两人都说了"前天是我说谎的日子"，日期必须同时满足两村的自洽条件。<br>
+                交集只有<strong>星期一</strong>。</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="insight">
+          <span class="label">洞见总结 / insight</span>
+          <ul>
+            <li>遇到"真假话 + 日期"时，最稳的是<strong>枚举并做一致性检查</strong>：先列出每一天的态度，再逐日验证句子是否自洽。</li>
+            <li>一句话里同时包含<strong>"内容真假"</strong>和<strong>"说话者真假"</strong>，必须分开判断：说谎日时句子内容取反，真话日时如实。</li>
+            <li>两村说谎日<strong>交错排列</strong>（张庄一三五、李村二四六）正是让星期一成为唯一交集的原因——说谎日与真话日的切换边界产生了这个巧合。</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    function initPage(){
+      if (window.initProblemStepper) window.initProblemStepper();
+    }
+    initPage();
+  </script>
+</body>
+</html>

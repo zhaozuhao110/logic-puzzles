@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>猜数问题 — 经典逻辑推理</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Noto+Serif+SC:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/base.css">
+  <link rel="stylesheet" href="../assets/problem-gold.css">
+  <script src="../assets/theme.js" defer></script>
+  <script src="../assets/problem-stepper.js" defer></script>
+</head>
+<body>
+  <div class="bg"></div>
+
+  <a href="../index.html" class="back-link">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    <span>返回首页</span>
+  </a>
+  <button class="theme-toggle-sub" id="themeToggle" title="切换明暗模式">
+    <svg class="moon-icon" viewBox="0 0 24 24"><path d="M12.1,22c-4.9,0-9-3.8-9.1-8.7c0-3.1,1.5-6.1,4.1-8c0.2-0.1,0.5-0.1,0.7,0.1c0.2,0.2,0.2,0.5,0.1,0.7c-0.5,0.9-0.7,1.8-0.7,2.8c0,3.5,2.8,6.3,6.3,6.3c1,0,1.9-0.2,2.8-0.7c0.2-0.1,0.5-0.1,0.7,0.1c0.2,0.2,0.2,0.5,0.1,0.7C15.1,20.5,13.6,22,12.1,22z"/></svg>
+    <svg class="sun-icon" viewBox="0 0 24 24"><path d="M12,18c-3.3,0-6-2.7-6-6s2.7-6,6-6s6,2.7,6,6S15.3,18,12,18z M12,8c-2.2,0-4,1.8-4,4s1.8,4,4,4s4-1.8,4-4S14.2,8,12,8z M11,1h2v3h-2V1z M11,20h2v3h-2V20z M3.5,4.9l2.1-2.1l1.4,1.4L4.9,6.3L3.5,4.9z M17,18.4l2.1-2.1l1.4,1.4l-2.1,2.1L17,18.4z M1,11h3v2H1V11z M20,11h3v2h-3V11z M4.9,17.7l2.1,2.1l-1.4,1.4l-2.1-2.1L4.9,17.7z M18.4,5.6l2.1-2.1l1.4,1.4l-2.1,2.1L18.4,5.6z"/></svg>
+  </button>
+
+  <div class="container">
+    <section class="hero">
+      <div class="hero-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 4h16v16H4z"/>
+          <path d="M8 9h8M8 13h8M8 17h5"/>
+        </svg>
+      </div>
+      <h1>猜数问题</h1>
+      <p class="subtitle">guess-number-144</p>
+      <div class="hero-question">
+        教授在三个学生脑门上各贴了一张纸条，写着一个正整数，并告诉他们：<strong>某两个数的和等于第三个</strong>。每个学生能看到另外两个人的数，但看不到自己的。<br><br>
+        教授依次发问：<br>
+        问第一个学生：不能；问第二个：不能；问第三个：不能；<br>
+        再问第一个：不能；再问第二个：不能；<br>
+        第三个学生说：<strong>“我猜出来了，144！”</strong><br><br>
+        <strong>问：另外两个人的数是多少？</strong>
+      </div>
+    </section>
+
+    <section id="analysis">
+      <span class="label">逻辑解析 / analysis</span>
+      <h2 class="heading">对“我可能是和/我可能是差”做迭代排除</h2>
+      <div class="card">
+        <div class="nav">
+          <div class="status" id="stepStatus">步骤 1 / 4</div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end">
+            <button class="btn" id="btnPrev" disabled>上一步</button>
+            <button class="btn" id="btnNext">下一步</button>
+          </div>
+        </div>
+
+        <div class="steps" id="steps">
+          <div class="step-card" data-step="1">
+            <div class="step-title"><div class="badge">1</div><h3>对任意学生：看到 (x,y) 时，自己只可能是 x+y 或 |x-y|</h3></div>
+            <p>因为三个数里必有一个是另外两个的和。对某个学生来说，他看见另外两人是 x 与 y，则自己的数只能是：<strong>x+y</strong>（自己是最大者）或 <strong>|x-y|</strong>（自己是最小者）。</p>
+          </div>
+
+          <div class="step-card" data-step="2">
+            <div class="step-title"><div class="badge">2</div><h3>第三个学生最终喊 144 ⇒ 他看到的两数之和为 144</h3></div>
+            <p>第三个学生能在第二轮得出“我就是 144”，说明“我可能是和/我可能是差”里有一个最终被排除。<br>
+              设他看到的两个数为 a 与 b（a&lt;b），他最初的候选是 a+b 与 b-a。最终确定为 144，最典型的情况是：<strong>a+b=144</strong>，而 b-a 被对话排除。</p>
+          </div>
+
+          <div class="step-card" data-step="3">
+            <div class="step-title"><div class="badge">3</div><h3>用“别人为什么还不知道”去排除差值方案</h3></div>
+            <p>取一组能触发二轮收敛的经典解：a=36、b=108。第三个学生看到 36 与 108 时，候选为：<br>
+              a+b=144，b-a=72。<br><br>
+              如果他其实是 72，那么第二个学生看到 (36,72) 后，自己的候选为 108 或 36。<br>
+              但若他是 36，则三数将变成 (36,72,36)，有人会在第一轮就因为看见两个相同的数而立刻知道（与第一轮全员“不能”矛盾）。<br>
+              所以在“第三个是 72”的世界里，第二个学生会在第二轮就确定自己是 108，不会继续回答“不能”。</p>
+          </div>
+
+          <div class="step-card" data-step="4">
+            <div class="step-title"><div class="badge">4</div><h3>因此第三个不可能是 72，只能是 144</h3></div>
+            <p>现实里第二轮第二个学生仍回答“不能”，排除了“第三个是 72”的可能。<br>
+              于是第三个学生锁定自己为 144，并反推出另外两人分别为：<br><strong>36 和 108</strong>（36+108=144）。</p>
+          </div>
+        </div>
+
+        <div class="insight">
+          <span class="label">洞见总结 / insight</span>
+          <ul>
+            <li>看到两数后，你的候选往往是<strong>和/差</strong>；对话用来逐轮排除。</li>
+            <li>“别人还不知道”意味着某些世界会导致别人更早知道，从而被排除。</li>
+            <li>这类题经常出现“会导致两数相等”的分支，用它做反证非常有效。</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    /**
+     * 页面初始化：启用“步骤推进器”轻交互。
+     */
+    function initPage(){
+      if (window.initProblemStepper) window.initProblemStepper();
+    }
+    initPage();
+  </script>
+</body>
+</html>

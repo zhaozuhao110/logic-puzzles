@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>鲍西娅的肖像（一）— 经典逻辑推理</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Noto+Serif+SC:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/base.css"><link rel="stylesheet" href="../assets/problem-gold.css">
+  <script src="../assets/theme.js" defer></script><script src="../assets/problem-stepper.js" defer></script>
+  <style></style>
+</head>
+<body>
+  <div class="bg"></div>
+  <a href="../index.html" class="back-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg><span>返回首页</span></a>
+  <button class="theme-toggle-sub" id="themeToggle" title="切换明暗模式">
+    <svg class="moon-icon" viewBox="0 0 24 24"><path d="M12.1,22c-4.9,0-9-3.8-9.1-8.7c0-3.1,1.5-6.1,4.1-8c0.2-0.1,0.5-0.1,0.7,0.1c0.2,0.2,0.2,0.5,0.1,0.7c-0.5,0.9-0.7,1.8-0.7,2.8c0,3.5,2.8,6.3,6.3,6.3c1,0,1.9-0.2,2.8-0.7c0.2-0.1,0.5-0.1,0.7,0.1c0.2,0.2,0.2,0.5,0.1,0.7C15.1,20.5,13.6,22,12.1,22z"/></svg>
+    <svg class="sun-icon" viewBox="0 0 24 24"><path d="M12,18c-3.3,0-6-2.7-6-6s2.7-6,6-6s6,2.7,6,6S15.3,18,12,18z M12,8c-2.2,0-4,1.8-4,4s1.8,4,4,4s4-1.8,4-4S14.2,8,12,8z M11,1h2v3h-2V1z M11,20h2v3h-2V20z M3.5,4.9l2.1-2.1l1.4,1.4L4.9,6.3L3.5,4.9z M17,18.4l2.1-2.1l1.4,1.4l-2.1,2.1L17,18.4z M1,11h3v2H1V11z M20,11h3v2h-3V11z M4.9,17.7l2.1,2.1l-1.4,1.4l-2.1-2.1L4.9,17.7z M18.4,5.6l2.1-2.1l1.4,1.4l-2.1,2.1L18.4,5.6z"/></svg>
+  </button>
+
+  <div class="container">
+    <section class="hero">
+      <div class="hero-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4h16v16H4z"/><path d="M8 8h8v8H8z"/></svg></div>
+      <h1>鲍西娅的肖像（一）</h1>
+      <p class="subtitle">portia-portrait-1</p>
+      <div class="hero-question">
+        有金、银、铅三只匣子，只有一只匣子里放着肖像。匣子上刻着三句话：<br>
+        金：<strong>“肖像不在此匣中”</strong><br>
+        银：<strong>“肖像在金匣中”</strong><br>
+        铅：<strong>“肖像不在此匣中”</strong><br>
+        且三句话中<strong>只有一句真话</strong>。问肖像在哪只匣子里？
+      </div>
+    </section>
+
+    <section id="analysis">
+      <span class="label">逻辑解析 / analysis</span>
+      <h2 class="heading">用“假设位置”三选一，逐个验真值数量</h2>
+      <div class="card">
+        <div class="nav"><div class="status" id="stepStatus">步骤 1 / 3</div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><button class="btn" id="btnPrev" disabled>上一步</button><button class="btn" id="btnNext">下一步</button></div>
+        </div>
+        <div class="steps">
+          <div class="step-card"><div class="step-title"><div class="badge">1</div><h3>假设肖像在金匣</h3></div><p>金句“肖像不在金匣”是假；银句“肖像在金匣”是真；铅句“肖像不在铅匣”也是真（因为在金匣）。这会导致真话有 2 句，违背条件。</p></div>
+          <div class="step-card"><div class="step-title"><div class="badge">2</div><h3>假设肖像在银匣</h3></div><p>金句“肖像不在金匣”是真；银句“肖像在金匣”是假；铅句“肖像不在铅匣”也是真（因为在银匣）。真话 2 句，仍不行。</p></div>
+          <div class="step-card"><div class="step-title"><div class="badge">3</div><h3>只剩铅匣：验算恰好 1 句真</h3></div><p>若肖像在铅匣：金句“肖像不在金匣”是真；银句“肖像在金匣”是假；铅句“肖像不在铅匣”是假。恰好 1 句真，满足条件。<br><strong>答案：肖像在铅匣中。</strong></p></div>
+        </div>
+        <div class="insight"><span class="label">洞见总结 / insight</span><ul>
+          <li>“只有一句真”强约束，最适合<strong>穷举 + 计数真值</strong>。</li>
+          <li>先排除导致 2 句真/0 句真的假设，剩下即唯一解。</li>
+        </ul></div>
+      </div>
+    </section>
+  </div>
+  <script>window.initProblemStepper&&window.initProblemStepper();</script>
+</body>
+</html>

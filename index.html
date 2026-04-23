@@ -84,6 +84,17 @@ header{padding:80px 0 40px;text-align:center}
 .site-subtitle{
   color:var(--cream-dim);font-size:1rem;font-weight:300;letter-spacing:0.25em;text-transform:uppercase;
 }
+.header-links{margin-top:18px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.header-link{
+  display:inline-flex;align-items:center;gap:10px;
+  padding:10px 16px;border-radius:999px;
+  background:var(--tag-bg);border:1px solid var(--border);
+  color:var(--cream-dim);text-decoration:none;font-size:0.9rem;
+  transition:all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  letter-spacing:0.06em;
+}
+.header-link:hover{border-color:var(--border-hover);color:var(--accent-bright);transform:translateY(-2px)}
+.header-link svg{width:18px;height:18px}
 
 /* ===== Search & Filter ===== */
 .toolbar-container{
@@ -103,6 +114,33 @@ header{padding:80px 0 40px;text-align:center}
   display:flex;gap:16px;align-items:center;flex-wrap:wrap;
   max-width:1080px;margin:0 auto;padding:0 28px;
 }
+.toolbar-right{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-left:auto}
+.view-hint{font-size:0.8rem;color:var(--cream-dim);letter-spacing:0.06em;opacity:0.75}
+.sort-select{
+  padding:10px 14px;
+  border-radius:12px;
+  background:var(--surface);
+  border:1px solid var(--border);
+  color:var(--cream);
+  font-family:'Noto Serif SC',serif;
+  font-size:0.88rem;
+  outline:none;
+  transition:all 0.3s;
+}
+.sort-select:focus{
+  border-color:var(--accent);
+  box-shadow:0 0 0 4px rgba(212, 165, 55, 0.05);
+}
+.toolbar-link{
+  display:inline-flex;align-items:center;gap:10px;
+  padding:10px 14px;border-radius:12px;
+  background:var(--tag-bg);border:1px solid var(--border);
+  color:var(--cream-dim);text-decoration:none;font-size:0.88rem;
+  transition:all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  letter-spacing:0.06em;user-select:none;
+}
+.toolbar-link:hover{border-color:var(--border-hover);color:var(--accent-bright);transform:translateY(-2px)}
+.toolbar-link svg{width:18px;height:18px}
 .search-box{
   flex:1;min-width:260px;position:relative;
 }
@@ -147,12 +185,24 @@ header{padding:80px 0 40px;text-align:center}
 .stat-label{font-size:0.75rem;color:var(--cream-dim);letter-spacing:0.15em;margin-top:4px}
 
 /* ===== Card Grid ===== */
-.grid{
+.card-grid{
   display:grid;
   grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
   gap:24px;
   margin-top:16px;
 }
+
+.group-section{margin-top:26px}
+.group-header{
+  display:flex;align-items:flex-end;justify-content:space-between;gap:18px;
+  padding:14px 4px 10px;border-bottom:1px solid rgba(212, 165, 55, 0.08);
+}
+.group-title{
+  font-family:'Playfair Display','Noto Serif SC',serif;
+  font-size:1.25rem;font-weight:800;letter-spacing:0.08em;
+  color:var(--cream);
+}
+.group-meta{color:var(--cream-dim);font-size:0.82rem;letter-spacing:0.12em;opacity:0.75}
 .card{
   background:var(--card);border:1px solid var(--border);
   backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
@@ -257,7 +307,7 @@ footer span{color:var(--accent-dim)}
   .filter-tag{padding:6px 14px;font-size:0.8rem}
 }
 @media(max-width:640px){
-  .grid{grid-template-columns:1fr;gap:16px}
+  .card-grid{grid-template-columns:1fr;gap:16px}
   .card{padding:20px 24px}
   .stats{gap:24px}
   .stat-item:not(:last-child)::after{right:-12px}
@@ -280,12 +330,44 @@ footer span{color:var(--accent-dim)}
   <header>
     <h1 class="site-title">Logic Puzzles</h1>
     <p class="site-subtitle">经 典 逻 辑 思 维 挑 战</p>
+    <div class="header-links">
+      <a class="header-link" href="outline.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M8 6h13M8 12h13M8 18h13"/><path d="M3 6h.01M3 12h.01M3 18h.01"/>
+        </svg>
+        <span>目录大纲</span>
+      </a>
+    </div>
   </header>
 
   <div class="stats" id="stats">
     <div class="stat-item"><div class="stat-num" id="totalCount">-</div><div class="stat-label">题目总数</div></div>
     <div class="stat-item"><div class="stat-num" id="catCount">-</div><div class="stat-label">分类数</div></div>
   </div>
+
+  <details class="legend" id="difficultyLegend" style="margin:10px auto 18px;max-width:920px">
+    <summary style="cursor:pointer;color:var(--cream-dim);letter-spacing:0.12em;font-size:0.86rem;user-select:none">
+      难度说明（1-10）· 点击展开
+    </summary>
+    <div style="margin-top:12px;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px">
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px 14px 12px">
+        <div style="color:var(--accent);font-weight:700">入门（1-3）</div>
+        <div style="color:var(--cream-dim);font-size:0.86rem;margin-top:6px;line-height:1.6">单点洞见，推理链短，适合热身。</div>
+      </div>
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px 14px 12px">
+        <div style="color:var(--accent);font-weight:700">进阶（4-6）</div>
+        <div style="color:var(--cream-dim);font-size:0.86rem;margin-top:6px;line-height:1.6">多步排除与信息整合，开始有结构。</div>
+      </div>
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px 14px 12px">
+        <div style="color:var(--accent);font-weight:700">挑战（7-8）</div>
+        <div style="color:var(--cream-dim);font-size:0.86rem;margin-top:6px;line-height:1.6">公共知识/分类讨论明显，易绕。</div>
+      </div>
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px 14px 12px">
+        <div style="color:var(--accent);font-weight:700">大师（9-10）</div>
+        <div style="color:var(--cream-dim);font-size:0.86rem;margin-top:6px;line-height:1.6">高信息量策略或复杂结构，建议沉浸推演。</div>
+      </div>
+    </div>
+  </details>
 
   <div class="toolbar-container" id="toolbarContainer">
     <div class="toolbar">
@@ -296,10 +378,24 @@ footer span{color:var(--accent-dim)}
       <div class="filter-tags" id="filterTags">
         <span class="filter-tag active" data-cat="all">全部题目</span>
       </div>
+      <div class="toolbar-right">
+        <span class="view-hint" id="viewHint">全部：按分类分组 · 组内按难度排序</span>
+        <select class="sort-select" id="sortSelect" title="排序方式">
+          <option value="diff-asc">难度：低 → 高</option>
+          <option value="diff-desc">难度：高 → 低</option>
+          <option value="id-asc">原题编号：小 → 大</option>
+        </select>
+        <a class="toolbar-link" href="outline.html" title="查看整体目录大纲">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M8 6h13M8 12h13M8 18h13"/><path d="M3 6h.01M3 12h.01M3 18h.01"/>
+          </svg>
+          <span>目录大纲</span>
+        </a>
+      </div>
     </div>
   </div>
 
-  <div class="grid" id="grid"></div>
+  <div id="grid"></div>
   <div class="empty-state" id="emptyState">
     <div class="empty-icon">?</div>
     <div class="empty-text">没有找到匹配的题目</div>
@@ -322,11 +418,14 @@ footer span{color:var(--accent-dim)}
   var totalCount = document.getElementById('totalCount');
   var catCount = document.getElementById('catCount');
   var themeToggle = document.getElementById('themeToggle');
+  var sortSelect = document.getElementById('sortSelect');
+  var viewHint = document.getElementById('viewHint');
 
   // 题目数据只维护一份：data/problems.json（本地 file:// 预览时由 data/problems.js 提供兜底）
   var problems = [];
   var activeCategory = 'all';
   var searchQuery = '';
+  var sortMode = 'diff-asc';
 
   // Category display names
   var catNames = {
@@ -389,8 +488,14 @@ footer span{color:var(--accent-dim)}
     });
     catCount.textContent = Object.keys(cats).length;
 
-    // Build filter tags
-    Object.keys(cats).forEach(function(cat) {
+    // Build filter tags（按固定顺序展示分类）
+    var catOrder = ['logic', 'math', 'game-theory', 'strategy', 'programming'];
+    var orderedCats = catOrder.filter(function(c){ return cats[c]; });
+    Object.keys(cats).forEach(function(c){
+      if (orderedCats.indexOf(c) === -1) orderedCats.push(c);
+    });
+
+    orderedCats.forEach(function(cat) {
       var tag = document.createElement('span');
       tag.className = 'filter-tag';
       tag.setAttribute('data-cat', cat);
@@ -419,11 +524,39 @@ footer span{color:var(--accent-dim)}
     }
     emptyState.classList.remove('show');
 
-    filtered.forEach(function(p, i) {
+    /**
+     * 题目排序：按难度（低→高），再按 id。
+     * @param {Object} a
+     * @param {Object} b
+     * @returns {number}
+     */
+    function sortComparator(a, b) {
+      var da = Number(a.difficulty || 5);
+      var db = Number(b.difficulty || 5);
+      var ia = Number(a.id || 0);
+      var ib = Number(b.id || 0);
+      if (sortMode === 'id-asc') return ia - ib;
+      if (sortMode === 'diff-desc') {
+        if (da !== db) return db - da;
+        return ia - ib;
+      }
+      // diff-asc default
+      if (da !== db) return da - db;
+      return ia - ib;
+    }
+
+    /**
+     * 创建题目卡片。
+     * @param {Object} p 题目
+     * @param {number} idx 全局序号（用于动画延迟）
+     * @returns {HTMLElement}
+     */
+    function createCard(p, idx, displayNo) {
       var card = document.createElement('a');
       card.className = 'card';
       card.href = p.file;
-      card.style.animationDelay = (i * 0.05) + 's';
+      card.style.animationDelay = (idx * 0.05) + 's';
+      card.setAttribute('data-id', p.id);
 
       var catClass = 'cat-' + (p.category || 'logic');
       var catLabel = catNames[p.category] || p.category || '逻辑';
@@ -437,7 +570,7 @@ footer span{color:var(--accent-dim)}
 
       card.innerHTML =
         '<div class="card-header">' +
-          '<span class="card-num">CASE #' + String(p.id).padStart(2, '0') + '</span>' +
+          '<span class="card-num">CASE #' + String(displayNo).padStart(2, '0') + '</span>' +
           '<span class="card-category ' + catClass + '">' + catLabel + '</span>' +
         '</div>' +
         '<div class="card-title">' + escapeHTML(p.title) + '</div>' +
@@ -448,9 +581,67 @@ footer span{color:var(--accent-dim)}
             '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>' +
           '</div>' +
         '</div>';
+      return card;
+    }
 
-      grid.appendChild(card);
+    // 分类 + 难度 排布：
+    // - 选择“全部”时：按分类分组展示；组内按难度排序
+    // - 选择具体分类时：直接按难度排序
+    var catOrder = ['logic', 'math', 'game-theory', 'strategy', 'programming'];
+    var cardIndex = 0;
+
+    if (activeCategory === 'all') {
+      if (viewHint) viewHint.textContent = '全部：按分类分组 · 组内按排序方式';
+      var groupMap = {};
+      filtered.forEach(function(p) {
+        var c = p.category || 'logic';
+        if (!groupMap[c]) groupMap[c] = [];
+        groupMap[c].push(p);
+      });
+
+      // 额外分类（不在预设顺序里的）追加在末尾
+      Object.keys(groupMap).forEach(function(c) {
+        if (catOrder.indexOf(c) === -1) catOrder.push(c);
+      });
+
+      catOrder.forEach(function(cat) {
+        var list = groupMap[cat];
+        if (!list || !list.length) return;
+        list.sort(sortComparator);
+
+        var sec = document.createElement('div');
+        sec.className = 'group-section';
+
+        var header = document.createElement('div');
+        header.className = 'group-header';
+        var sortLabel = sortMode === 'id-asc' ? '按原题编号' : (sortMode === 'diff-desc' ? '按难度递减' : '按难度递增');
+        header.innerHTML =
+          '<div class="group-title">' + escapeHTML(catNames[cat] || cat) + '</div>' +
+          '<div class="group-meta">共 ' + list.length + ' 题 · ' + sortLabel + '</div>';
+        sec.appendChild(header);
+
+        var g = document.createElement('div');
+        g.className = 'card-grid';
+        list.forEach(function(p) {
+          g.appendChild(createCard(p, cardIndex, cardIndex + 1));
+          cardIndex++;
+        });
+        sec.appendChild(g);
+
+        grid.appendChild(sec);
+      });
+      return;
+    }
+
+    if (viewHint) viewHint.textContent = '分类：单列表展示 · 按排序方式';
+    filtered.sort(sortComparator);
+    var singleGrid = document.createElement('div');
+    singleGrid.className = 'card-grid';
+    filtered.forEach(function(p) {
+      singleGrid.appendChild(createCard(p, cardIndex, cardIndex + 1));
+      cardIndex++;
     });
+    grid.appendChild(singleGrid);
   }
 
   function escapeHTML(str) {
@@ -492,6 +683,14 @@ footer span{color:var(--accent-dim)}
       });
       render();
     });
+
+    // 排序选择
+    if (sortSelect) {
+      sortSelect.addEventListener('change', function() {
+        sortMode = this.value;
+        render();
+      });
+    }
   }
 
   // Start

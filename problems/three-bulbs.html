@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>三个灯泡 — 经典逻辑推理</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Noto+Serif+SC:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/base.css">
+  <script src="../assets/theme.js" defer></script>
+  <style>
+  *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+  :root{
+    --bg:#07070b;
+    --surface:#0f0f18;
+    --card:rgba(18,18,26,0.62);
+    --card-2:rgba(28,28,40,0.45);
+    --accent:#d4a537;
+    --accent-bright:#f0c94d;
+    --accent-dim:#8a6d1b;
+    --cream:#e8e0d4;
+    --cream-dim:#8a847a;
+    --border:rgba(212,165,55,0.16);
+    --shadow:rgba(0,0,0,0.35);
+    --red:#c0392b;
+    --green:#4a9a5e;
+    --blue:#4a7adf;
+  }
+  [data-theme="light"]{
+    --bg:#f3f4f8;
+    --surface:#ffffff;
+    --card:rgba(255,255,255,0.92);
+    --card-2:rgba(255,255,255,0.78);
+    --accent:#b08235;
+    --accent-bright:#d4a537;
+    --accent-dim:#8a6528;
+    --cream:#1a1a1c;
+    --cream-dim:#5a5a5e;
+    --border:rgba(176,130,53,0.18);
+    --shadow:rgba(0,0,0,0.08);
+    --red:#c0392b;
+    --green:#2d7d47;
+    --blue:#2d63d6;
+  }
+  html{scroll-behavior:smooth}
+  body{
+    font-family:'Noto Serif SC',serif;
+    background:var(--bg);
+    color:var(--cream);
+    min-height:100vh;
+    overflow-x:hidden;
+    line-height:1.85;
+  }
+  .bg{
+    position:fixed;inset:0;z-index:0;pointer-events:none;
+    background:
+      radial-gradient(ellipse 62% 54% at 25% 12%,rgba(212,165,55,0.06),transparent),
+      radial-gradient(ellipse 48% 40% at 85% 85%,rgba(74,122,223,0.06),transparent),
+      var(--bg);
+  }
+  .container{position:relative;z-index:2;max-width:1000px;margin:0 auto;padding:0 24px}
+
+  /* ===== Hero ===== */
+  .hero{
+    min-height:78vh;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    text-align:center;padding:42px 0;
+  }
+  .hero-icon{width:70px;height:70px;margin-bottom:22px;color:var(--accent);opacity:0.9}
+  .hero h1{
+    font-family:'Playfair Display','Noto Serif SC',serif;
+    font-size:clamp(2rem,5.2vw,3.3rem);
+    font-weight:900;
+    background:linear-gradient(135deg,var(--accent-bright),var(--accent),var(--accent-dim));
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+    letter-spacing:0.06em;line-height:1.15;margin-bottom:10px;
+  }
+  .hero .subtitle{
+    font-size:clamp(0.9rem,2vw,1.1rem);
+    color:var(--cream-dim);
+    font-weight:300;
+    letter-spacing:0.22em;
+    margin-bottom:34px;
+  }
+  .hero-question{
+    max-width:760px;text-align:left;
+    background:var(--card);
+    border:1px solid var(--border);
+    padding:24px 28px;
+    border-radius:14px;
+    font-size:0.95rem;
+    color:var(--cream-dim);
+    box-shadow:0 18px 46px var(--shadow);
+  }
+  .hero-question strong{color:var(--accent-bright);font-weight:700}
+
+  /* ===== Sections ===== */
+  section{padding:54px 0}
+  .label{
+    display:inline-block;
+    font-size:0.75rem;
+    letter-spacing:0.2em;
+    color:var(--accent-dim);
+    margin-bottom:12px;
+    text-transform:uppercase;
+  }
+  .heading{
+    font-size:clamp(1.5rem,3vw,2.05rem);
+    color:var(--cream);
+    font-weight:900;
+    margin-bottom:18px;
+  }
+
+  .card{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:16px;
+    padding:22px 20px;
+    box-shadow:0 16px 36px rgba(0,0,0,0.18);
+  }
+
+  .steps{display:grid;gap:14px;margin-top:18px}
+  .step{
+    padding:16px 16px 16px 18px;
+    border:1px solid rgba(212,165,55,0.10);
+    background:linear-gradient(180deg,rgba(212,165,55,0.06),transparent);
+    border-radius:14px;
+    transition:transform .25s ease,border-color .25s ease,background .25s ease;
+    cursor:pointer;
+  }
+  .step:hover{
+    transform:translateY(-2px);
+    border-color:rgba(212,165,55,0.25);
+    background:linear-gradient(180deg,rgba(212,165,55,0.10),transparent);
+  }
+  .step.active{
+    border-color:rgba(240,201,77,0.55);
+    box-shadow:0 10px 24px rgba(212,165,55,0.12);
+  }
+  .step-title{font-weight:900;color:var(--accent);margin-bottom:6px}
+  .step-desc{color:var(--cream-dim);font-size:0.92rem}
+
+  /* ===== Demo ===== */
+  .grid{
+    margin-top:18px;
+    display:grid;
+    grid-template-columns:1.05fr 0.95fr;
+    gap:16px;
+    align-items:start;
+  }
+  @media (max-width:900px){.grid{grid-template-columns:1fr}}
+
+  .panel{
+    background:var(--card-2);
+    border:1px solid rgba(212,165,55,0.12);
+    border-radius:16px;
+    padding:16px;
+  }
+  .panel-title{
+    display:flex;align-items:center;justify-content:space-between;
+    gap:12px;margin-bottom:12px;
+  }
+  .panel-title h3{font-size:0.95rem;color:var(--cream);letter-spacing:0.06em}
+
+  .pill{
+    display:inline-flex;align-items:center;gap:8px;
+    padding:6px 10px;border-radius:999px;
+    border:1px solid rgba(212,165,55,0.22);
+    background:rgba(212,165,55,0.08);
+    font-size:0.82rem;color:var(--cream);
+    letter-spacing:0.06em;
+  }
+  .dot{width:8px;height:8px;border-radius:50%}
+  .dot.ok{background:var(--green)}
+  .dot.bad{background:var(--red)}
+  .dot.neu{background:var(--blue)}
+
+  .switches{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+  .sw{
+    padding:12px;border-radius:14px;
+    border:1px solid rgba(212,165,55,0.14);
+    background:rgba(255,255,255,0.02);
+  }
+  .sw .k{font-size:0.74rem;letter-spacing:0.18em;color:var(--accent-dim);text-transform:uppercase}
+  .sw .v{margin-top:6px;font-weight:900;color:var(--cream)}
+  .sw .state{margin-top:8px;color:var(--cream-dim);font-size:0.88rem}
+  .tag{
+    display:inline-flex;align-items:center;gap:8px;
+    padding:6px 10px;border-radius:999px;
+    border:1px solid rgba(212,165,55,0.22);
+    background:rgba(212,165,55,0.08);
+    font-size:0.82rem;color:var(--cream);
+  }
+  .tag .mini{width:8px;height:8px;border-radius:50%}
+  .mini.on{background:var(--green)}
+  .mini.off{background:var(--cream-dim);opacity:0.5}
+
+  .bulbs{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}
+  .bulb{
+    padding:12px;border-radius:14px;
+    border:1px solid rgba(212,165,55,0.14);
+    background:rgba(255,255,255,0.02);
+    position:relative;
+    overflow:hidden;
+  }
+  .bulb::after{
+    content:'';
+    position:absolute;inset:-60px;
+    background:radial-gradient(circle at 30% 20%,rgba(240,201,77,0.10),transparent 55%);
+    transform:rotate(10deg);
+    pointer-events:none;
+    opacity:0;
+    transition:opacity .25s ease;
+  }
+  .bulb.is-on::after{opacity:1}
+  .bulb .k{font-size:0.74rem;letter-spacing:0.18em;color:var(--accent-dim);text-transform:uppercase}
+  .bulb .v{margin-top:6px;font-weight:900;color:var(--cream)}
+  .bulb .state{margin-top:8px;color:var(--cream-dim);font-size:0.88rem}
+
+  .btn-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+  .btn{
+    appearance:none;border:none;cursor:pointer;
+    padding:10px 14px;border-radius:12px;
+    font-family:'Noto Serif SC',serif;
+    font-size:0.88rem;
+    color:var(--bg);
+    background:linear-gradient(135deg,var(--accent-bright),var(--accent));
+    box-shadow:0 10px 24px rgba(212,165,55,0.18);
+    transition:transform .2s ease, filter .2s ease;
+  }
+  .btn:active{transform:translateY(1px)}
+  .btn.secondary{
+    background:transparent;
+    color:var(--cream);
+    border:1px solid rgba(212,165,55,0.25);
+    box-shadow:none;
+  }
+
+  .result{
+    margin-top:12px;
+    padding:12px 14px;
+    border-radius:14px;
+    background:rgba(212,165,55,0.06);
+    border:1px solid rgba(212,165,55,0.16);
+    color:var(--cream-dim);
+    font-size:0.9rem;
+  }
+  .result strong{color:var(--accent-bright)}
+
+  .insight{
+    margin-top:20px;
+    padding:18px 18px 18px 18px;
+    border-left:3px solid var(--accent);
+    background:rgba(212,165,55,0.06);
+    border-radius:14px;
+  }
+  .insight h3{font-size:1rem;color:var(--cream);margin-bottom:6px}
+  .insight p{color:var(--cream-dim);font-size:0.92rem}
+
+  footer{padding:42px 0 70px;text-align:center;color:var(--cream-dim);opacity:0.7}
+  </style>
+</head>
+<body>
+  <div class="bg"></div>
+
+  <a href="../index.html" class="back-link">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    <span>返回首页</span>
+  </a>
+  <button class="theme-toggle-sub" id="themeToggle" title="切换明暗模式">
+    <svg class="moon-icon" viewBox="0 0 24 24"><path d="M12.1,22c-4.9,0-9-3.8-9.1-8.7c0-3.1,1.5-6.1,4.1-8c0.2-0.1,0.5-0.1,0.7,0.1c0.2,0.2,0.2,0.5,0.1,0.7c-0.5,0.9-0.7,1.8-0.7,2.8c0,3.5,2.8,6.3,6.3,6.3c1,0,1.9-0.2,2.8-0.7c0.2-0.1,0.5-0.1,0.7,0.1c0.2,0.2,0.2,0.5,0.1,0.7C15.1,20.5,13.6,22,12.1,22z"/></svg>
+    <svg class="sun-icon" viewBox="0 0 24 24"><path d="M12,18c-3.3,0-6-2.7-6-6s2.7-6,6-6s6,2.7,6,6S15.3,18,12,18z M12,8c-2.2,0-4,1.8-4,4s1.8,4,4,4s4-1.8,4-4S14.2,8,12,8z M11,1h2v3h-2V1z M11,20h2v3h-2V20z M3.5,4.9l2.1-2.1l1.4,1.4L4.9,6.3L3.5,4.9z M17,18.4l2.1-2.1l1.4,1.4l-2.1,2.1L17,18.4z M1,11h3v2H1V11z M20,11h3v2h-3V11z M4.9,17.7l2.1,2.1l-1.4,1.4l-2.1-2.1L4.9,17.7z M18.4,5.6l2.1-2.1l1.4,1.4l-2.1,2.1L18.4,5.6z"/></svg>
+  </button>
+
+  <div class="container">
+    <section class="hero">
+      <div class="hero-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9 18h6"></path>
+          <path d="M10 22h4"></path>
+          <path d="M12 2a7 7 0 0 0-4 12c.7.7 1 1.4 1 2h6c0-.6.3-1.3 1-2A7 7 0 0 0 12 2z"></path>
+        </svg>
+      </div>
+      <h1>三个灯泡</h1>
+      <p class="subtitle">THE THREE BULBS</p>
+      <div class="hero-question">
+        门外有<strong>三个开关</strong>，分别对应室内<strong>三个灯泡</strong>，线路良好。
+        <br>
+        在门外控制开关时<strong>看不到室内</strong>灯泡情况，现在只允许<strong>进门一次</strong>，如何确定每个开关与灯泡的对应关系？
+      </div>
+    </section>
+
+    <section id="solution">
+      <span class="label">逻辑解析 / ANALYSIS</span>
+      <h2 class="heading">用“温度”多赚一个信息维度</h2>
+
+      <div class="card">
+        <div class="steps" id="steps">
+          <div class="step" data-step="1">
+            <div class="step-title">步骤 1：开关 1 打开一段时间</div>
+            <div class="step-desc">把开关 1 打开并等待一会儿（比如 5~10 分钟），让对应灯泡<strong>升温</strong>。</div>
+          </div>
+          <div class="step" data-step="2">
+            <div class="step-title">步骤 2：关掉开关 1，打开开关 2</div>
+            <div class="step-desc">在进门前：关掉开关 1（灯灭但仍<strong>温热</strong>），再打开开关 2（灯保持<strong>点亮</strong>）。</div>
+          </div>
+          <div class="step" data-step="3">
+            <div class="step-title">步骤 3：进门一次，观察 + 触摸</div>
+            <div class="step-desc">进屋后：<strong>亮着的灯</strong>对应开关 2；<strong>灭但温热的灯</strong>对应开关 1；<strong>灭且冰冷的灯</strong>对应开关 3。</div>
+          </div>
+        </div>
+
+        <div class="grid">
+          <div class="panel">
+            <div class="panel-title">
+              <h3>流程演示</h3>
+              <span class="pill"><span class="dot neu"></span>点击推进</span>
+            </div>
+
+            <div class="switches">
+              <div class="sw">
+                <div class="k">SWITCH</div>
+                <div class="v">开关 1</div>
+                <div class="state" id="sw1State"></div>
+              </div>
+              <div class="sw">
+                <div class="k">SWITCH</div>
+                <div class="v">开关 2</div>
+                <div class="state" id="sw2State"></div>
+              </div>
+              <div class="sw">
+                <div class="k">SWITCH</div>
+                <div class="v">开关 3</div>
+                <div class="state" id="sw3State"></div>
+              </div>
+            </div>
+
+            <div class="bulbs">
+              <div class="bulb" id="b1">
+                <div class="k">BULB</div>
+                <div class="v">灯泡 A</div>
+                <div class="state" id="b1State"></div>
+              </div>
+              <div class="bulb" id="b2">
+                <div class="k">BULB</div>
+                <div class="v">灯泡 B</div>
+                <div class="state" id="b2State"></div>
+              </div>
+              <div class="bulb" id="b3">
+                <div class="k">BULB</div>
+                <div class="v">灯泡 C</div>
+                <div class="state" id="b3State"></div>
+              </div>
+            </div>
+
+            <div class="btn-row">
+              <button class="btn" id="btnNext" type="button">下一步</button>
+              <button class="btn secondary" id="btnReset" type="button">重置</button>
+            </div>
+
+            <div class="result" id="result">
+              点击“下一步”开始执行标准策略。
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-title">
+              <h3>一次进门为什么够？</h3>
+              <span class="pill"><span class="dot ok"></span>多一个信号</span>
+            </div>
+            <div class="result">
+              “亮/灭”只能提供 1 bit 左右的信息，但允许你用“灯泡余温”把状态扩展成三类：
+              <br>
+              <strong>亮</strong> / <strong>灭但温热</strong> / <strong>灭且冰冷</strong>。
+              <br>
+              三类状态刚好对应三个开关，因此一次进门就足够。
+            </div>
+            <div class="insight">
+              <h3>洞见</h3>
+              <p>当观察手段受限时，别急着“更聪明地看”，先想能不能引入<strong>新的可观测量</strong>（这里就是温度）。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer>Logic Site · 经典题解页面</footer>
+  </div>
+
+  <script>
+  /**
+   * 创建一个随机映射：开关 1/2/3 分别对应灯泡 A/B/C。
+   * @returns {{swToBulb:number[]}} swToBulb[i]=对应灯泡索引(0..2)
+   */
+  function createRandomMapping() {
+    var arr = [0,1,2];
+    for (var i = arr.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var t = arr[i];
+      arr[i] = arr[j];
+      arr[j] = t;
+    }
+    return { swToBulb: arr };
+  }
+
+  /**
+   * 根据开关状态与“是否等待过”计算每个灯泡的亮灭与温度状态。
+   * @param {Object} sim 模拟状态
+   * @returns {{on:boolean[], warm:boolean[]}} 灯泡状态
+   */
+  function computeBulbState(sim) {
+    var on = [false,false,false];
+    var warm = [false,false,false];
+
+    // 灯泡是否亮，完全由开关当前开/关决定
+    for (var sw = 0; sw < 3; sw++) {
+      var bulb = sim.map.swToBulb[sw];
+      if (sim.switchOn[sw]) on[bulb] = true;
+    }
+
+    // 温热：只要曾经“开过一段时间”且现在关掉，就视为温热
+    // 这里用布尔近似“等待”，不做真实计时
+    if (sim.heatedSwitchIndex !== null) {
+      var heatedBulb = sim.map.swToBulb[sim.heatedSwitchIndex];
+      if (!on[heatedBulb]) warm[heatedBulb] = true;
+    }
+
+    return { on: on, warm: warm };
+  }
+
+  /**
+   * 渲染页面：开关状态 + 灯泡状态。
+   * @param {Object} sim 模拟状态
+   */
+  function render(sim) {
+    var swEls = [
+      document.getElementById('sw1State'),
+      document.getElementById('sw2State'),
+      document.getElementById('sw3State')
+    ];
+    for (var i = 0; i < 3; i++) {
+      swEls[i].innerHTML =
+        '<span class="tag"><span class="mini ' + (sim.switchOn[i] ? 'on' : 'off') + '"></span>' +
+        (sim.switchOn[i] ? '已打开' : '已关闭') +
+        '</span>';
+    }
+
+    var s = computeBulbState(sim);
+    var bEls = [
+      {wrap: document.getElementById('b1'), text: document.getElementById('b1State')},
+      {wrap: document.getElementById('b2'), text: document.getElementById('b2State')},
+      {wrap: document.getElementById('b3'), text: document.getElementById('b3State')}
+    ];
+    for (var b = 0; b < 3; b++) {
+      bEls[b].wrap.classList.toggle('is-on', s.on[b]);
+      var desc = s.on[b] ? '亮着（可直接确定）' : (s.warm[b] ? '灭，但温热（曾经亮过）' : '灭，且冰冷（从未亮过）');
+      bEls[b].text.innerHTML = '<span class="tag"><span class="mini ' + (s.on[b] ? 'on' : 'off') + '"></span>' + desc + '</span>';
+    }
+  }
+
+  /**
+   * 初始化演示：按标准策略三步走。
+   */
+  function initDemo() {
+    var btnNext = document.getElementById('btnNext');
+    var btnReset = document.getElementById('btnReset');
+    var result = document.getElementById('result');
+    var steps = document.getElementById('steps');
+
+    var sim = {
+      map: createRandomMapping(),
+      // 开关当前状态
+      switchOn: [false,false,false],
+      // 哪个开关曾经“加热”过（打开等待过）
+      heatedSwitchIndex: null,
+      phase: 0
+    };
+
+    /**
+     * 高亮对应步骤卡片。
+     * @param {number} stepIndex 1..3
+     */
+    function highlightStep(stepIndex) {
+      steps.querySelectorAll('.step').forEach(function(el) {
+        el.classList.toggle('active', Number(el.getAttribute('data-step')) === stepIndex);
+      });
+    }
+
+    /**
+     * 执行下一阶段动作。
+     */
+    function next() {
+      sim.phase++;
+      if (sim.phase === 1) {
+        // Step1: open switch1 and heat
+        sim.switchOn = [true,false,false];
+        sim.heatedSwitchIndex = 0;
+        highlightStep(1);
+        result.innerHTML = '步骤 1：打开开关 1 并等待（对应灯泡升温）。';
+      } else if (sim.phase === 2) {
+        // Step2: close switch1, open switch2
+        sim.switchOn = [false,true,false];
+        highlightStep(2);
+        result.innerHTML = '步骤 2：关掉开关 1，再打开开关 2。';
+      } else if (sim.phase === 3) {
+        // Step3: enter room, read states
+        sim.switchOn = [false,true,false];
+        highlightStep(3);
+        result.innerHTML =
+          '步骤 3：进门一次观察：<br>' +
+          '<strong>亮着的灯</strong> → 开关 2；<br>' +
+          '<strong>灭但温热</strong> → 开关 1；<br>' +
+          '<strong>灭且冰冷</strong> → 开关 3。';
+        btnNext.disabled = true;
+      }
+      render(sim);
+    }
+
+    /**
+     * 重置演示（重新随机映射）。
+     */
+    function reset() {
+      sim.map = createRandomMapping();
+      sim.switchOn = [false,false,false];
+      sim.heatedSwitchIndex = null;
+      sim.phase = 0;
+      btnNext.disabled = false;
+      steps.querySelectorAll('.step').forEach(function(el) { el.classList.remove('active'); });
+      result.textContent = '点击“下一步”开始执行标准策略。';
+      render(sim);
+    }
+
+    steps.addEventListener('click', function(e) {
+      var item = e.target.closest('.step');
+      if (!item) return;
+      steps.querySelectorAll('.step').forEach(function(s) {
+        s.classList.toggle('active', s === item);
+      });
+    });
+    btnNext.addEventListener('click', next);
+    btnReset.addEventListener('click', reset);
+
+    render(sim);
+  }
+
+  initDemo();
+  </script>
+</body>
+</html>

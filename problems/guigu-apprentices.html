@@ -51,12 +51,27 @@ body{
   line-height:1.85;
 }
 .bg{
-  position:fixed;inset:0;z-index:0;pointer-events:none;
-  background:
-    radial-gradient(ellipse 60% 40% at 50% 0%,rgba(200,154,66,0.06),transparent),
-    radial-gradient(ellipse 45% 30% at 20% 80%,rgba(124,104,195,0.05),transparent),
-    var(--bg);
-}
+    position:fixed;inset:0;z-index:0;pointer-events:none;
+    background:
+      radial-gradient(ellipse 60% 40% at 50% 0%,rgba(200,154,66,0.06),transparent),
+      radial-gradient(ellipse 45% 30% at 20% 80%,rgba(124,104,195,0.05),transparent),
+      var(--bg);
+  }
+  /* 竹简/宣纸背景纹理 */
+  .bg::before{
+    content:'';position:absolute;inset:0;
+    background: 
+      linear-gradient(90deg, transparent 97%, var(--line) 97%, var(--line) 100%),
+      linear-gradient(var(--line) 1px, transparent 1px);
+    background-size: 40px 100%, 100% 40px;
+    opacity: 0.08;
+  }
+  .bg::after{
+    content:'';position:absolute;inset:0;
+    background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.4' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    opacity: 0.05;
+    mix-blend-mode: multiply;
+  }
 .bg::before{
   content:'';position:absolute;inset:0;
   background:url("data:image/svg+xml,%3Csvg viewBox='0 0 240 240' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");

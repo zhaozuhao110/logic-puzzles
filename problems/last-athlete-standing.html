@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>最后剩下谁 — 经典逻辑推理</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Noto+Serif+SC:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/base.css">
+  <link rel="stylesheet" href="../assets/problem-gold.css">
+  <script src="../assets/theme.js" defer></script>
+  <script src="../assets/problem-stepper.js" defer></script>
+</head>
+<body>
+  <div class="bg"></div>
+
+  <a href="../index.html" class="back-link">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    <span>返回首页</span>
+  </a>
+  <button class="theme-toggle-sub" id="themeToggle" title="切换明暗模式">
+    <svg class="moon-icon" viewBox="0 0 24 24"><path d="M12.1,22c-4.9,0-9-3.8-9.1-8.7c0-3.1,1.5-6.1,4.1-8c0.2-0.1,0.5-0.1,0.7,0.1c0.2,0.2,0.2,0.5,0.1,0.7c-0.5,0.9-0.7,1.8-0.7,2.8c0,3.5,2.8,6.3,6.3,6.3c1,0,1.9-0.2,2.8-0.7c0.2-0.1,0.5-0.1,0.7,0.1c0.2,0.2,0.2,0.5,0.1,0.7C15.1,20.5,13.6,22,12.1,22z"/></svg>
+    <svg class="sun-icon" viewBox="0 0 24 24"><path d="M12,18c-3.3,0-6-2.7-6-6s2.7-6,6-6s6,2.7,6,6S15.3,18,12,18z M12,8c-2.2,0-4,1.8-4,4s1.8,4,4,4s4-1.8,4-4S14.2,8,12,8z M11,1h2v3h-2V1z M11,20h2v3h-2V20z M3.5,4.9l2.1-2.1l1.4,1.4L4.9,6.3L3.5,4.9z M17,18.4l2.1-2.1l1.4,1.4l-2.1,2.1L17,18.4z M1,11h3v2H1V11z M20,11h3v2h-3V11z M4.9,17.7l2.1,2.1l-1.4,1.4l-2.1-2.1L4.9,17.7z M18.4,5.6l2.1-2.1l1.4,1.4l-2.1,2.1L18.4,5.6z"/></svg>
+  </button>
+
+  <div class="container">
+    <section class="hero">
+      <div class="hero-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M7 7h10v14H7z"/>
+          <path d="M9 3h6v4H9z"/>
+          <path d="M10 11h4M10 15h4"/>
+        </svg>
+      </div>
+      <h1>最后剩下谁</h1>
+      <p class="subtitle">last-athlete-standing</p>
+      <div class="hero-question">
+        1～50 号运动员按顺序排成一排。教练下令：<strong>单数运动员出列</strong>，剩下的人重新排队编号；再下令单数出列……如此反复，直到最后只剩 1 人。<br><br>
+        <strong>问：</strong>最后剩下的是几号？<br>
+        如果教练下的令改为：<strong>双数运动员出列</strong>，最后剩下的又是谁？
+      </div>
+    </section>
+
+    <section id="analysis">
+      <span class="label">逻辑解析 / analysis</span>
+      <h2 class="heading">每轮都“砍半”：对应二进制/2 的幂（约瑟夫问题 k=2）</h2>
+      <div class="card">
+        <div class="nav">
+          <div class="status" id="stepStatus">步骤 1 / 4</div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end">
+            <button class="btn" id="btnPrev" disabled>上一步</button>
+            <button class="btn" id="btnNext">下一步</button>
+          </div>
+        </div>
+
+        <div class="steps" id="steps">
+          <div class="step-card" data-step="1">
+            <div class="step-title"><div class="badge">1</div><h3>“单数出列” = 保留偶数 = 原编号变成 2×(新编号)</h3></div>
+            <p>第一轮剔除 1,3,5,... 后，留下的是 2,4,6,...,50。<br>
+              重新编号后，新队列的第 k 个对应原编号 <strong>2k</strong>。</p>
+          </div>
+
+          <div class="step-card" data-step="2">
+            <div class="step-title"><div class="badge">2</div><h3>继续“单数出列” ⇒ 只剩 4 的倍数，再剩 8 的倍数……</h3></div>
+            <p>第二轮保留下来的对应原编号是 4 的倍数；第三轮是 8 的倍数……每轮都让“幸存者编号”乘 2。</p>
+          </div>
+
+          <div class="step-card" data-step="3">
+            <div class="step-title"><div class="badge">3</div><h3>直到只剩一个：就是 ≤50 的最大 2 的幂</h3></div>
+            <p>50 以内最大的 2 的幂是 32，所以最后留下的是 <strong>32 号</strong>。</p>
+          </div>
+
+          <div class="step-card" data-step="4">
+            <div class="step-title"><div class="badge">4</div><h3>若改为“双数出列” = 保留奇数 ⇒ 最终留下 1 号</h3></div>
+            <p>第一轮保留 1,3,5,...,49；重新编号后继续保留“奇数位”，对应原编号始终保持为 <strong>1 mod 2^t</strong>。最终剩下的就是 <strong>1 号</strong>。<br><br>
+              <strong>结论：</strong>单数出列 ⇒ 32 号；双数出列 ⇒ 1 号。</p>
+          </div>
+        </div>
+
+        <div class="insight">
+          <span class="label">洞见总结 / insight</span>
+          <ul>
+            <li>这是约瑟夫问题 k=2 的一种变体：每轮“砍半”特别适合用 2 的幂理解。</li>
+            <li>“单数出列”对应保留偶数，所以幸存者编号不断乘 2。</li>
+            <li>“双数出列”对应保留奇数，最终回到最小的那个：1。</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    /**
+     * 页面初始化：启用“步骤推进器”轻交互。
+     */
+    function initPage(){
+      if (window.initProblemStepper) window.initProblemStepper();
+    }
+    initPage();
+  </script>
+</body>
+</html>

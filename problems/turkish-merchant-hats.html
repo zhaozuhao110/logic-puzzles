@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>土耳其商人和帽子 — 经典逻辑推理</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Noto+Serif+SC:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/base.css">
+  <link rel="stylesheet" href="../assets/problem-gold.css">
+  <script src="../assets/theme.js" defer></script>
+  <script src="../assets/problem-stepper.js" defer></script>
+</head>
+<body>
+  <div class="bg"></div>
+
+  <a href="../index.html" class="back-link">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    <span>返回首页</span>
+  </a>
+  <button class="theme-toggle-sub" id="themeToggle" title="切换明暗模式">
+    <svg class="moon-icon" viewBox="0 0 24 24"><path d="M12.1,22c-4.9,0-9-3.8-9.1-8.7c0-3.1,1.5-6.1,4.1-8c0.2-0.1,0.5-0.1,0.7,0.1c0.2,0.2,0.2,0.5,0.1,0.7c-0.5,0.9-0.7,1.8-0.7,2.8c0,3.5,2.8,6.3,6.3,6.3c1,0,1.9-0.2,2.8-0.7c0.2-0.1,0.5-0.1,0.7,0.1c0.2,0.2,0.2,0.5,0.1,0.7C15.1,20.5,13.6,22,12.1,22z"/></svg>
+    <svg class="sun-icon" viewBox="0 0 24 24"><path d="M12,18c-3.3,0-6-2.7-6-6s2.7-6,6-6s6,2.7,6,6S15.3,18,12,18z M12,8c-2.2,0-4,1.8-4,4s1.8,4,4,4s4-1.8,4-4S14.2,8,12,8z M11,1h2v3h-2V1z M11,20h2v3h-2V20z M3.5,4.9l2.1-2.1l1.4,1.4L4.9,6.3L3.5,4.9z M17,18.4l2.1-2.1l1.4,1.4l-2.1,2.1L17,18.4z M1,11h3v2H1V11z M20,11h3v2h-3V11z M4.9,17.7l2.1,2.1l-1.4,1.4l-2.1-2.1L4.9,17.7z M18.4,5.6l2.1-2.1l1.4,1.4l-2.1,2.1L18.4,5.6z"/></svg>
+  </button>
+
+  <div class="container">
+    <section class="hero">
+      <div class="hero-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 7h16"/>
+          <path d="M6 7v10a3 3 0 0 0 3 3h6a3 3 0 0 0 3-3V7"/>
+          <path d="M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"/>
+        </svg>
+      </div>
+      <h1>土耳其商人和帽子</h1>
+      <p class="subtitle">turkish-merchant-hats</p>
+      <div class="hero-question">
+        桌上有五顶帽子：<strong>两顶红色</strong>、<strong>三顶黑色</strong>。商人关灯后打乱帽子位置，三人（商人、A、B）各摸一顶戴上，把剩下两顶藏起来。<br><br>
+        开灯后，A、B 都看到商人戴的是<strong>红帽子</strong>。过了一会儿，A 喊道：<strong>“我戴的是黑帽子。”</strong><br><br>
+        <strong>问：A 是如何推理的？</strong>
+      </div>
+    </section>
+
+    <section id="analysis">
+      <span class="label">逻辑解析 / analysis</span>
+      <h2 class="heading">“别人为什么沉默”比“你看见了什么”更有力</h2>
+      <div class="card">
+        <div class="nav">
+          <div class="status" id="stepStatus">步骤 1 / 4</div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end">
+            <button class="btn" id="btnPrev" disabled>上一步</button>
+            <button class="btn" id="btnNext">下一步</button>
+          </div>
+        </div>
+
+        <div class="steps" id="steps">
+          <div class="step-card" data-step="1">
+            <div class="step-title"><div class="badge">1</div><h3>已知：商人是红帽 ⇒ 场上剩余红帽最多还有 1 顶</h3></div>
+            <p>总共只有 2 顶红帽，商人已经占用 1 顶，所以 A 与 B 的帽子中<strong>最多只有 1 顶红</strong>。</p>
+          </div>
+
+          <div class="step-card" data-step="2">
+            <div class="step-title"><div class="badge">2</div><h3>如果 A 看到 B 也是红帽，会怎样？</h3></div>
+            <p>若 A 看到 B 也是红帽，则两顶红帽都已出现在商人与 B 身上，A 自己就<strong>不可能是红帽</strong>，只能是黑帽。那他会立刻说出答案，不需要等待。</p>
+          </div>
+
+          <div class="step-card" data-step="3">
+            <div class="step-title"><div class="badge">3</div><h3>A 等了一会儿 ⇒ A 看到 B 不是红帽（即 B 是黑帽）</h3></div>
+            <p>现实中 A 没有立刻回答，而是“过了一会儿”才喊出结论，说明他并未看到 B 是红帽，所以 A 看到 B 戴的是<strong>黑帽</strong>。</p>
+          </div>
+
+          <div class="step-card" data-step="4">
+            <div class="step-title"><div class="badge">4</div><h3>利用 B 的沉默做二阶推理 ⇒ A 必是黑帽</h3></div>
+            <p>A 看到：商人红、B 黑。此时 A 还可能是红或黑。<br>
+              关键在于：如果 A 是红帽，那么 B 将会看到两顶红帽（商人红 + A 红），从而能立刻断定自己只能是黑帽，并马上说出来。<br>
+              但 B 没有立刻说话（沉默了一会儿），所以 A 推出：自己不可能是红帽，只能是黑帽。<br><strong>结论：A 戴黑帽。</strong></p>
+          </div>
+        </div>
+
+        <div class="insight">
+          <span class="label">洞见总结 / insight</span>
+          <ul>
+            <li>这类题的核心是<strong>二阶推理</strong>：我推理“你会怎么推理”。</li>
+            <li>“等待/沉默”不是剧情，它是<strong>信息</strong>（公共公告）。</li>
+            <li>先用配额（红帽只有 2 顶）把情况压到少数，再用沉默排除即可。</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    /**
+     * 页面初始化：启用“步骤推进器”轻交互。
+     */
+    function initPage(){
+      if (window.initProblemStepper) window.initProblemStepper();
+    }
+    initPage();
+  </script>
+</body>
+</html>

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>遗嘱分牛（二） — 经典逻辑推理</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Noto+Serif+SC:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/base.css">
+  <link rel="stylesheet" href="../assets/problem-gold.css">
+  <script src="../assets/theme.js" defer></script>
+  <script src="../assets/problem-stepper.js" defer></script>
+</head>
+<body>
+  <div class="bg"></div>
+
+  <a href="../index.html" class="back-link">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    <span>返回首页</span>
+  </a>
+  <button class="theme-toggle-sub" id="themeToggle" title="切换明暗模式">
+    <svg class="moon-icon" viewBox="0 0 24 24"><path d="M12.1,22c-4.9,0-9-3.8-9.1-8.7c0-3.1,1.5-6.1,4.1-8c0.2-0.1,0.5-0.1,0.7,0.1c0.2,0.2,0.2,0.5,0.1,0.7c-0.5,0.9-0.7,1.8-0.7,2.8c0,3.5,2.8,6.3,6.3,6.3c1,0,1.9-0.2,2.8-0.7c0.2-0.1,0.5-0.1,0.7,0.1c0.2,0.2,0.2,0.5,0.1,0.7C15.1,20.5,13.6,22,12.1,22z"/></svg>
+    <svg class="sun-icon" viewBox="0 0 24 24"><path d="M12,18c-3.3,0-6-2.7-6-6s2.7-6,6-6s6,2.7,6,6S15.3,18,12,18z M12,8c-2.2,0-4,1.8-4,4s1.8,4,4,4s4-1.8,4-4S14.2,8,12,8z M11,1h2v3h-2V1z M11,20h2v3h-2V20z M3.5,4.9l2.1-2.1l1.4,1.4L4.9,6.3L3.5,4.9z M17,18.4l2.1-2.1l1.4,1.4l-2.1,2.1L17,18.4z M1,11h3v2H1V11z M20,11h3v2h-3V11z M4.9,17.7l2.1,2.1l-1.4,1.4l-2.1-2.1L4.9,17.7z M18.4,5.6l2.1-2.1l1.4,1.4l-2.1,2.1L18.4,5.6z"/></svg>
+  </button>
+
+  <div class="container">
+    <section class="hero">
+      <div class="hero-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 20h16"/>
+          <path d="M7 20V8a5 5 0 0 1 10 0v12"/>
+          <path d="M9 10h6"/>
+        </svg>
+      </div>
+      <h1>遗嘱分牛（二）</h1>
+      <p class="subtitle">will-cows-2</p>
+      <div class="hero-question">
+        从前有个农民去世前留下遗嘱：<br>
+        先把牛的总数的<strong>一半加半头</strong>给儿子；<br>
+        再把剩下的牛的<strong>一半加半头</strong>给妻子；<br>
+        再把剩下的牛的<strong>一半加半头</strong>给女儿；<br>
+        最后把再剩下的一半加半头宰杀犒劳乡亲。<br><br>
+        他们按遗嘱分完后<strong>恰好一头不剩</strong>。<br>
+        <strong>问：他们各分了多少头牛？</strong>
+      </div>
+    </section>
+
+    <section id="analysis">
+      <span class="label">逻辑解析 / analysis</span>
+      <h2 class="heading">从最后一步倒推：让“半 + 半头”刚好等于全部</h2>
+      <div class="card">
+        <div class="nav">
+          <div class="status" id="stepStatus">步骤 1 / 4</div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end">
+            <button class="btn" id="btnPrev" disabled>上一步</button>
+            <button class="btn" id="btnNext">下一步</button>
+          </div>
+        </div>
+
+        <div class="steps" id="steps">
+          <div class="step-card" data-step="1">
+            <div class="step-title"><div class="badge">1</div><h3>最后一步的关键：剩余必须是多少？</h3></div>
+            <p>最后一步是“把剩余的一半加半头”拿走，并且拿走后一头不剩。设最后一步前还剩 <strong>R</strong> 头，则：<br>
+              R/2 + 1/2 = R ⇒ R/2 = 1/2 ⇒ <strong>R = 1</strong>。<br>
+              也就是说：在最后宰杀之前，场上必须只剩 1 头牛。</p>
+          </div>
+
+          <div class="step-card" data-step="2">
+            <div class="step-title"><div class="badge">2</div><h3>把“R=1”往前推一层：女儿分走前剩多少？</h3></div>
+            <p>女儿分走的是“当前的一半 + 半头”。设女儿分之前剩 <strong>D</strong> 头，分走 D/2+1/2 后，剩下应为 1：<br>
+              D - (D/2 + 1/2) = 1 ⇒ D/2 - 1/2 = 1 ⇒ <strong>D = 3</strong>。</p>
+          </div>
+
+          <div class="step-card" data-step="3">
+            <div class="step-title"><div class="badge">3</div><h3>继续往前：妻子分走前剩多少？</h3></div>
+            <p>同理设妻子分之前剩 <strong>W</strong> 头，分走 W/2+1/2 后，剩下应为 3：<br>
+              W - (W/2 + 1/2) = 3 ⇒ W/2 - 1/2 = 3 ⇒ <strong>W = 7</strong>。</p>
+          </div>
+
+          <div class="step-card" data-step="4">
+            <div class="step-title"><div class="badge">4</div><h3>回到最开始：儿子分走前总数是多少？</h3></div>
+            <p>设总数为 <strong>T</strong>。儿子分走 T/2+1/2 后，剩下应为 7：<br>
+              T - (T/2 + 1/2) = 7 ⇒ T/2 - 1/2 = 7 ⇒ <strong>T = 15</strong>。<br><br>
+              于是：儿子得 15/2+1/2=8 头；妻子得 7/2+1/2=4 头；女儿得 3/2+1/2=2 头；最后宰杀 1 头。<br>
+              <strong>结论：总数 15 头；儿子 8，妻子 4，女儿 2，乡亲 1。</strong></p>
+          </div>
+        </div>
+
+        <div class="insight">
+          <span class="label">洞见总结 / insight</span>
+          <ul>
+            <li>“分走一半再加半”最适合<strong>从最后一步倒推</strong>。</li>
+            <li>每往前推一层，剩余会按规律变为：1 → 3 → 7 → 15（即 2^n - 1）。</li>
+            <li>倒推的好处是：一步一步都能保证是整数，不会卡在分数上。</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    /**
+     * 页面初始化：启用“步骤推进器”轻交互。
+     */
+    function initPage(){
+      if (window.initProblemStepper) window.initProblemStepper();
+    }
+    initPage();
+  </script>
+</body>
+</html>

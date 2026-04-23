@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>称量药丸 — 经典逻辑推理</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Noto+Serif+SC:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/base.css">
+  <link rel="stylesheet" href="../assets/problem-gold.css">
+  <script src="../assets/theme.js" defer></script>
+  <script src="../assets/problem-stepper.js" defer></script>
+  <style></style>
+</head>
+<body>
+  <div class="bg"></div>
+  <a href="../index.html" class="back-link">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg><span>返回首页</span>
+  </a>
+  <button class="theme-toggle-sub" id="themeToggle" title="切换明暗模式">
+    <svg class="moon-icon" viewBox="0 0 24 24"><path d="M12.1,22c-4.9,0-9-3.8-9.1-8.7c0-3.1,1.5-6.1,4.1-8c0.2-0.1,0.5-0.1,0.7,0.1c0.2,0.2,0.2,0.5,0.1,0.7c-0.5,0.9-0.7,1.8-0.7,2.8c0,3.5,2.8,6.3,6.3,6.3c1,0,1.9-0.2,2.8-0.7c0.2-0.1,0.5-0.1,0.7,0.1c0.2,0.2,0.2,0.5,0.1,0.7C15.1,20.5,13.6,22,12.1,22z"/></svg>
+    <svg class="sun-icon" viewBox="0 0 24 24"><path d="M12,18c-3.3,0-6-2.7-6-6s2.7-6,6-6s6,2.7,6,6S15.3,18,12,18z M12,8c-2.2,0-4,1.8-4,4s1.8,4,4,4s4-1.8,4-4S14.2,8,12,8z M11,1h2v3h-2V1z M11,20h2v3h-2V20z M3.5,4.9l2.1-2.1l1.4,1.4L4.9,6.3L3.5,4.9z M17,18.4l2.1-2.1l1.4,1.4l-2.1,2.1L17,18.4z M1,11h3v2H1V11z M20,11h3v2h-3V11z M4.9,17.7l2.1,2.1l-1.4,1.4l-2.1-2.1L4.9,17.7z M18.4,5.6l2.1-2.1l1.4,1.4l-2.1,2.1L18.4,5.6z"/></svg>
+  </button>
+
+  <div class="container">
+    <section class="hero">
+      <div class="hero-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 20h16"/><path d="M6 20V8a6 6 0 0 1 12 0v12"/><path d="M9 12h6"/>
+        </svg>
+      </div>
+      <h1>称量药丸</h1>
+      <p class="subtitle">pill-weighing</p>
+      <div class="hero-question">
+        你有 4 个装药丸的罐子。正常药丸每颗重 w，某一罐被污染：该罐药丸每颗重 <strong>w+1</strong>。<br>
+        只允许称量<strong>一次</strong>，如何判断是哪一罐被污染？
+      </div>
+    </section>
+
+    <section id="analysis">
+      <span class="label">逻辑解析 / analysis</span>
+      <h2 class="heading">用“取样数量”把罐号编码到重量差里</h2>
+      <div class="card">
+        <div class="nav">
+          <div class="status" id="stepStatus">步骤 1 / 3</div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end">
+            <button class="btn" id="btnPrev" disabled>上一步</button>
+            <button class="btn" id="btnNext">下一步</button>
+          </div>
+        </div>
+        <div class="steps">
+          <div class="step-card">
+            <div class="step-title"><div class="badge">1</div><h3>从第 i 罐取 i 颗药丸</h3></div>
+            <p>把 4 个罐子编号为 1~4：从 1 号取 1 颗，从 2 号取 2 颗，从 3 号取 3 颗，从 4 号取 4 颗，合计取 10 颗。</p>
+          </div>
+          <div class="step-card">
+            <div class="step-title"><div class="badge">2</div><h3>计算“应有重量”并对比实际称重</h3></div>
+            <p>如果全都正常，重量应为 <strong>10w</strong>。实际称得重量为 W。两者差值 <strong>Δ = W - 10w</strong> 只可能是 0~4 的整数。</p>
+          </div>
+          <div class="step-card">
+            <div class="step-title"><div class="badge">3</div><h3>差值 Δ 就是被污染的罐号</h3></div>
+            <p>若第 i 罐被污染，则你恰好从那罐取了 i 颗，每颗多 1，所以总共多出 i。也就是 <strong>Δ = i</strong>。<br>因此一次称量即可锁定污染罐。</p>
+          </div>
+        </div>
+        <div class="insight">
+          <span class="label">洞见总结 / insight</span>
+          <ul>
+            <li>把“未知的罐号”转换成<strong>可观测的重量差</strong>，本质是一次性编码。</li>
+            <li>这类题常用套路：<strong>取样数量 = 编码位权</strong>。</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>window.initProblemStepper&&window.initProblemStepper();</script>
+</body>
+</html>

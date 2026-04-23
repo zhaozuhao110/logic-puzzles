@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>六张纸币 — 经典逻辑推理</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Noto+Serif+SC:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/base.css">
+  <link rel="stylesheet" href="../assets/problem-gold.css">
+  <script src="../assets/theme.js" defer></script>
+  <script src="../assets/problem-stepper.js" defer></script>
+</head>
+<body>
+  <div class="bg"></div>
+
+  <a href="../index.html" class="back-link">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    <span>返回首页</span>
+  </a>
+  <button class="theme-toggle-sub" id="themeToggle" title="切换明暗模式">
+    <svg class="moon-icon" viewBox="0 0 24 24"><path d="M12.1,22c-4.9,0-9-3.8-9.1-8.7c0-3.1,1.5-6.1,4.1-8c0.2-0.1,0.5-0.1,0.7,0.1c0.2,0.2,0.2,0.5,0.1,0.7c-0.5,0.9-0.7,1.8-0.7,2.8c0,3.5,2.8,6.3,6.3,6.3c1,0,1.9-0.2,2.8-0.7c0.2-0.1,0.5-0.1,0.7,0.1c0.2,0.2,0.2,0.5,0.1,0.7C15.1,20.5,13.6,22,12.1,22z"/></svg>
+    <svg class="sun-icon" viewBox="0 0 24 24"><path d="M12,18c-3.3,0-6-2.7-6-6s2.7-6,6-6s6,2.7,6,6S15.3,18,12,18z M12,8c-2.2,0-4,1.8-4,4s1.8,4,4,4s4-1.8,4-4S14.2,8,12,8z M11,1h2v3h-2V1z M11,20h2v3h-2V20z M3.5,4.9l2.1-2.1l1.4,1.4L4.9,6.3L3.5,4.9z M17,18.4l2.1-2.1l1.4,1.4l-2.1,2.1L17,18.4z M1,11h3v2H1V11z M20,11h3v2h-3V11z M4.9,17.7l2.1,2.1l-1.4,1.4l-2.1-2.1L4.9,17.7z M18.4,5.6l2.1-2.1l1.4,1.4l-2.1,2.1L18.4,5.6z"/></svg>
+  </button>
+
+  <div class="container">
+    <section class="hero">
+      <div class="hero-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="7" width="18" height="14" rx="2"/>
+          <path d="M7 7V5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v2"/>
+          <path d="M7 13h10"/>
+        </svg>
+      </div>
+      <h1>六张纸币</h1>
+      <p class="subtitle">six-banknotes</p>
+      <div class="hero-question">
+        有 3 个美国孩子，把兜里的钱全掏出来一共是 <strong>320 美元</strong>：其中 <strong>100 美元两张</strong>、<strong>50 美元两张</strong>、<strong>10 美元两张</strong>。<br><br>
+        已知每个孩子所带的纸币组合互不相同，并且：<br>
+        没带 100 美元纸币的孩子也没带 10 美元纸币；<br>
+        没带 50 美元纸币的孩子也没带 100 美元纸币。<br><br>
+        <strong>问：3 个孩子各自带了哪些纸币？</strong>
+      </div>
+    </section>
+
+    <section id="analysis">
+      <span class="label">逻辑解析 / analysis</span>
+      <h2 class="heading">把“缺少某面额 ⇒ 也缺少某面额”看成排除链</h2>
+      <div class="card">
+        <div class="nav">
+          <div class="status" id="stepStatus">步骤 1 / 3</div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end">
+            <button class="btn" id="btnPrev" disabled>上一步</button>
+            <button class="btn" id="btnNext">下一步</button>
+          </div>
+        </div>
+
+        <div class="steps" id="steps">
+          <div class="step-card" data-step="1">
+            <div class="step-title"><div class="badge">1</div><h3>锁定“没带 50”的那位：他只能带 10</h3></div>
+            <p>题目给出：没带 50 的孩子也没带 100。<br>
+              那么他只能从剩下的面额里拿钱：也就是只能带 <strong>10 美元</strong>纸币。<br>
+              因为 10 美元只有两张，所以这位孩子只能是：<strong>10 + 10 = 20 美元</strong>。</p>
+          </div>
+
+          <div class="step-card" data-step="2">
+            <div class="step-title"><div class="badge">2</div><h3>锁定“没带 100”的那位：他也没带 10 ⇒ 只能带 50</h3></div>
+            <p>题目还给出：没带 100 的孩子也没带 10。<br>
+              由于两张 10 已经被“没带 50”的那位拿走了，另一位“没带 100”的孩子只能用 <strong>50 美元</strong>纸币凑钱。<br>
+              两张 50 恰好可以组成：<strong>50 + 50 = 100 美元</strong>。</p>
+          </div>
+
+          <div class="step-card" data-step="3">
+            <div class="step-title"><div class="badge">3</div><h3>剩余纸币自动归第三人：两张 100</h3></div>
+            <p>目前已分出：两张 10 与两张 50。剩下的只有两张 100，必然由第三个孩子持有：<strong>100 + 100 = 200 美元</strong>。<br><br>
+              <strong>结论：</strong><br>
+              孩子甲：10+10=20；孩子乙：50+50=100；孩子丙：100+100=200。</p>
+          </div>
+        </div>
+
+        <div class="insight">
+          <span class="label">洞见总结 / insight</span>
+          <ul>
+            <li>用“缺少 A ⇒ 也缺少 B”构造<strong>排除链</strong>，可快速锁定可选面额。</li>
+            <li>题目给了“某种面额只有两张”，等价于强约束：<strong>一旦有人只能用它，就直接定死</strong>。</li>
+            <li>剩余法（把已分配的拿走）往往能一锤定音。</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    /**
+     * 页面初始化：启用“步骤推进器”轻交互。
+     */
+    function initPage(){
+      if (window.initProblemStepper) window.initProblemStepper();
+    }
+    initPage();
+  </script>
+</body>
+</html>

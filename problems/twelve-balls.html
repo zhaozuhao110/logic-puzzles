@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>称球问题（12球）— 经典逻辑推理</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Noto+Serif+SC:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/base.css">
+  <script src="../assets/theme.js" defer></script>
+  <style>
+  *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+  :root{
+    --bg:#07070b;
+    --surface:#0f0f18;
+    --card:rgba(18,18,26,0.62);
+    --card-2:rgba(28,28,40,0.45);
+    --accent:#d4a537;
+    --accent-bright:#f0c94d;
+    --accent-dim:#8a6d1b;
+    --cream:#e8e0d4;
+    --cream-dim:#8a847a;
+    --border:rgba(212,165,55,0.16);
+    --shadow:rgba(0,0,0,0.35);
+    --red:#c0392b;
+    --green:#4a9a5e;
+    --blue:#4a7adf;
+  }
+  [data-theme="light"]{
+    --bg:#f3f4f8;
+    --surface:#ffffff;
+    --card:rgba(255,255,255,0.92);
+    --card-2:rgba(255,255,255,0.78);
+    --accent:#b08235;
+    --accent-bright:#d4a537;
+    --accent-dim:#8a6528;
+    --cream:#1a1a1c;
+    --cream-dim:#5a5a5e;
+    --border:rgba(176,130,53,0.18);
+    --shadow:rgba(0,0,0,0.08);
+    --red:#c0392b;
+    --green:#2d7d47;
+    --blue:#2d63d6;
+  }
+  html{scroll-behavior:smooth}
+  body{
+    font-family:'Noto Serif SC',serif;
+    background:var(--bg);
+    color:var(--cream);
+    min-height:100vh;
+    overflow-x:hidden;
+    line-height:1.85;
+  }
+  .bg{
+    position:fixed;inset:0;z-index:0;pointer-events:none;
+    background:
+      radial-gradient(ellipse 62% 54% at 25% 12%,rgba(212,165,55,0.06),transparent),
+      radial-gradient(ellipse 48% 40% at 85% 85%,rgba(74,122,223,0.06),transparent),
+      var(--bg);
+  }
+  .container{position:relative;z-index:2;max-width:1040px;margin:0 auto;padding:0 24px}
+
+  /* ===== Hero ===== */
+  .hero{
+    min-height:78vh;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    text-align:center;padding:42px 0;
+  }
+  .hero-icon{width:70px;height:70px;margin-bottom:22px;color:var(--accent);opacity:0.9}
+  .hero h1{
+    font-family:'Playfair Display','Noto Serif SC',serif;
+    font-size:clamp(2rem,5.2vw,3.3rem);
+    font-weight:900;
+    background:linear-gradient(135deg,var(--accent-bright),var(--accent),var(--accent-dim));
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+    letter-spacing:0.06em;line-height:1.15;margin-bottom:10px;
+  }
+  .hero .subtitle{
+    font-size:clamp(0.9rem,2vw,1.1rem);
+    color:var(--cream-dim);
+    font-weight:300;
+    letter-spacing:0.22em;
+    margin-bottom:34px;
+  }
+  .hero-question{
+    max-width:760px;text-align:left;
+    background:var(--card);
+    border:1px solid var(--border);
+    padding:24px 28px;
+    border-radius:14px;
+    font-size:0.95rem;
+    color:var(--cream-dim);
+    box-shadow:0 18px 46px var(--shadow);
+  }
+  .hero-question strong{color:var(--accent-bright);font-weight:700}
+
+  /* ===== Sections ===== */
+  section{padding:54px 0}
+  .label{
+    display:inline-block;
+    font-size:0.75rem;
+    letter-spacing:0.2em;
+    color:var(--accent-dim);
+    margin-bottom:12px;
+    text-transform:uppercase;
+  }
+  .heading{
+    font-size:clamp(1.5rem,3vw,2.05rem);
+    color:var(--cream);
+    font-weight:900;
+    margin-bottom:18px;
+  }
+
+  .card{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:16px;
+    padding:22px 20px;
+    box-shadow:0 16px 36px rgba(0,0,0,0.18);
+  }
+
+  .cols{
+    margin-top:18px;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:16px;
+    align-items:start;
+  }
+  @media (max-width:900px){.cols{grid-template-columns:1fr}}
+
+  .panel{
+    background:var(--card-2);
+    border:1px solid rgba(212,165,55,0.12);
+    border-radius:16px;
+    padding:16px;
+  }
+  .panel-title{
+    display:flex;align-items:center;justify-content:space-between;
+    gap:12px;margin-bottom:12px;
+  }
+  .panel-title h3{font-size:0.95rem;color:var(--cream);letter-spacing:0.06em}
+
+  .pill{
+    display:inline-flex;align-items:center;gap:8px;
+    padding:6px 10px;border-radius:999px;
+    border:1px solid rgba(212,165,55,0.22);
+    background:rgba(212,165,55,0.08);
+    font-size:0.82rem;color:var(--cream);
+    letter-spacing:0.06em;
+  }
+  .dot{width:8px;height:8px;border-radius:50%}
+  .dot.ok{background:var(--green)}
+  .dot.bad{background:var(--red)}
+  .dot.neu{background:var(--blue)}
+
+  .weigh{
+    border:1px solid rgba(212,165,55,0.14);
+    border-radius:14px;
+    padding:14px;
+    background:rgba(255,255,255,0.02);
+  }
+  .weigh + .weigh{margin-top:10px}
+  .weigh .k{font-size:0.74rem;letter-spacing:0.18em;color:var(--accent-dim);text-transform:uppercase}
+  .weigh .v{margin-top:6px;color:var(--cream);font-weight:900}
+  .weigh .v span{color:var(--accent-bright)}
+  .weigh .hint{margin-top:6px;color:var(--cream-dim);font-size:0.88rem}
+
+  .btn-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+  .btn{
+    appearance:none;border:none;cursor:pointer;
+    padding:10px 14px;border-radius:12px;
+    font-family:'Noto Serif SC',serif;
+    font-size:0.88rem;
+    color:var(--bg);
+    background:linear-gradient(135deg,var(--accent-bright),var(--accent));
+    box-shadow:0 10px 24px rgba(212,165,55,0.18);
+    transition:transform .2s ease, filter .2s ease;
+  }
+  .btn:active{transform:translateY(1px)}
+  .btn.secondary{
+    background:transparent;
+    color:var(--cream);
+    border:1px solid rgba(212,165,55,0.25);
+    box-shadow:none;
+  }
+
+  .result{
+    margin-top:12px;
+    padding:12px 14px;
+    border-radius:14px;
+    background:rgba(212,165,55,0.06);
+    border:1px solid rgba(212,165,55,0.16);
+    color:var(--cream-dim);
+    font-size:0.9rem;
+  }
+  .result strong{color:var(--accent-bright)}
+
+  .steps{display:grid;gap:14px;margin-top:18px}
+  .step{
+    padding:16px 16px 16px 18px;
+    border:1px solid rgba(212,165,55,0.10);
+    background:linear-gradient(180deg,rgba(212,165,55,0.06),transparent);
+    border-radius:14px;
+    transition:transform .25s ease,border-color .25s ease,background .25s ease;
+    cursor:pointer;
+  }
+  .step:hover{
+    transform:translateY(-2px);
+    border-color:rgba(212,165,55,0.25);
+    background:linear-gradient(180deg,rgba(212,165,55,0.10),transparent);
+  }
+  .step.active{
+    border-color:rgba(240,201,77,0.55);
+    box-shadow:0 10px 24px rgba(212,165,55,0.12);
+  }
+  .step-title{font-weight:900;color:var(--accent);margin-bottom:6px}
+  .step-desc{color:var(--cream-dim);font-size:0.92rem}
+
+  footer{padding:42px 0 70px;text-align:center;color:var(--cream-dim);opacity:0.7}
+  </style>
+</head>
+<body>
+  <div class="bg"></div>
+
+  <a href="../index.html" class="back-link">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    <span>返回首页</span>
+  </a>
+  <button class="theme-toggle-sub" id="themeToggle" title="切换明暗模式">
+    <svg class="moon-icon" viewBox="0 0 24 24"><path d="M12.1,22c-4.9,0-9-3.8-9.1-8.7c0-3.1,1.5-6.1,4.1-8c0.2-0.1,0.5-0.1,0.7,0.1c0.2,0.2,0.2,0.5,0.1,0.7c-0.5,0.9-0.7,1.8-0.7,2.8c0,3.5,2.8,6.3,6.3,6.3c1,0,1.9-0.2,2.8-0.7c0.2-0.1,0.5-0.1,0.7,0.1c0.2,0.2,0.2,0.5,0.1,0.7C15.1,20.5,13.6,22,12.1,22z"/></svg>
+    <svg class="sun-icon" viewBox="0 0 24 24"><path d="M12,18c-3.3,0-6-2.7-6-6s2.7-6,6-6s6,2.7,6,6S15.3,18,12,18z M12,8c-2.2,0-4,1.8-4,4s1.8,4,4,4s4-1.8,4-4S14.2,8,12,8z M11,1h2v3h-2V1z M11,20h2v3h-2V20z M3.5,4.9l2.1-2.1l1.4,1.4L4.9,6.3L3.5,4.9z M17,18.4l2.1-2.1l1.4,1.4l-2.1,2.1L17,18.4z M1,11h3v2H1V11z M20,11h3v2h-3V11z M4.9,17.7l2.1,2.1l-1.4,1.4l-2.1-2.1L4.9,17.7z M18.4,5.6l2.1-2.1l1.4,1.4l-2.1,2.1L18.4,5.6z"/></svg>
+  </button>
+
+  <div class="container">
+    <section class="hero">
+      <div class="hero-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M6 4h12"></path>
+          <path d="M7 4l2 6h6l2-6"></path>
+          <path d="M5 10h14"></path>
+          <path d="M8 10l-3 10h14l-3-10"></path>
+          <path d="M12 10v10"></path>
+        </svg>
+      </div>
+      <h1>称球问题（12球）</h1>
+      <p class="subtitle">THE 12 BALLS PROBLEM</p>
+      <div class="hero-question">
+        有 <strong>12 个外观完全相同</strong> 的球，以及一个不带砝码的天平。已知其中 <strong>恰好 1 个球</strong> 的重量与其他不同，但不知道它是<strong>更重</strong>还是<strong>更轻</strong>。
+        <br><br>
+        问：如何<strong>最多称 3 次</strong>就找出这个球，并判断它是重还是轻？
+      </div>
+    </section>
+
+    <section id="solution">
+      <span class="label">逻辑解析 / ANALYSIS</span>
+      <h2 class="heading">把 24 种可能，压缩进 3×3 的信息量</h2>
+
+      <div class="card">
+        <div class="steps" id="steps">
+          <div class="step">
+            <div class="step-title">信息量直觉</div>
+            <div class="step-desc">12 个球 ×（重/轻）= 24 种状态；一次称重只有 3 种结果（左重/右重/平衡），三次最多区分 27 种结果，所以理论上“可解”。</div>
+          </div>
+          <div class="step">
+            <div class="step-title">策略核心</div>
+            <div class="step-desc">第一称把球分成 4/4/4：先确定“嫌疑组”，同时获得一组<strong>确定是标准球</strong>，为后续提供“参照物”。</div>
+          </div>
+          <div class="step">
+            <div class="step-title">实现方式</div>
+            <div class="step-desc">下面的“称重向导”按固定方案给出每次上秤的球，并且在你点击结果后，自动给出下一次称法与最终答案。</div>
+          </div>
+        </div>
+
+        <div class="cols">
+          <div class="panel">
+            <div class="panel-title">
+              <h3>称重向导</h3>
+              <span class="pill"><span class="dot neu"></span>点击结果推进</span>
+            </div>
+
+            <div class="weigh" id="weighInfo">
+              <div class="k">WEIGHING #1</div>
+              <div class="v">左盘：<span id="leftSet">1,2,3,4</span>　|　右盘：<span id="rightSet">5,6,7,8</span></div>
+              <div class="hint" id="weighHint">第 1 次：先分组定位嫌疑范围。</div>
+            </div>
+
+            <div class="btn-row">
+              <button class="btn" id="btnLeft" type="button">左边重</button>
+              <button class="btn" id="btnBal" type="button">平衡</button>
+              <button class="btn" id="btnRight" type="button">右边重</button>
+              <button class="btn secondary" id="btnReset" type="button">重置</button>
+            </div>
+
+            <div class="result" id="result">
+              从第 1 次称开始：选择“左重/平衡/右重”继续。
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-title">
+              <h3>当前推理状态</h3>
+              <span class="pill"><span class="dot neu"></span>候选集合</span>
+            </div>
+            <div class="result" id="stateBox">候选：{1..12}（重/轻未知）</div>
+            <div class="result">
+              说明：向导使用一套经典的三次称重方案：
+              <br>
+              第一次称：1234 vs 5678
+              <br>
+              若不平衡，第二次称会用 9/10/11 作为标准球进行“替换/对调”，让不同结果对应到更小的候选集。
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer>Logic Site · 经典题解页面</footer>
+  </div>
+
+  <script>
+  /**
+   * 将数组渲染为逗号分隔字符串。
+   * @param {number[]} arr 数字列表
+   * @returns {string} 文本
+   */
+  function setToText(arr) {
+    return arr.join(',');
+  }
+
+  /**
+   * 生成 “某些球可能重/可能轻” 的简洁描述。
+   * @param {Array<{ball:number, type:'heavy'|'light'}>} candidates 候选集合
+   * @returns {string} 文本
+   */
+  function candidatesToText(candidates) {
+    if (!candidates || !candidates.length) return '候选：∅';
+    var parts = candidates.map(function(c) {
+      return c.ball + (c.type === 'heavy' ? '重' : '轻');
+    });
+    return '候选：' + parts.join('，');
+  }
+
+  /**
+   * 根据当前分支与称重结果，计算下一步（或最终答案）。
+   * @param {Object} ctx 当前上下文
+   * @param {'L'|'B'|'R'} outcome 本次结果（L=左重，B=平衡，R=右重）
+   * @returns {Object} 下一步信息
+   */
+  function nextByOutcome(ctx, outcome) {
+    // ctx.stage: 1/2/3
+    // ctx.branch: 'unknown' | 'bal1' | 'L1' | 'R1' | 'bal1_L2' | ...
+
+    if (ctx.stage === 1) {
+      // Weigh1: 1234 vs 5678
+      if (outcome === 'B') {
+        return {
+          stage: 2,
+          branch: 'bal1',
+          left: [9,10,11],
+          right: [1,2,3],
+          hint: '第 2 次：因第 1 次平衡，坏球在 9~12。用 1/2/3 作标准对比 9/10/11。',
+          candidates: [
+            {ball:9,type:'heavy'},{ball:9,type:'light'},
+            {ball:10,type:'heavy'},{ball:10,type:'light'},
+            {ball:11,type:'heavy'},{ball:11,type:'light'},
+            {ball:12,type:'heavy'},{ball:12,type:'light'}
+          ]
+        };
+      }
+      if (outcome === 'L') {
+        // left heavy => {1-4 heavy} or {5-8 light}, and 9-12 are standard
+        return {
+          stage: 2,
+          branch: 'L1',
+          left: [1,9,10,11],
+          right: [5,2,3,4],
+          hint: '第 2 次：用 9/10/11（标准球）替换 2/3/4，并把 2/3/4 对调到右盘，制造信息分岔。',
+          candidates: [
+            {ball:1,type:'heavy'},{ball:2,type:'heavy'},{ball:3,type:'heavy'},{ball:4,type:'heavy'},
+            {ball:5,type:'light'},{ball:6,type:'light'},{ball:7,type:'light'},{ball:8,type:'light'}
+          ]
+        };
+      }
+      // outcome === 'R' right heavy
+      return {
+        stage: 2,
+        branch: 'R1',
+        left: [1,6,7,8],
+        right: [5,9,10,11],
+        hint: '第 2 次：与“左重分支”对称处理：把 6/7/8 对调到左盘，用 9/10/11（标准球）替换右盘的 6/7/8。',
+        candidates: [
+          {ball:1,type:'light'},{ball:2,type:'light'},{ball:3,type:'light'},{ball:4,type:'light'},
+          {ball:5,type:'heavy'},{ball:6,type:'heavy'},{ball:7,type:'heavy'},{ball:8,type:'heavy'}
+        ]
+      };
+    }
+
+    if (ctx.stage === 2 && ctx.branch === 'bal1') {
+      // Weigh2: 9,10,11 vs 1,2,3 (standard)
+      if (outcome === 'B') {
+        return {
+          stage: 3,
+          branch: 'bal1_B2',
+          left: [12],
+          right: [1],
+          hint: '第 3 次：第 2 次平衡，说明 9/10/11 都是标准球，坏球只能是 12。与标准球 1 对比判轻重。',
+          candidates: [{ball:12,type:'heavy'},{ball:12,type:'light'}]
+        };
+      }
+      if (outcome === 'L') {
+        // left heavy => 9/10/11 heavy
+        return {
+          stage: 3,
+          branch: 'bal1_L2',
+          left: [9],
+          right: [10],
+          hint: '第 3 次：第 2 次左重，坏球在 9/10/11 且为“重”。称 9 vs 10，平衡则 11 重。',
+          candidates: [{ball:9,type:'heavy'},{ball:10,type:'heavy'},{ball:11,type:'heavy'}]
+        };
+      }
+      // outcome === 'R' => 9/10/11 light
+      return {
+        stage: 3,
+        branch: 'bal1_R2',
+        left: [9],
+        right: [10],
+        hint: '第 3 次：第 2 次右重，坏球在 9/10/11 且为“轻”。称 9 vs 10，平衡则 11 轻。',
+        candidates: [{ball:9,type:'light'},{ball:10,type:'light'},{ball:11,type:'light'}]
+      };
+    }
+
+    if (ctx.stage === 2 && ctx.branch === 'L1') {
+      // Weigh2: [1,9,10,11] vs [5,2,3,4]
+      if (outcome === 'B') {
+        // candidates 6/7/8 light
+        return {
+          stage: 3,
+          branch: 'L1_B2',
+          left: [6],
+          right: [7],
+          hint: '第 3 次：第 2 次平衡，说明 1/2/3/4/5 都正常，坏球只能在 6/7/8 且为“轻”。称 6 vs 7。',
+          candidates: [{ball:6,type:'light'},{ball:7,type:'light'},{ball:8,type:'light'}]
+        };
+      }
+      if (outcome === 'L') {
+        // candidates 1 heavy or 5 light
+        return {
+          stage: 3,
+          branch: 'L1_L2',
+          left: [1],
+          right: [9],
+          hint: '第 3 次：第 2 次左重，只可能是 1“重”或 5“轻”。称 1 vs 标准球 9。',
+          candidates: [{ball:1,type:'heavy'},{ball:5,type:'light'}]
+        };
+      }
+      // outcome === 'R' => candidates 2/3/4 heavy
+      return {
+        stage: 3,
+        branch: 'L1_R2',
+        left: [2],
+        right: [3],
+        hint: '第 3 次：第 2 次右重，坏球只可能在 2/3/4 且为“重”。称 2 vs 3，平衡则 4 重。',
+        candidates: [{ball:2,type:'heavy'},{ball:3,type:'heavy'},{ball:4,type:'heavy'}]
+      };
+    }
+
+    if (ctx.stage === 2 && ctx.branch === 'R1') {
+      // Weigh2: [1,6,7,8] vs [5,9,10,11]
+      if (outcome === 'B') {
+        // candidates 2/3/4 light
+        return {
+          stage: 3,
+          branch: 'R1_B2',
+          left: [2],
+          right: [3],
+          hint: '第 3 次：第 2 次平衡，说明 1/5/6/7/8 都正常，坏球只能在 2/3/4 且为“轻”。称 2 vs 3，平衡则 4 轻。',
+          candidates: [{ball:2,type:'light'},{ball:3,type:'light'},{ball:4,type:'light'}]
+        };
+      }
+      if (outcome === 'R') {
+        // right heavy => candidates 5 heavy or 1 light
+        return {
+          stage: 3,
+          branch: 'R1_R2',
+          left: [1],
+          right: [9],
+          hint: '第 3 次：第 2 次右重，只可能是 5“重”或 1“轻”。称 1 vs 标准球 9。',
+          candidates: [{ball:5,type:'heavy'},{ball:1,type:'light'}]
+        };
+      }
+      // outcome === 'L' => candidates 6/7/8 heavy
+      return {
+        stage: 3,
+        branch: 'R1_L2',
+        left: [6],
+        right: [7],
+        hint: '第 3 次：第 2 次左重，坏球只可能在 6/7/8 且为“重”。称 6 vs 7，平衡则 8 重。',
+        candidates: [{ball:6,type:'heavy'},{ball:7,type:'heavy'},{ball:8,type:'heavy'}]
+      };
+    }
+
+    // stage === 3 : this outcome should terminate with an answer
+    return { stage: 4, branch: 'done', done: true, outcome: outcome };
+  }
+
+  /**
+   * 在第 3 次称重后，根据分支规则输出最终答案。
+   * @param {Object} ctx 第 3 次称重上下文
+   * @param {'L'|'B'|'R'} outcome 第 3 次结果
+   * @returns {{ok:boolean, text:string}} 答案或错误
+   */
+  function solveFinal(ctx, outcome) {
+    // 用分支 + 第三次结果，映射到唯一答案
+    function ok(ball, type) {
+      return { ok: true, text: '答案：<strong>' + ball + ' 号球</strong>为<strong>' + (type === 'heavy' ? '偏重' : '偏轻') + '</strong>。' };
+    }
+    function bad(msg) {
+      return { ok: false, text: '<strong style="color:var(--red)">不可能</strong>：' + msg + '（可能是前两次选择与本次不一致）' };
+    }
+
+    if (ctx.branch === 'bal1_B2') {
+      // 12 vs 1
+      if (outcome === 'L') return ok(12, 'heavy');
+      if (outcome === 'R') return ok(12, 'light');
+      return bad('12 与标准球比较不应平衡');
+    }
+    if (ctx.branch === 'bal1_L2') {
+      // 9 vs 10, heavy case
+      if (outcome === 'B') return ok(11, 'heavy');
+      if (outcome === 'L') return ok(9, 'heavy');
+      if (outcome === 'R') return ok(10, 'heavy');
+    }
+    if (ctx.branch === 'bal1_R2') {
+      // 9 vs 10, light case
+      if (outcome === 'B') return ok(11, 'light');
+      if (outcome === 'L') return ok(10, 'light'); // 右边更轻 → 左盘更重
+      if (outcome === 'R') return ok(9, 'light');  // 左边更轻 → 右盘更重
+    }
+    if (ctx.branch === 'L1_B2') {
+      // 6 vs 7, both light
+      if (outcome === 'B') return ok(8, 'light');
+      if (outcome === 'L') return ok(7, 'light'); // 右边更轻 → 左盘更重
+      if (outcome === 'R') return ok(6, 'light'); // 左边更轻 → 右盘更重
+    }
+    if (ctx.branch === 'L1_L2') {
+      // 1 vs 9 : 1 heavy OR 5 light
+      if (outcome === 'L') return ok(1, 'heavy');
+      if (outcome === 'B') return ok(5, 'light');
+      if (outcome === 'R') return bad('此分支不可能出现右重');
+    }
+    if (ctx.branch === 'L1_R2') {
+      // 2 vs 3, heavy
+      if (outcome === 'B') return ok(4, 'heavy');
+      if (outcome === 'L') return ok(2, 'heavy');
+      if (outcome === 'R') return ok(3, 'heavy');
+    }
+    if (ctx.branch === 'R1_B2') {
+      // 2 vs 3, light
+      if (outcome === 'B') return ok(4, 'light');
+      if (outcome === 'L') return ok(3, 'light'); // 左重 => 右轻 => 3 light
+      if (outcome === 'R') return ok(2, 'light'); // 右重 => 左轻 => 2 light
+    }
+    if (ctx.branch === 'R1_R2') {
+      // 1 vs 9 : 5 heavy OR 1 light
+      if (outcome === 'R') return ok(1, 'light'); // 右重 => 1 轻
+      if (outcome === 'B') return ok(5, 'heavy');
+      if (outcome === 'L') return bad('此分支不可能出现左重');
+    }
+    if (ctx.branch === 'R1_L2') {
+      // 6 vs 7, heavy
+      if (outcome === 'B') return ok(8, 'heavy');
+      if (outcome === 'L') return ok(6, 'heavy');
+      if (outcome === 'R') return ok(7, 'heavy');
+    }
+
+    return bad('未知分支');
+  }
+
+  /**
+   * 初始化称重向导交互。
+   */
+  function initGuide() {
+    var leftSet = document.getElementById('leftSet');
+    var rightSet = document.getElementById('rightSet');
+    var weighHint = document.getElementById('weighHint');
+    var weighInfo = document.getElementById('weighInfo');
+    var result = document.getElementById('result');
+    var stateBox = document.getElementById('stateBox');
+
+    var btnLeft = document.getElementById('btnLeft');
+    var btnBal = document.getElementById('btnBal');
+    var btnRight = document.getElementById('btnRight');
+    var btnReset = document.getElementById('btnReset');
+
+    var ctx = {
+      stage: 1,
+      branch: 'unknown',
+      left: [1,2,3,4],
+      right: [5,6,7,8],
+      hint: '第 1 次：先分组定位嫌疑范围。',
+      candidates: []
+    };
+
+    /**
+     * 刷新界面显示。
+     */
+    function render() {
+      leftSet.textContent = setToText(ctx.left);
+      rightSet.textContent = setToText(ctx.right);
+      weighHint.textContent = ctx.hint;
+      weighInfo.querySelector('.k').textContent = 'WEIGHING #' + ctx.stage;
+      stateBox.textContent = ctx.candidates && ctx.candidates.length
+        ? candidatesToText(ctx.candidates)
+        : (ctx.stage === 1 ? '候选：{1..12}（重/轻未知）' : '候选：未记录');
+    }
+
+    /**
+     * 处理一次结果输入并推进状态机。
+     * @param {'L'|'B'|'R'} outcome 结果
+     */
+    function advance(outcome) {
+      if (ctx.stage < 3) {
+        var next = nextByOutcome(ctx, outcome);
+        ctx.stage = next.stage;
+        ctx.branch = next.branch;
+        ctx.left = next.left;
+        ctx.right = next.right;
+        ctx.hint = next.hint;
+        ctx.candidates = next.candidates || [];
+        result.innerHTML = '已记录第 ' + (ctx.stage - 1) + ' 次结果，继续下一称。';
+        render();
+        return;
+      }
+
+      // ctx.stage === 3 : output final answer
+      var solved = solveFinal(ctx, outcome);
+      result.innerHTML = solved.text;
+      stateBox.innerHTML = solved.ok
+        ? ('最终：<strong>' + solved.text.replace('答案：', '').replace(/<\/?strong[^>]*>/g, '') + '</strong>')
+        : candidatesToText(ctx.candidates);
+    }
+
+    /**
+     * 重置向导。
+     */
+    function reset() {
+      ctx.stage = 1;
+      ctx.branch = 'unknown';
+      ctx.left = [1,2,3,4];
+      ctx.right = [5,6,7,8];
+      ctx.hint = '第 1 次：先分组定位嫌疑范围。';
+      ctx.candidates = [];
+      result.textContent = '从第 1 次称开始：选择“左重/平衡/右重”继续。';
+      render();
+    }
+
+    btnLeft.addEventListener('click', function(){ advance('L'); });
+    btnBal.addEventListener('click', function(){ advance('B'); });
+    btnRight.addEventListener('click', function(){ advance('R'); });
+    btnReset.addEventListener('click', reset);
+
+    // Steps highlight
+    var steps = document.getElementById('steps');
+    steps.addEventListener('click', function(e){
+      var item = e.target.closest('.step');
+      if (!item) return;
+      steps.querySelectorAll('.step').forEach(function(s){
+        s.classList.toggle('active', s === item);
+      });
+    });
+
+    render();
+  }
+
+  initGuide();
+  </script>
+</body>
+</html>

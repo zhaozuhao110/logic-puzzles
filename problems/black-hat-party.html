@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>黑帽子舞会 — 经典逻辑推理</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Noto+Serif+SC:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/base.css">
+  <script src="../assets/theme.js" defer></script>
+  <style>
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    :root{
+      --gold-bg:#0f0d0a;--gold-surface:#1a1712;--gold-card:#241f18;
+      --gold-bright:#f0c94d;--gold-mid:#d4a537;--gold-dim:#8a6d1b;
+      --cream:#e8dcc8;--cream-dim:#9e9483;--border:rgba(212,165,55,0.15);
+    }
+    [data-theme="light"]{
+      --gold-bg:#fdfaf0;--gold-surface:#ffffff;--gold-card:#ffffff;
+      --gold-bright:#d4a537;--gold-mid:#b08235;--gold-dim:#85672a;
+      --cream:#1a1410;--cream-dim:#5a5550;--border:rgba(176,130,53,0.2);
+    }
+    body{font-family:'Noto Serif SC',serif;background:var(--gold-bg);color:var(--cream);min-height:100vh;overflow-x:hidden;line-height:1.8}
+    .bg{position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse 60% 50% at 50% 10%,rgba(212,165,55,0.05),transparent),var(--gold-bg)}
+    .bg::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,transparent 45%,var(--border) 49%,var(--gold-dim) 50%,var(--border) 51%,transparent 55%),linear-gradient(45deg,transparent 45%,var(--border) 49%,var(--gold-dim) 50%,var(--border) 51%,transparent 55%);background-size:60px 60px;opacity:0.1}
+    .bg::after{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.6' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");opacity:0.05;mix-blend-mode:color-dodge}
+    .container{position:relative;z-index:2;max-width:860px;margin:0 auto;padding:0 24px}
+    .hero{min-height:80vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px 0}
+    .hero-icon{width:64px;height:64px;margin-bottom:20px;color:var(--gold-mid);opacity:0.85}
+    .hero h1{font-family:'Playfair Display','Noto Serif SC',serif;font-size:clamp(2rem,5.5vw,3.4rem);font-weight:900;background:linear-gradient(135deg,var(--gold-bright),var(--gold-mid),var(--gold-dim));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:0.04em;line-height:1.2;margin-bottom:10px}
+    .subtitle{font-size:clamp(0.9rem,2vw,1.1rem);color:var(--cream-dim);font-weight:300;letter-spacing:0.22em;margin-bottom:34px;text-transform:uppercase}
+    .hero-question{max-width:560px;text-align:left;background:var(--gold-card);border:1px solid var(--border);padding:22px 26px;border-radius:6px;font-size:0.95rem;color:var(--cream-dim);line-height:2;box-shadow:0 10px 30px rgba(0,0,0,0.12)}
+    .hero-question strong{color:var(--gold-mid);font-weight:650}
+    section{padding:64px 0}
+    .label{display:inline-block;font-size:0.72rem;letter-spacing:0.28em;color:var(--gold-dim);margin-bottom:10px;text-transform:uppercase}
+    .heading{font-size:clamp(1.45rem,3vw,2rem);color:var(--cream);font-weight:800;margin-bottom:18px;line-height:1.35}
+    .card{background:var(--gold-surface);border:1px solid var(--border);border-radius:10px;padding:28px}
+    .nav{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:14px 0 18px}
+    .nav .status{font-size:0.85rem;color:var(--cream-dim);letter-spacing:0.08em}
+    .btn{appearance:none;border:1px solid var(--border);background:transparent;color:var(--cream-dim);padding:10px 14px;border-radius:8px;cursor:pointer;font-family:'Noto Serif SC',serif;font-size:0.9rem;transition:all .25s}
+    .btn:hover{border-color:rgba(212,165,55,0.35);color:var(--gold-bright);transform:translateY(-1px)}
+    .btn:disabled{opacity:.35;cursor:not-allowed;transform:none}
+    .steps{display:flex;flex-direction:column;gap:12px}
+    .step-card{display:none;background:rgba(0,0,0,0.14);border:1px solid rgba(212,165,55,0.10);border-radius:10px;padding:18px 18px 16px;transition:all .25s}
+    [data-theme="light"] .step-card{background:rgba(176,130,53,0.06)}
+    .step-card.visible{display:block}
+    .step-card.active{border-color:rgba(212,165,55,0.45);box-shadow:0 0 0 4px rgba(212,165,55,0.06)}
+    .step-title{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+    .badge{width:24px;height:24px;border-radius:999px;background:linear-gradient(135deg,var(--gold-bright),var(--gold-mid));color:var(--gold-bg);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:0.78rem;flex:0 0 auto}
+    .step-card h3{font-size:1rem;color:var(--gold-mid);font-weight:800}
+    .step-card p{font-size:0.92rem;color:var(--cream-dim);line-height:1.9}
+    .insight{margin-top:22px}
+    .insight ul{margin:10px 0 0 18px;color:var(--cream-dim);font-size:0.92rem;line-height:1.9}
+    .insight li strong{color:var(--gold-mid)}
+  </style>
+</head>
+<body>
+  <div class="bg"></div>
+
+  <a href="../index.html" class="back-link">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    <span>返回首页</span>
+  </a>
+  <button class="theme-toggle-sub" id="themeToggle" title="切换明暗模式">
+    <svg class="moon-icon" viewBox="0 0 24 24"><path d="M12.1,22c-4.9,0-9-3.8-9.1-8.7c0-3.1,1.5-6.1,4.1-8c0.2-0.1,0.5-0.1,0.7,0.1c0.2,0.2,0.2,0.5,0.1,0.7c-0.5,0.9-0.7,1.8-0.7,2.8c0,3.5,2.8,6.3,6.3,6.3c1,0,1.9-0.2,2.8-0.7c0.2-0.1,0.5-0.1,0.7,0.1c0.2,0.2,0.2,0.5,0.1,0.7C15.1,20.5,13.6,22,12.1,22z"/></svg>
+    <svg class="sun-icon" viewBox="0 0 24 24"><path d="M12,18c-3.3,0-6-2.7-6-6s2.7-6,6-6s6,2.7,6,6S15.3,18,12,18z M12,8c-2.2,0-4,1.8-4,4s1.8,4,4,4s4-1.8,4-4S14.2,8,12,8z M11,1h2v3h-2V1z M11,20h2v3h-2V20z M3.5,4.9l2.1-2.1l1.4,1.4L4.9,6.3L3.5,4.9z M17,18.4l2.1-2.1l1.4,1.4l-2.1,2.1L17,18.4z M1,11h3v2H1V11z M20,11h3v2h-3V11z M4.9,17.7l2.1,2.1l-1.4,1.4l-2.1-2.1L4.9,17.7z M18.4,5.6l2.1-2.1l1.4,1.4l-2.1,2.1L18.4,5.6z"/></svg>
+  </button>
+
+  <div class="container">
+    <section class="hero">
+      <div class="hero-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 7h16M6 7v10a3 3 0 0 0 3 3h6a3 3 0 0 0 3-3V7"/>
+          <path d="M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"/>
+          <path d="M8 12h8"/>
+        </svg>
+      </div>
+      <h1>黑帽子舞会</h1>
+      <p class="subtitle">black-hat-party</p>
+      <div class="hero-question">
+        一群人开舞会，每人头上都戴着一顶帽子。帽子只有黑白两种，且<strong>黑帽至少一顶</strong>。每个人都能看到别人帽子的颜色，却看不到自己的。<br>
+        主持人反复执行：先开灯让大家看一遍，然后关灯；如果有人确定自己戴的是黑帽子，就打自己一个耳光。<br><br>
+        第一次关灯没有声音；第二次仍然鸦雀无声；直到第三次关灯，才响起一阵打耳光声。<br>
+        <strong>问：有多少人戴着黑帽子？</strong>
+      </div>
+    </section>
+
+    <section id="analysis">
+      <span class="label">逻辑解析 / analysis</span>
+      <h2 class="heading">“沉默”就是公共信息：把它当成一次次公告</h2>
+      <div class="card">
+        <div class="nav">
+          <div class="status" id="stepStatus">步骤 1 / 4</div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end">
+            <button class="btn" id="btnPrev" disabled>上一步</button>
+            <button class="btn" id="btnNext">下一步</button>
+          </div>
+        </div>
+
+        <div class="steps" id="steps">
+          <div class="step-card" data-step="1">
+            <div class="step-title"><div class="badge">1</div><h3>设想只有 1 顶黑帽，会发生什么？</h3></div>
+            <p>如果现场只有 1 顶黑帽，那么那位黑帽人<strong>在第一次关灯</strong>时就能确定：他看到所有人都戴白帽，而主持人又保证“至少一顶黑帽”，所以黑帽只能在自己头上——他会立刻打耳光。</p>
+          </div>
+          <div class="step-card" data-step="2">
+            <div class="step-title"><div class="badge">2</div><h3>第一次沉默 ⇒ 黑帽至少 2 顶</h3></div>
+            <p>但第一次关灯没人打耳光，等价于一次“公共公告”：<strong>“不可能只有 1 顶黑帽”</strong>。因此，每位黑帽人都得出：黑帽数量至少为 2。</p>
+          </div>
+          <div class="step-card" data-step="3">
+            <div class="step-title"><div class="badge">3</div><h3>第二次沉默 ⇒ 黑帽至少 3 顶</h3></div>
+            <p>若只有 2 顶黑帽，则两位黑帽人互相看到对方是黑帽：他们会想“如果我不是黑帽，那么就只剩 1 顶黑帽，对方在第一次就该打耳光”。由于第一次没有声音，他们会在<strong>第二次关灯</strong>同时打耳光。<br>但第二次也沉默，所以黑帽不可能是 2 顶 ⇒ 至少 3 顶。</p>
+          </div>
+          <div class="step-card" data-step="4">
+            <div class="step-title"><div class="badge">4</div><h3>第三次响声 ⇒ 恰好 3 顶黑帽</h3></div>
+            <p>现在大家都知道黑帽至少 3 顶。若恰好 3 顶，则每位黑帽人看到<strong>另外两顶黑帽</strong>，并推演：如果自己是白帽，则黑帽只有 2 顶，应在第二次响；但第二次沉默，所以自己只能是黑帽。于是第三次关灯时，三人同时打耳光。<br><strong>结论：黑帽共有 3 顶。</strong></p>
+          </div>
+        </div>
+
+        <div class="insight">
+          <span class="label">洞见总结 / insight</span>
+          <ul>
+            <li><strong>“没人说话”也是信息</strong>：它会改变所有人的可行世界集合。</li>
+            <li><strong>层层递推</strong>：第 n 次响声，对应“黑帽恰好 n 顶”。</li>
+            <li>这类题可以用“反事实推演 + 公共公告”稳定求解。</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    var stepCards = Array.prototype.slice.call(document.querySelectorAll('.step-card'));
+    var btnPrev = document.getElementById('btnPrev');
+    var btnNext = document.getElementById('btnNext');
+    var stepStatus = document.getElementById('stepStatus');
+    var currentIndex = 0;
+    var maxVisible = 0;
+
+    /** 更新顶部“步骤 x / y”状态文本 */
+    function updateStatus(){
+      stepStatus.textContent = '步骤 ' + (currentIndex + 1) + ' / ' + stepCards.length;
+    }
+
+    /** 将指定步骤设为“当前高亮”，并确保它已被展示出来 */
+    function setActiveStep(nextIndex){
+      if(nextIndex < 0 || nextIndex >= stepCards.length) return;
+      currentIndex = nextIndex;
+      if(currentIndex > maxVisible) maxVisible = currentIndex;
+
+      for(var i=0;i<stepCards.length;i++){
+        var el = stepCards[i];
+        if(i <= maxVisible) el.classList.add('visible'); else el.classList.remove('visible');
+        if(i === currentIndex) el.classList.add('active'); else el.classList.remove('active');
+      }
+
+      btnPrev.disabled = currentIndex === 0;
+      btnNext.disabled = currentIndex === stepCards.length - 1;
+      updateStatus();
+    }
+
+    /** 初始化“按钮推进 + 步骤点击高亮”的轻交互 */
+    function initStepNavigator(){
+      btnPrev.addEventListener('click', function(){ setActiveStep(currentIndex - 1); });
+      btnNext.addEventListener('click', function(){ setActiveStep(currentIndex + 1); });
+      for(var i=0;i<stepCards.length;i++){
+        (function(idx){
+          stepCards[idx].addEventListener('click', function(){ setActiveStep(idx); });
+        })(i);
+      }
+      setActiveStep(0);
+    }
+
+    initStepNavigator();
+  </script>
+</body>
+</html>

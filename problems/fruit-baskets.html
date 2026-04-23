@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>三筐水果 — 经典逻辑推理</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Noto+Serif+SC:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/base.css"><link rel="stylesheet" href="../assets/problem-gold.css">
+  <script src="../assets/theme.js" defer></script><script src="../assets/problem-stepper.js" defer></script>
+  <style></style>
+</head>
+<body>
+  <div class="bg"></div>
+  <a href="../index.html" class="back-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg><span>返回首页</span></a>
+  <button class="theme-toggle-sub" id="themeToggle" title="切换明暗模式">
+    <svg class="moon-icon" viewBox="0 0 24 24"><path d="M12.1,22c-4.9,0-9-3.8-9.1-8.7c0-3.1,1.5-6.1,4.1-8c0.2-0.1,0.5-0.1,0.7,0.1c0.2,0.2,0.2,0.5,0.1,0.7c-0.5,0.9-0.7,1.8-0.7,2.8c0,3.5,2.8,6.3,6.3,6.3c1,0,1.9-0.2,2.8-0.7c0.2-0.1,0.5-0.1,0.7,0.1c0.2,0.2,0.2,0.5,0.1,0.7C15.1,20.5,13.6,22,12.1,22z"/></svg>
+    <svg class="sun-icon" viewBox="0 0 24 24"><path d="M12,18c-3.3,0-6-2.7-6-6s2.7-6,6-6s6,2.7,6,6S15.3,18,12,18z M12,8c-2.2,0-4,1.8-4,4s1.8,4,4,4s4-1.8,4-4S14.2,8,12,8z M11,1h2v3h-2V1z M11,20h2v3h-2V20z M3.5,4.9l2.1-2.1l1.4,1.4L4.9,6.3L3.5,4.9z M17,18.4l2.1-2.1l1.4,1.4l-2.1,2.1L17,18.4z M1,11h3v2H1V11z M20,11h3v2h-3V11z M4.9,17.7l2.1,2.1l-1.4,1.4l-2.1-2.1L4.9,17.7z M18.4,5.6l2.1-2.1l1.4,1.4l-2.1,2.1L18.4,5.6z"/></svg>
+  </button>
+
+  <div class="container">
+    <section class="hero">
+      <div class="hero-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 10h16v10H4z"/><path d="M7 10V7h10v3"/><path d="M8 14h8"/></svg></div>
+      <h1>三筐水果</h1>
+      <p class="subtitle">fruit-baskets</p>
+      <div class="hero-question">
+        有三筐水果：一筐全是苹果，一筐全是橘子，一筐是苹果+橘子混合。三筐标签都是骗人的。你只能从其中<strong>一筐拿出一只水果</strong>，就要把三筐的真实标签写对。<br><br>
+        <strong>怎么做？</strong>
+      </div>
+    </section>
+
+    <section id="analysis">
+      <span class="label">逻辑解析 / analysis</span>
+      <h2 class="heading">从“标注混合”的筐下手：因为它必然不是混合</h2>
+      <div class="card">
+        <div class="nav"><div class="status" id="stepStatus">步骤 1 / 3</div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><button class="btn" id="btnPrev" disabled>上一步</button><button class="btn" id="btnNext">下一步</button></div>
+        </div>
+        <div class="steps">
+          <div class="step-card"><div class="step-title"><div class="badge">1</div><h3>从“混合”标签的筐里取 1 个水果</h3></div><p>因为标签全错，所以标着“混合”的那筐<strong>一定不是混合</strong>，它要么全苹果，要么全橘子。只要拿出一个就能确定这筐的真实身份。</p></div>
+          <div class="step-card"><div class="step-title"><div class="badge">2</div><h3>确定第一筐后，剩下两筐标签顺推即可</h3></div><p>若你从“混合筐”取出的是苹果，则该筐真实为“全苹果”。那么标着“全苹果”的筐不可能是全苹果（标签错），也不可能是全橘子（因为剩下一个必须是混合），因此它只能是“混合”。最后一筐自然是“全橘子”。取到橘子的情况同理。</p></div>
+          <div class="step-card"><div class="step-title"><div class="badge">3</div><h3>结论：一次取样足够</h3></div><p>取样只需要告诉你：标“混合”的筐到底是全苹果还是全橘子；其余两筐靠排除法唯一确定。</p></div>
+        </div>
+        <div class="insight"><span class="label">洞见总结 / insight</span><ul>
+          <li>优先选择<strong>信息增益最大</strong>的那一筐：标“混合”的筐。</li>
+          <li>当“所有标签都错”时，任何一个确定都会带来强约束，剩下用<strong>排除</strong>即可。</li>
+        </ul></div>
+      </div>
+    </section>
+  </div>
+  <script>window.initProblemStepper&&window.initProblemStepper();</script>
+</body>
+</html>

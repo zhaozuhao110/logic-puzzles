@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>爱瓦梯尔的学费 — 经典逻辑推理</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Noto+Serif+SC:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/base.css"><link rel="stylesheet" href="../assets/problem-gold.css">
+  <script src="../assets/theme.js" defer></script><script src="../assets/problem-stepper.js" defer></script>
+  <style></style>
+</head>
+<body>
+  <div class="bg"></div>
+  <a href="../index.html" class="back-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg><span>返回首页</span></a>
+  <button class="theme-toggle-sub" id="themeToggle" title="切换明暗模式">
+    <svg class="moon-icon" viewBox="0 0 24 24"><path d="M12.1,22c-4.9,0-9-3.8-9.1-8.7c0-3.1,1.5-6.1,4.1-8c0.2-0.1,0.5-0.1,0.7,0.1c0.2,0.2,0.2,0.5,0.1,0.7c-0.5,0.9-0.7,1.8-0.7,2.8c0,3.5,2.8,6.3,6.3,6.3c1,0,1.9-0.2,2.8-0.7c0.2-0.1,0.5-0.1,0.7,0.1c0.2,0.2,0.2,0.5,0.1,0.7C15.1,20.5,13.6,22,12.1,22z"/></svg>
+    <svg class="sun-icon" viewBox="0 0 24 24"><path d="M12,18c-3.3,0-6-2.7-6-6s2.7-6,6-6s6,2.7,6,6S15.3,18,12,18z M12,8c-2.2,0-4,1.8-4,4s1.8,4,4,4s4-1.8,4-4S14.2,8,12,8z M11,1h2v3h-2V1z M11,20h2v3h-2V20z M3.5,4.9l2.1-2.1l1.4,1.4L4.9,6.3L3.5,4.9z M17,18.4l2.1-2.1l1.4,1.4l-2.1,2.1L17,18.4z M1,11h3v2H1V11z M20,11h3v2h-3V11z M4.9,17.7l2.1,2.1l-1.4,1.4l-2.1-2.1L4.9,17.7z M18.4,5.6l2.1-2.1l1.4,1.4l-2.1,2.1L18.4,5.6z"/></svg>
+  </button>
+
+  <div class="container">
+    <section class="hero">
+      <div class="hero-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M7 3h10v18H7z"/><path d="M9 7h6"/><path d="M9 11h6"/><path d="M9 15h6"/></svg></div>
+      <h1>爱瓦梯尔的学费</h1>
+      <p class="subtitle">tuition-paradox</p>
+      <div class="hero-question">
+        老师与学生签合同：学费分两次付，第二次在学生<strong>第一次出庭打官司赢了</strong>时支付。学生毕业后一直不付第二次学费。老师起诉，学生辩称“我赢则依法不用付、我输则按合同也不用付”。老师也反驳“我赢依法要付、我输按合同也要付”。<br><br>
+        <strong>法官如何判才能使学生既交学费又心服口服？</strong>
+      </div>
+    </section>
+
+    <section id="analysis">
+      <span class="label">逻辑解析 / analysis</span>
+      <h2 class="heading">把“第一次胜诉”绑定到本案，悖论立刻消失</h2>
+      <div class="card">
+        <div class="nav"><div class="status" id="stepStatus">步骤 1 / 3</div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><button class="btn" id="btnPrev" disabled>上一步</button><button class="btn" id="btnNext">下一步</button></div>
+        </div>
+        <div class="steps">
+          <div class="step-card"><div class="step-title"><div class="badge">1</div><h3>学生的偷换：把“本案”与“第一次胜诉”分离</h3></div><p>学生的辩词依赖于：本案不算“第一次赢的官司”。一旦法官承认这种分离，合同条款就被恶意规避。</p></div>
+          <div class="step-card"><div class="step-title"><div class="badge">2</div><h3>法官判决：若学生在本案胜诉，则本案即为“第一次胜诉”</h3></div><p>判决要点：本案就是学生出庭的案件之一；若学生赢了，则触发合同“第一次赢官司即付款”。</p></div>
+          <div class="step-card"><div class="step-title"><div class="badge">3</div><h3>两分支都导向付款</h3></div><p>若学生输：依法判其支付学费；若学生赢：依据合同条款（本案即首次胜诉）仍须支付。于是学生无法再用文字游戏逃避，必须付款且逻辑自洽。</p></div>
+        </div>
+        <div class="insight"><span class="label">洞见总结 / insight</span><ul>
+          <li>悖论来自对“触发条件”的<strong>语义漏洞</strong>。</li>
+          <li>把争议事件（本案）纳入合同触发集合，是典型的<strong>反规避解释</strong>。</li>
+        </ul></div>
+      </div>
+    </section>
+  </div>
+  <script>window.initProblemStepper&&window.initProblemStepper();</script>
+</body>
+</html>

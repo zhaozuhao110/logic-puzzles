@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>鲍西娅三世的肖像（三） — 经典逻辑推理</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Noto+Serif+SC:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/base.css">
+  <link rel="stylesheet" href="../assets/problem-gold.css">
+  <script src="../assets/theme.js" defer></script>
+  <script src="../assets/problem-stepper.js" defer></script>
+</head>
+<body>
+  <div class="bg"></div>
+
+  <a href="../index.html" class="back-link">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    <span>返回首页</span>
+  </a>
+  <button class="theme-toggle-sub" id="themeToggle" title="切换明暗模式">
+    <svg class="moon-icon" viewBox="0 0 24 24"><path d="M12.1,22c-4.9,0-9-3.8-9.1-8.7c0-3.1,1.5-6.1,4.1-8c0.2-0.1,0.5-0.1,0.7,0.1c0.2,0.2,0.2,0.5,0.1,0.7c-0.5,0.9-0.7,1.8-0.7,2.8c0,3.5,2.8,6.3,6.3,6.3c1,0,1.9-0.2,2.8-0.7c0.2-0.1,0.5-0.1,0.7,0.1c0.2,0.2,0.2,0.5,0.1,0.7C15.1,20.5,13.6,22,12.1,22z"/></svg>
+    <svg class="sun-icon" viewBox="0 0 24 24"><path d="M12,18c-3.3,0-6-2.7-6-6s2.7-6,6-6s6,2.7,6,6S15.3,18,12,18z M12,8c-2.2,0-4,1.8-4,4s1.8,4,4,4s4-1.8,4-4S14.2,8,12,8z M11,1h2v3h-2V1z M11,20h2v3h-2V20z M3.5,4.9l2.1-2.1l1.4,1.4L4.9,6.3L3.5,4.9z M17,18.4l2.1-2.1l1.4,1.4l-2.1,2.1L17,18.4z M1,11h3v2H1V11z M20,11h3v2h-3V11z M4.9,17.7l2.1,2.1l-1.4,1.4l-2.1-2.1L4.9,17.7z M18.4,5.6l2.1-2.1l1.4,1.4l-2.1,2.1L18.4,5.6z"/></svg>
+  </button>
+
+  <div class="container">
+    <section class="hero">
+      <div class="hero-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M6 20h12"/>
+          <path d="M7 20V9a5 5 0 0 1 10 0v11"/>
+          <path d="M9 11h6"/>
+        </svg>
+      </div>
+      <h1>鲍西娅三世的肖像（三）</h1>
+      <p class="subtitle">portia-iii-portrait-3</p>
+      <div class="hero-question">
+        本城内有两个著名的能工巧匠：<strong>切利尼</strong>和<strong>别利尼</strong>。切利尼只刻<strong>假话</strong>；别利尼只刻<strong>真话</strong>。<br><br>
+        这次有金、银、铅三只匣子，任意一只都由二者之一打造，且只有一只匣子里放着鲍西娅三世的肖像。匣子上刻字如下：<br>
+        金匣子：<strong>“肖像在此匣中”</strong><br>
+        银匣子：<strong>“肖像在此匣中”</strong><br>
+        铅匣子：<strong>“这三只匣子，至少有两只是切利尼做的。”</strong><br><br>
+        <strong>要求：</strong>选出放肖像的匣子，并说出它的制作者。
+      </div>
+    </section>
+
+    <section id="analysis">
+      <span class="label">逻辑解析 / analysis</span>
+      <h2 class="heading">先定“说法真假”，再倒推制作者与肖像位置</h2>
+      <div class="card">
+        <div class="nav">
+          <div class="status" id="stepStatus">步骤 1 / 4</div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end">
+            <button class="btn" id="btnPrev" disabled>上一步</button>
+            <button class="btn" id="btnNext">下一步</button>
+          </div>
+        </div>
+
+        <div class="steps" id="steps">
+          <div class="step-card" data-step="1">
+            <div class="step-title"><div class="badge">1</div><h3>先观察：肖像可能在第三只匣子里</h3></div>
+            <p>金匣与银匣都宣称“肖像在此匣中”。但肖像也可能在铅匣里——这时<strong>金匣与银匣两句话都为假</strong>，因此它们的制作者会被同时锁定为切利尼。</p>
+          </div>
+
+          <div class="step-card" data-step="2">
+            <div class="step-title"><div class="badge">2</div><h3>枚举三种位置：在金 / 在银 / 在铅</h3></div>
+            <p>（1）若肖像在金：金匣语句为真 ⇒ 金匣=别利尼；银匣语句为假 ⇒ 银匣=切利尼。<br>
+              （2）若肖像在银：银匣=别利尼；金匣=切利尼。<br>
+              （3）若肖像在铅：金、银两句都为假 ⇒ 金匣=切利尼，银匣=切利尼。</p>
+          </div>
+
+          <div class="step-card" data-step="3">
+            <div class="step-title"><div class="badge">3</div><h3>验证“肖像在金/银”都会与铅匣矛盾</h3></div>
+            <p>铅匣的语句是：“至少有两只是切利尼做的”。<br>
+              若肖像在金：此时切利尼暂为 1（银匣），要让“至少 2”成立则铅匣必须也是切利尼，但切利尼刻假话会要求该语句为假（即切利尼至多 1），自相矛盾。<br>
+              若肖像在银：同理，切利尼暂为 1（金匣），也会导致铅匣无论真/假都无法自洽。<br>
+              因此肖像<strong>不在金匣也不在银匣</strong>。</p>
+          </div>
+
+          <div class="step-card" data-step="4">
+            <div class="step-title"><div class="badge">4</div><h3>唯一自洽：肖像在铅匣，铅匣由别利尼打造</h3></div>
+            <p>既然肖像不在金/银，则肖像在铅匣。于是金匣与银匣的两句话都为假 ⇒ 金匣、银匣都由<strong>切利尼</strong>打造（假话匣）。这时切利尼数量已经是 2，所以铅匣的“至少有两只是切利尼做的”这句话为真 ⇒ 铅匣由<strong>别利尼</strong>打造。<br><strong>结论：肖像在铅匣；铅匣由别利尼打造；金匣与银匣由切利尼打造。</strong></p>
+          </div>
+        </div>
+
+        <div class="insight">
+          <span class="label">洞见总结 / insight</span>
+          <ul>
+            <li>遇到“真话匣/假话匣”，优先把每句话当作<strong>真假标签</strong>，将“谁做的”转化为约束。</li>
+            <li>含“至少/至多/恰好”的句子，常用<strong>反证 + 数量界</strong>一击致命。</li>
+            <li>本题关键在于：铅匣句子既约束“制作者数量”，也反过来决定<strong>自身必须真</strong>还是必须假。</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    /**
+     * 页面初始化：启用“步骤推进器”轻交互。
+     */
+    function initPage(){
+      if (window.initProblemStepper) window.initProblemStepper();
+    }
+    initPage();
+  </script>
+</body>
+</html>

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>帽子的颜色（一） — 经典逻辑推理</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Noto+Serif+SC:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/base.css">
+  <link rel="stylesheet" href="../assets/problem-gold.css">
+  <script src="../assets/theme.js" defer></script>
+  <script src="../assets/problem-stepper.js" defer></script>
+</head>
+<body>
+  <div class="bg"></div>
+
+  <a href="../index.html" class="back-link">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    <span>返回首页</span>
+  </a>
+  <button class="theme-toggle-sub" id="themeToggle" title="切换明暗模式">
+    <svg class="moon-icon" viewBox="0 0 24 24"><path d="M12.1,22c-4.9,0-9-3.8-9.1-8.7c0-3.1,1.5-6.1,4.1-8c0.2-0.1,0.5-0.1,0.7,0.1c0.2,0.2,0.2,0.5,0.1,0.7c-0.5,0.9-0.7,1.8-0.7,2.8c0,3.5,2.8,6.3,6.3,6.3c1,0,1.9-0.2,2.8-0.7c0.2-0.1,0.5-0.1,0.7,0.1c0.2,0.2,0.2,0.5,0.1,0.7C15.1,20.5,13.6,22,12.1,22z"/></svg>
+    <svg class="sun-icon" viewBox="0 0 24 24"><path d="M12,18c-3.3,0-6-2.7-6-6s2.7-6,6-6s6,2.7,6,6S15.3,18,12,18z M12,8c-2.2,0-4,1.8-4,4s1.8,4,4,4s4-1.8,4-4S14.2,8,12,8z M11,1h2v3h-2V1z M11,20h2v3h-2V20z M3.5,4.9l2.1-2.1l1.4,1.4L4.9,6.3L3.5,4.9z M17,18.4l2.1-2.1l1.4,1.4l-2.1,2.1L17,18.4z M1,11h3v2H1V11z M20,11h3v2h-3V11z M4.9,17.7l2.1,2.1l-1.4,1.4l-2.1-2.1L4.9,17.7z M18.4,5.6l2.1-2.1l1.4,1.4l-2.1,2.1L18.4,5.6z"/></svg>
+  </button>
+
+  <div class="container">
+    <section class="hero">
+      <div class="hero-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M6 10c0-4 3-7 6-7s6 3 6 7"/>
+          <path d="M5 10h14l-1 10H6L5 10z"/>
+        </svg>
+      </div>
+      <h1>帽子的颜色（一）</h1>
+      <p class="subtitle">hat-color-1</p>
+      <div class="hero-question">
+        十个人站成一列纵队，从<strong>十顶黄帽子</strong>和<strong>九顶蓝帽子</strong>中取出十顶给每个人戴上。<br>
+        每个人看不见自己的帽子颜色，只能看见站在前面那些人的帽子颜色。<br><br>
+        从最后的第十个人开始依次被问“你知道自己帽子颜色吗？”<br>
+        第十个说不知道，第九个也不知道……一直到第二个人都说不知道。<br>
+        出乎意料的是，第一个人却说：<strong>“我知道自己帽子的颜色了。”</strong><br><br>
+        <strong>问：第一个人戴的是什么颜色？为什么？</strong>
+      </div>
+    </section>
+
+    <section id="analysis">
+      <span class="label">逻辑解析 / analysis</span>
+      <h2 class="heading">把“我不知道”当作一条条被公开的限制</h2>
+      <div class="card">
+        <div class="nav">
+          <div class="status" id="stepStatus">步骤 1 / 4</div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end">
+            <button class="btn" id="btnPrev" disabled>上一步</button>
+            <button class="btn" id="btnNext">下一步</button>
+          </div>
+        </div>
+
+        <div class="steps" id="steps">
+          <div class="step-card" data-step="1">
+            <div class="step-title"><div class="badge">1</div><h3>第十个人“不知道”意味着什么？</h3></div>
+            <p>第十个人能看到前面 9 顶帽子。如果他看到<strong>9 顶全是蓝帽</strong>，由于蓝帽总共只有 9 顶，他就能立刻推出自己一定是黄帽。<br>
+              但他回答“不知道”，说明他看到的 9 顶帽子里<strong>至少有 1 顶黄帽</strong>。</p>
+          </div>
+
+          <div class="step-card" data-step="2">
+            <div class="step-title"><div class="badge">2</div><h3>第九个人“不知道”再加一条限制</h3></div>
+            <p>第九个人能看到前面 8 顶帽子，并且知道“前面 9 人里至少有 1 顶黄帽”。<br>
+              如果第九个人看到前面 8 顶<strong>全是蓝帽</strong>，那么根据第十人的信息，黄帽只能落在第九个人自己头上，他就会知道自己是黄帽。<br>
+              但第九个人也“不知道”，说明前面 8 顶中<strong>至少有 1 顶黄帽</strong>。</p>
+          </div>
+
+          <div class="step-card" data-step="3">
+            <div class="step-title"><div class="badge">3</div><h3>一路递推到第二个人</h3></div>
+            <p>同理，第八人“不知道” ⇒ 前 7 顶里至少有 1 顶黄帽……一直递推。<br>
+              当轮到第二个人时，他“不知道” ⇒ 说明他看到的前面 1 顶（也就是第一个人的帽子）里<strong>至少有 1 顶黄帽</strong>。</p>
+          </div>
+
+          <div class="step-card" data-step="4">
+            <div class="step-title"><div class="badge">4</div><h3>结论：第一个人一定是黄帽</h3></div>
+            <p>第二个人只能看到第一个人的帽子，如果他“不知道”却又能推出“前面 1 顶里至少有 1 顶黄帽”，那只能是：第一个人的帽子就是黄帽。<br><strong>结论：第一个人戴黄帽。</strong></p>
+          </div>
+        </div>
+
+        <div class="insight">
+          <span class="label">洞见总结 / insight</span>
+          <ul>
+            <li>“我不知道”会成为新的<strong>公共信息</strong>，可反复叠加。</li>
+            <li>每个人的“不知道”都在排除一种极端情况：前面全蓝。</li>
+            <li>这种题的结构很像“黑帽子舞会”，核心是<strong>沉默的递推</strong>。</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    /**
+     * 页面初始化：启用“步骤推进器”轻交互。
+     */
+    function initPage(){
+      if (window.initProblemStepper) window.initProblemStepper();
+    }
+    initPage();
+  </script>
+</body>
+</html>

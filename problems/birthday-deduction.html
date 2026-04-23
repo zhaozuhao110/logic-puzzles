@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>推断生日 — 经典逻辑推理</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Noto+Serif+SC:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/base.css">
+  <link rel="stylesheet" href="../assets/problem-gold.css">
+  <script src="../assets/theme.js" defer></script>
+  <script src="../assets/problem-stepper.js" defer></script>
+</head>
+<body>
+  <div class="bg"></div>
+
+  <a href="../index.html" class="back-link">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    <span>返回首页</span>
+  </a>
+  <button class="theme-toggle-sub" id="themeToggle" title="切换明暗模式">
+    <svg class="moon-icon" viewBox="0 0 24 24"><path d="M12.1,22c-4.9,0-9-3.8-9.1-8.7c0-3.1,1.5-6.1,4.1-8c0.2-0.1,0.5-0.1,0.7,0.1c0.2,0.2,0.2,0.5,0.1,0.7c-0.5,0.9-0.7,1.8-0.7,2.8c0,3.5,2.8,6.3,6.3,6.3c1,0,1.9-0.2,2.8-0.7c0.2-0.1,0.5-0.1,0.7,0.1c0.2,0.2,0.2,0.5,0.1,0.7C15.1,20.5,13.6,22,12.1,22z"/></svg>
+    <svg class="sun-icon" viewBox="0 0 24 24"><path d="M12,18c-3.3,0-6-2.7-6-6s2.7-6,6-6s6,2.7,6,6S15.3,18,12,18z M12,8c-2.2,0-4,1.8-4,4s1.8,4,4,4s4-1.8,4-4S14.2,8,12,8z M11,1h2v3h-2V1z M11,20h2v3h-2V20z M3.5,4.9l2.1-2.1l1.4,1.4L4.9,6.3L3.5,4.9z M17,18.4l2.1-2.1l1.4,1.4l-2.1,2.1L17,18.4z M1,11h3v2H1V11z M20,11h3v2h-3V11z M4.9,17.7l2.1,2.1l-1.4,1.4l-2.1-2.1L4.9,17.7z M18.4,5.6l2.1-2.1l1.4,1.4l-2.1,2.1L18.4,5.6z"/></svg>
+  </button>
+
+  <div class="container">
+    <section class="hero">
+      <div class="hero-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M7 3v3M17 3v3"/>
+          <path d="M4 7h16"/>
+          <rect x="4" y="7" width="16" height="14" rx="2"/>
+          <path d="M8 11h2M8 15h2M12 11h2M12 15h2M16 11h2"/>
+        </svg>
+      </div>
+      <h1>推断生日</h1>
+      <p class="subtitle">birthday-deduction</p>
+      <div class="hero-question">
+        张老师的生日是 <strong>M 月 N 日</strong>，且只可能来自下列 10 组：<br>
+        3月4日、3月5日、3月8日<br>
+        6月4日、6月7日<br>
+        9月1日、9月5日<br>
+        12月1日、12月2日、12月8日<br><br>
+        张老师把 <strong>M</strong> 告诉了小明，把 <strong>N</strong> 告诉了小强。随后发生对话：<br>
+        小明：如果我不知道的话，小强肯定也不知道。<br>
+        小强：本来我也不知道，但是现在我知道了。<br>
+        小明：哦，那我也知道了。<br><br>
+        <strong>问：张老师的生日是哪一天？</strong>
+      </div>
+    </section>
+
+    <section id="analysis">
+      <span class="label">逻辑解析 / analysis</span>
+      <h2 class="heading">把每句话当作“排除一批候选日期”的公共公告</h2>
+      <div class="card">
+        <div class="nav">
+          <div class="status" id="stepStatus">步骤 1 / 4</div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end">
+            <button class="btn" id="btnPrev" disabled>上一步</button>
+            <button class="btn" id="btnNext">下一步</button>
+          </div>
+        </div>
+
+        <div class="steps" id="steps">
+          <div class="step-card" data-step="1">
+            <div class="step-title"><div class="badge">1</div><h3>先找“日”是否有唯一值</h3></div>
+            <p>小强只知道“日”。如果某个日只出现一次（比如只有一个候选日期是 7 号），那小强一开始就能确定生日。统计可知：<strong>2 号</strong>只出现一次（12月2日），<strong>7 号</strong>只出现一次（6月7日）。</p>
+          </div>
+
+          <div class="step-card" data-step="2">
+            <div class="step-title"><div class="badge">2</div><h3>小明第一句话 ⇒ 月份不可能是 6 月或 12 月</h3></div>
+            <p>小明知道“月”。他说“如果我不知道，小强肯定也不知道”，等价于：他所看到的这个月份里，<strong>不包含任何“唯一日”</strong>。因为若包含唯一日，小强拿到那个日就可能直接知道。<br>因此月份不可能是 6 月（含 7 号）或 12 月（含 2 号），只剩 <strong>3 月</strong>或<strong>9 月</strong>。</p>
+          </div>
+
+          <div class="step-card" data-step="3">
+            <div class="step-title"><div class="badge">3</div><h3>小强第二句话 ⇒ “日”不可能是 5 号</h3></div>
+            <p>在候选缩小为 3 月或 9 月后，剩余日期为：3/4、3/5、3/8、9/1、9/5。<br>
+              若小强拿到的是<strong>5 号</strong>，仍可能是 3/5 或 9/5，无法确定；但他现在能确定，说明他的日不是 5。于是排除 3/5 与 9/5。</p>
+          </div>
+
+          <div class="step-card" data-step="4">
+            <div class="step-title"><div class="badge">4</div><h3>小明第三句话 ⇒ 月份只能是 9 月</h3></div>
+            <p>排除 5 号后，剩余日期为：3/4、3/8、9/1。<br>
+              小明知道月份：若是 3 月，他仍面临 3/4 与 3/8 两种可能，无法确定；只有当月份是 9 月时，候选只剩 9/1。<br><strong>结论：张老师生日是 9 月 1 日。</strong></p>
+          </div>
+        </div>
+
+        <div class="insight">
+          <span class="label">洞见总结 / insight</span>
+          <ul>
+            <li>第一句话通常用于排除“含唯一值”的组（这里是<strong>含 2、7</strong>的月份）。</li>
+            <li>第二句话利用“现在能确定”把<strong>仍有歧义的日</strong>排除（这里是 5 号）。</li>
+            <li>第三句话把剩余候选压到 1 个，完成闭环推理。</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    /**
+     * 页面初始化：启用“步骤推进器”轻交互。
+     */
+    function initPage(){
+      if (window.initProblemStepper) window.initProblemStepper();
+    }
+    initPage();
+  </script>
+</body>
+</html>

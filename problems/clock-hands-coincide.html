@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>表针重合 — 经典逻辑推理</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Noto+Serif+SC:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/base.css">
+  <link rel="stylesheet" href="../assets/problem-gold.css">
+  <script src="../assets/theme.js" defer></script>
+  <script src="../assets/problem-stepper.js" defer></script>
+  <style></style>
+</head>
+<body>
+  <div class="bg"></div>
+  <a href="../index.html" class="back-link">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg><span>返回首页</span>
+  </a>
+  <button class="theme-toggle-sub" id="themeToggle" title="切换明暗模式">
+    <svg class="moon-icon" viewBox="0 0 24 24"><path d="M12.1,22c-4.9,0-9-3.8-9.1-8.7c0-3.1,1.5-6.1,4.1-8c0.2-0.1,0.5-0.1,0.7,0.1c0.2,0.2,0.2,0.5,0.1,0.7c-0.5,0.9-0.7,1.8-0.7,2.8c0,3.5,2.8,6.3,6.3,6.3c1,0,1.9-0.2,2.8-0.7c0.2-0.1,0.5-0.1,0.7,0.1c0.2,0.2,0.2,0.5,0.1,0.7C15.1,20.5,13.6,22,12.1,22z"/></svg>
+    <svg class="sun-icon" viewBox="0 0 24 24"><path d="M12,18c-3.3,0-6-2.7-6-6s2.7-6,6-6s6,2.7,6,6S15.3,18,12,18z M12,8c-2.2,0-4,1.8-4,4s1.8,4,4,4s4-1.8,4-4S14.2,8,12,8z M11,1h2v3h-2V1z M11,20h2v3h-2V20z M3.5,4.9l2.1-2.1l1.4,1.4L4.9,6.3L3.5,4.9z M17,18.4l2.1-2.1l1.4,1.4l-2.1,2.1L17,18.4z M1,11h3v2H1V11z M20,11h3v2h-3V11z M4.9,17.7l2.1,2.1l-1.4,1.4l-2.1-2.1L4.9,17.7z M18.4,5.6l2.1-2.1l1.4,1.4l-2.1,2.1L18.4,5.6z"/></svg>
+  </button>
+
+  <div class="container">
+    <section class="hero">
+      <div class="hero-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="9"/><path d="M12 12V7"/><path d="M12 12l4 2"/><path d="M12 2v2"/>
+        </svg>
+      </div>
+      <h1>表针重合</h1>
+      <p class="subtitle">clock-hands-coincide</p>
+      <div class="hero-question">
+        在一天的 24 小时里，时针、分针和秒针<strong>完全重合</strong>在一起的时候有几次？分别是什么时间？你怎样算出来的？
+      </div>
+    </section>
+
+    <section id="analysis">
+      <span class="label">逻辑解析 / analysis</span>
+      <h2 class="heading">把“重合”写成同一角速度方程</h2>
+      <div class="card">
+        <div class="nav">
+          <div class="status" id="stepStatus">步骤 1 / 3</div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end">
+            <button class="btn" id="btnPrev" disabled>上一步</button>
+            <button class="btn" id="btnNext">下一步</button>
+          </div>
+        </div>
+        <div class="steps">
+          <div class="step-card">
+            <div class="step-title"><div class="badge">1</div><h3>用“圈/秒”表示三根指针速度</h3></div>
+            <p>秒针每 60 秒转 1 圈：ωₛ=1/60。分针每 3600 秒转 1 圈：ωₘ=1/3600。时针每 43200 秒转 1 圈：ωₕ=1/43200。</p>
+          </div>
+          <div class="step-card">
+            <div class="step-title"><div class="badge">2</div><h3>完全重合 ⇔ 三个角度同余</h3></div>
+            <p>从某个 12:00:00 起算 t 秒后，三针角度分别为 ωt（取模 1 圈）。完全重合要求：<strong>ωₛt ≡ ωₘt ≡ ωₕt (mod 1)</strong>。</p>
+          </div>
+          <div class="step-card">
+            <div class="step-title"><div class="badge">3</div><h3>解出最小周期：每 12 小时一次</h3></div>
+            <p>等价于 (ωₛ-ωₘ)t、(ωₛ-ωₕ)t 都是整数。由于 59 与 3600 互素、719 与 43200 互素，可得最小正解是 <strong>t=43200 秒</strong>（12 小时）。<br>因此 24 小时内发生 2 次：<strong>00:00:00 与 12:00:00</strong>。</p>
+          </div>
+        </div>
+        <div class="insight">
+          <span class="label">洞见总结 / insight</span>
+          <ul>
+            <li>“几针重合”本质是<strong>同余方程</strong>与速度差。</li>
+            <li>三针一起重合比“两针重合”稀有得多，这里恰好只剩 <strong>12 小时周期</strong>。</li>
+          </ul>
+        </div>
+        <p class="note">注：若只问“时针与分针重合”，12 小时内为 11 次；本题是三针完全重合。</p>
+      </div>
+    </section>
+  </div>
+  <script>window.initProblemStepper&&window.initProblemStepper();</script>
+</body>
+</html>

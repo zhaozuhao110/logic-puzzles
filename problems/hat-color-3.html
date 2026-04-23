@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>帽子的颜色（三） — 经典逻辑推理</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Noto+Serif+SC:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/base.css">
+  <link rel="stylesheet" href="../assets/problem-gold.css">
+  <script src="../assets/theme.js" defer></script>
+  <script src="../assets/problem-stepper.js" defer></script>
+</head>
+<body>
+  <div class="bg"></div>
+
+  <a href="../index.html" class="back-link">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    <span>返回首页</span>
+  </a>
+  <button class="theme-toggle-sub" id="themeToggle" title="切换明暗模式">
+    <svg class="moon-icon" viewBox="0 0 24 24"><path d="M12.1,22c-4.9,0-9-3.8-9.1-8.7c0-3.1,1.5-6.1,4.1-8c0.2-0.1,0.5-0.1,0.7,0.1c0.2,0.2,0.2,0.5,0.1,0.7c-0.5,0.9-0.7,1.8-0.7,2.8c0,3.5,2.8,6.3,6.3,6.3c1,0,1.9-0.2,2.8-0.7c0.2-0.1,0.5-0.1,0.7,0.1c0.2,0.2,0.2,0.5,0.1,0.7C15.1,20.5,13.6,22,12.1,22z"/></svg>
+    <svg class="sun-icon" viewBox="0 0 24 24"><path d="M12,18c-3.3,0-6-2.7-6-6s2.7-6,6-6s6,2.7,6,6S15.3,18,12,18z M12,8c-2.2,0-4,1.8-4,4s1.8,4,4,4s4-1.8,4-4S14.2,8,12,8z M11,1h2v3h-2V1z M11,20h2v3h-2V20z M3.5,4.9l2.1-2.1l1.4,1.4L4.9,6.3L3.5,4.9z M17,18.4l2.1-2.1l1.4,1.4l-2.1,2.1L17,18.4z M1,11h3v2H1V11z M20,11h3v2h-3V11z M4.9,17.7l2.1,2.1l-1.4,1.4l-2.1-2.1L4.9,17.7z M18.4,5.6l2.1-2.1l1.4,1.4l-2.1,2.1L18.4,5.6z"/></svg>
+  </button>
+
+  <div class="container">
+    <section class="hero">
+      <div class="hero-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M6 10c0-4 3-7 6-7s6 3 6 7"/>
+          <path d="M5 10h14l-1 10H6L5 10z"/>
+        </svg>
+      </div>
+      <h1>帽子的颜色（三）</h1>
+      <p class="subtitle">hat-color-3</p>
+      <div class="hero-question">
+        有 <strong>3 顶红帽</strong>、<strong>4 顶黑帽</strong>、<strong>5 顶白帽</strong>。让 10 个人从矮到高站成一队，每人戴一顶帽子。<br>
+        每个人看不见自己帽子的颜色，只能看见站在前面那些人的帽子颜色（最后一个人能看见前面 9 人）。<br><br>
+        从最后一个人开始依次询问“你是否知道自己帽子的颜色？”若回答不知道，就问前面一个。<br>
+        <strong>假设最前面那个人一定会知道自己戴的是黑帽子。为什么？</strong>
+      </div>
+    </section>
+
+    <section id="analysis">
+      <span class="label">逻辑解析 / analysis</span>
+      <h2 class="heading">把“能立刻确定”的条件写成“看见某两种颜色已用尽”</h2>
+      <div class="card">
+        <div class="nav">
+          <div class="status" id="stepStatus">步骤 1 / 3</div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end">
+            <button class="btn" id="btnPrev" disabled>上一步</button>
+            <button class="btn" id="btnNext">下一步</button>
+          </div>
+        </div>
+
+        <div class="steps" id="steps">
+          <div class="step-card" data-step="1">
+            <div class="step-title"><div class="badge">1</div><h3>“我知道”意味着：另外两色在我眼前已达到上限</h3></div>
+            <p>对于队尾的人来说，他若能确定自己的颜色，通常是因为他看到前面 9 顶帽子里，<strong>某两种颜色的数量已经达到可用上限</strong>，从而排除了自己不可能再是那两色，只剩一种可能。<br>
+              例如：若他看到 3 顶红帽与 5 顶白帽（共 8 顶），第 9 顶无论是什么，红与白都已“用尽”，他就能断定自己只能是黑帽。</p>
+          </div>
+
+          <div class="step-card" data-step="2">
+            <div class="step-title"><div class="badge">2</div><h3>“不知道”会逐层变成公共约束</h3></div>
+            <p>当最后一个人回答“不知道”，等价于一次公共公告：<strong>前 9 人的帽色分布没有触发他能唯一确定的“用尽两色”情形</strong>。<br>
+              同理，每往前一个人，都会在已有公告基础上再加一条“不满足可唯一确定条件”的约束，从而逐层收缩“前面若干人帽色的可能分布”。</p>
+          </div>
+
+          <div class="step-card" data-step="3">
+            <div class="step-title"><div class="badge">3</div><h3>为何最前者最终可唯一锁定为黑帽</h3></div>
+            <p>在 3 红、4 黑、5 白的配额下，“可唯一确定”的边界条件会在一层层“都不知道”的公告中被排除殆尽。到最前面的人时，他看不见任何帽子，但已从前面 9 次回答中获得了足够多的公共约束，使得“自己若不是黑帽”会导致某个更靠后的人早已能利用配额上限推出结论，从而与“他们都不知道”矛盾。<br>
+              因此在该设定下，最前者只能处在仍与所有公告相容的唯一颜色：<strong>黑帽</strong>。</p>
+            <p class="note">注：这题在原始流传版本中通常会给出更精确的“唯一确定条件”枚举表；这里保留其核心思路：用“配额上限 + 公共公告”递推收缩可能世界。</p>
+          </div>
+        </div>
+
+        <div class="insight">
+          <span class="label">洞见总结 / insight</span>
+          <ul>
+            <li>多人“依次回答不知道”的题，本质是<strong>多轮公共公告逻辑</strong>。</li>
+            <li>判断某人能否立刻确定，常用“看见某两色已到上限 ⇒ 自己只能是第三色”。</li>
+            <li>当题目没有给出完整答案时，依然可以用“边界条件 + 递推约束”搭出解题框架。</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    /**
+     * 页面初始化：启用“步骤推进器”轻交互。
+     */
+    function initPage(){
+      if (window.initProblemStepper) window.initProblemStepper();
+    }
+    initPage();
+  </script>
+</body>
+</html>

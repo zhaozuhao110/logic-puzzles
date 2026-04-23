@@ -1,0 +1,130 @@
+/* =========================================================
+ * 题目页统一样式（深色金色强调）
+ * - 搭配 base.css + theme.js 使用
+ * - 允许各题目页用内联 style 仅覆盖 :root 变量或局部细节
+ * ========================================================= */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --gold-bg:#0f0d0a;--gold-surface:#1a1712;--gold-card:#241f18;
+  --gold-bright:#f0c94d;--gold-mid:#d4a537;--gold-dim:#8a6d1b;
+  --cream:#e8dcc8;--cream-dim:#9e9483;--border:rgba(212,165,55,0.15);
+}
+[data-theme="light"]{
+  --gold-bg:#fdfaf0;--gold-surface:#ffffff;--gold-card:#ffffff;
+  --gold-bright:#d4a537;--gold-mid:#b08235;--gold-dim:#85672a;
+  --cream:#1a1410;--cream-dim:#5a5550;--border:rgba(176,130,53,0.2);
+}
+body{
+  font-family:'Noto Serif SC',serif;background:var(--gold-bg);color:var(--cream);
+  min-height:100vh;overflow-x:hidden;line-height:1.8;
+}
+.bg{
+  position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse 60% 50% at 50% 10%,var(--page-glow-1, rgba(212,165,55,0.05)),transparent),
+    radial-gradient(ellipse 50% 45% at 18% 86%,var(--page-glow-2, rgba(74,122,223,0.04)),transparent),
+    var(--gold-bg);
+}
+.bg::before{
+  content:'';position:absolute;inset:0;
+  /* 可变背景纹理（由 assets/theme.js 根据题目自动设置变量） */
+  background:var(--page-pattern,
+    linear-gradient(135deg,transparent 45%,var(--border) 49%,var(--gold-dim) 50%,var(--border) 51%,transparent 55%),
+    linear-gradient(45deg,transparent 45%,var(--border) 49%,var(--gold-dim) 50%,var(--border) 51%,transparent 55%)
+  );
+  background-size:var(--page-pattern-size, 60px 60px);
+  background-position:var(--page-pattern-pos, center);
+  opacity:var(--page-pattern-opacity, 0.10);
+}
+.bg::after{
+  content:'';position:absolute;inset:0;
+  background:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.6' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity:0.05;mix-blend-mode:color-dodge;
+}
+.container{position:relative;z-index:2;max-width:900px;margin:0 auto;padding:0 24px}
+.hero{
+  position:relative;
+  min-height:80vh;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;padding:40px 0;
+}
+.hero::after{
+  content:'';
+  position:absolute;
+  width:var(--hero-mark-size, 420px);
+  height:var(--hero-mark-size, 420px);
+  right:clamp(-120px, -10vw, -40px);
+  top:clamp(40px, 10vh, 120px);
+  background-image:var(--hero-mark, none);
+  background-repeat:no-repeat;
+  background-size:contain;
+  background-position:center;
+  opacity:var(--hero-mark-opacity, 0.09);
+  filter:blur(0.2px) saturate(1.1);
+  pointer-events:none;
+  z-index:0;
+  transform:rotate(var(--hero-mark-rotate, -6deg));
+}
+[data-theme="light"] .hero::after{
+  opacity:var(--hero-mark-opacity-light, 0.08);
+}
+.hero-icon{width:64px;height:64px;margin-bottom:20px;color:var(--gold-mid);opacity:0.85}
+.hero h1{
+  font-family:'Playfair Display','Noto Serif SC',serif;
+  font-size:clamp(2rem,5.5vw,3.4rem);font-weight:900;
+  background:linear-gradient(135deg,var(--gold-bright),var(--gold-mid),var(--gold-dim));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  letter-spacing:0.04em;line-height:1.2;margin-bottom:10px;
+}
+.subtitle{
+  font-size:clamp(0.9rem,2vw,1.1rem);color:var(--cream-dim);font-weight:300;
+  letter-spacing:0.22em;margin-bottom:34px;text-transform:uppercase;
+}
+.hero-question{
+  max-width:640px;text-align:left;background:var(--gold-card);border:1px solid var(--border);
+  padding:22px 26px;border-radius:10px;font-size:0.95rem;color:var(--cream-dim);line-height:2;
+  box-shadow:0 10px 30px rgba(0,0,0,0.12);
+}
+.hero-question strong{color:var(--gold-mid);font-weight:650}
+.story-hook{
+  margin:0 0 12px;
+  padding:10px 12px;
+  border-radius:10px;
+  border:1px solid rgba(212,165,55,0.14);
+  background:rgba(212,165,55,0.06);
+  color:var(--cream-dim);
+  font-size:0.9rem;
+  line-height:1.9;
+}
+[data-theme="light"] .story-hook{background:rgba(176,130,53,0.06)}
+section{padding:64px 0}
+.label{display:inline-block;font-size:0.72rem;letter-spacing:0.28em;color:var(--gold-dim);margin-bottom:10px;text-transform:uppercase}
+.heading{font-size:clamp(1.45rem,3vw,2rem);color:var(--cream);font-weight:800;margin-bottom:18px;line-height:1.35}
+.card{background:var(--gold-surface);border:1px solid var(--border);border-radius:12px;padding:28px}
+.nav{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:14px 0 18px}
+.nav .status{font-size:0.85rem;color:var(--cream-dim);letter-spacing:0.08em}
+.btn{
+  appearance:none;border:1px solid var(--border);background:transparent;color:var(--cream-dim);
+  padding:10px 14px;border-radius:10px;cursor:pointer;font-family:'Noto Serif SC',serif;
+  font-size:0.9rem;transition:all .25s;
+}
+.btn:hover{border-color:rgba(212,165,55,0.35);color:var(--gold-bright);transform:translateY(-1px)}
+.btn:disabled{opacity:.35;cursor:not-allowed;transform:none}
+.steps{display:flex;flex-direction:column;gap:12px}
+.step-card{
+  display:none;background:rgba(0,0,0,0.14);border:1px solid rgba(212,165,55,0.10);
+  border-radius:12px;padding:18px 18px 16px;transition:all .25s;
+}
+[data-theme="light"] .step-card{background:rgba(176,130,53,0.06)}
+.step-card.visible{display:block}
+.step-card.active{border-color:rgba(212,165,55,0.45);box-shadow:0 0 0 4px rgba(212,165,55,0.06)}
+.step-title{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.badge{
+  width:24px;height:24px;border-radius:999px;background:linear-gradient(135deg,var(--gold-bright),var(--gold-mid));
+  color:var(--gold-bg);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:0.78rem;flex:0 0 auto;
+}
+.step-card h3{font-size:1rem;color:var(--gold-mid);font-weight:800}
+.step-card p{font-size:0.92rem;color:var(--cream-dim);line-height:1.9}
+.insight{margin-top:22px}
+.insight ul{margin:10px 0 0 18px;color:var(--cream-dim);font-size:0.92rem;line-height:1.9}
+.insight li strong{color:var(--gold-mid)}
+.note{margin-top:12px;color:var(--cream-dim);font-size:0.9rem}

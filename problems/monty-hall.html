@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>蒙特门难题 — 经典逻辑推理</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Noto+Serif+SC:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/base.css">
+  <script src="../assets/theme.js" defer></script>
+  <style>
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    :root{--gold-bg:#0f0d0a;--gold-surface:#1a1712;--gold-card:#241f18;--gold-bright:#f0c94d;--gold-mid:#d4a537;--gold-dim:#8a6d1b;--cream:#e8dcc8;--cream-dim:#9e9483;--border:rgba(212,165,55,0.15)}
+    [data-theme="light"]{--gold-bg:#fdfaf0;--gold-surface:#fff;--gold-card:#fff;--gold-bright:#d4a537;--gold-mid:#b08235;--gold-dim:#85672a;--cream:#1a1410;--cream-dim:#5a5550;--border:rgba(176,130,53,0.2)}
+    body{font-family:'Noto Serif SC',serif;background:var(--gold-bg);color:var(--cream);min-height:100vh;overflow-x:hidden;line-height:1.8}
+    .bg{position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse 60% 50% at 50% 10%,rgba(212,165,55,0.05),transparent),var(--gold-bg)}
+    .bg::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,transparent 45%,var(--border) 49%,var(--gold-dim) 50%,var(--border) 51%,transparent 55%),linear-gradient(45deg,transparent 45%,var(--border) 49%,var(--gold-dim) 50%,var(--border) 51%,transparent 55%);background-size:60px 60px;opacity:0.1}
+    .bg::after{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.6' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");opacity:0.05;mix-blend-mode:color-dodge}
+    .container{position:relative;z-index:2;max-width:860px;margin:0 auto;padding:0 24px}
+    .hero{min-height:80vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px 0}
+    .hero-icon{width:64px;height:64px;margin-bottom:20px;color:var(--gold-mid);opacity:0.85}
+    .hero h1{font-family:'Playfair Display','Noto Serif SC',serif;font-size:clamp(2rem,5.5vw,3.4rem);font-weight:900;background:linear-gradient(135deg,var(--gold-bright),var(--gold-mid),var(--gold-dim));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:0.04em;line-height:1.2;margin-bottom:10px}
+    .subtitle{font-size:clamp(0.9rem,2vw,1.1rem);color:var(--cream-dim);font-weight:300;letter-spacing:0.22em;margin-bottom:34px;text-transform:uppercase}
+    .hero-question{max-width:600px;text-align:left;background:var(--gold-card);border:1px solid var(--border);padding:22px 26px;border-radius:6px;font-size:0.95rem;color:var(--cream-dim);line-height:2;box-shadow:0 10px 30px rgba(0,0,0,0.12)}
+    .hero-question strong{color:var(--gold-mid);font-weight:650}
+    section{padding:64px 0}
+    .label{display:inline-block;font-size:0.72rem;letter-spacing:0.28em;color:var(--gold-dim);margin-bottom:10px;text-transform:uppercase}
+    .heading{font-size:clamp(1.45rem,3vw,2rem);color:var(--cream);font-weight:800;margin-bottom:18px;line-height:1.35}
+    .card{background:var(--gold-surface);border:1px solid var(--border);border-radius:10px;padding:28px}
+    .nav{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:14px 0 18px}
+    .nav .status{font-size:0.85rem;color:var(--cream-dim);letter-spacing:0.08em}
+    .btn{appearance:none;border:1px solid var(--border);background:transparent;color:var(--cream-dim);padding:10px 14px;border-radius:8px;cursor:pointer;font-family:'Noto Serif SC',serif;font-size:0.9rem;transition:all .25s}
+    .btn:hover{border-color:rgba(212,165,55,0.35);color:var(--gold-bright);transform:translateY(-1px)}
+    .btn:disabled{opacity:.35;cursor:not-allowed;transform:none}
+    .steps{display:flex;flex-direction:column;gap:12px}
+    .step-card{display:none;background:rgba(0,0,0,0.14);border:1px solid rgba(212,165,55,0.10);border-radius:10px;padding:18px 18px 16px;transition:all .25s}
+    [data-theme="light"] .step-card{background:rgba(176,130,53,0.06)}
+    .step-card.visible{display:block}
+    .step-card.active{border-color:rgba(212,165,55,0.45);box-shadow:0 0 0 4px rgba(212,165,55,0.06)}
+    .step-title{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+    .badge{width:24px;height:24px;border-radius:999px;background:linear-gradient(135deg,var(--gold-bright),var(--gold-mid));color:var(--gold-bg);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:0.78rem;flex:0 0 auto}
+    .step-card h3{font-size:1rem;color:var(--gold-mid);font-weight:800}
+    .step-card p{font-size:0.92rem;color:var(--cream-dim);line-height:1.9}
+    .mini{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+    .pill{padding:6px 10px;border-radius:999px;border:1px solid rgba(212,165,55,0.18);color:var(--cream-dim);font-size:0.82rem}
+    .pill strong{color:var(--gold-mid)}
+    .insight{margin-top:22px}
+    .insight ul{margin:10px 0 0 18px;color:var(--cream-dim);font-size:0.92rem;line-height:1.9}
+    .insight li strong{color:var(--gold-mid)}
+  </style>
+</head>
+<body>
+  <div class="bg"></div>
+
+  <a href="../index.html" class="back-link">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    <span>返回首页</span>
+  </a>
+  <button class="theme-toggle-sub" id="themeToggle" title="切换明暗模式">
+    <svg class="moon-icon" viewBox="0 0 24 24"><path d="M12.1,22c-4.9,0-9-3.8-9.1-8.7c0-3.1,1.5-6.1,4.1-8c0.2-0.1,0.5-0.1,0.7,0.1c0.2,0.2,0.2,0.5,0.1,0.7c-0.5,0.9-0.7,1.8-0.7,2.8c0,3.5,2.8,6.3,6.3,6.3c1,0,1.9-0.2,2.8-0.7c0.2-0.1,0.5-0.1,0.7,0.1c0.2,0.2,0.2,0.5,0.1,0.7C15.1,20.5,13.6,22,12.1,22z"/></svg>
+    <svg class="sun-icon" viewBox="0 0 24 24"><path d="M12,18c-3.3,0-6-2.7-6-6s2.7-6,6-6s6,2.7,6,6S15.3,18,12,18z M12,8c-2.2,0-4,1.8-4,4s1.8,4,4,4s4-1.8,4-4S14.2,8,12,8z M11,1h2v3h-2V1z M11,20h2v3h-2V20z M3.5,4.9l2.1-2.1l1.4,1.4L4.9,6.3L3.5,4.9z M17,18.4l2.1-2.1l1.4,1.4l-2.1,2.1L17,18.4z M1,11h3v2H1V11z M20,11h3v2h-3V11z M4.9,17.7l2.1,2.1l-1.4,1.4l-2.1-2.1L4.9,17.7z M18.4,5.6l2.1-2.1l1.4,1.4l-2.1,2.1L18.4,5.6z"/></svg>
+  </button>
+
+  <div class="container">
+    <section class="hero">
+      <div class="hero-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 4h16v16H4z"/><path d="M8 8h8v8H8z"/><path d="M2 12h2M20 12h2"/>
+        </svg>
+      </div>
+      <h1>蒙特门难题</h1>
+      <p class="subtitle">monty-hall</p>
+      <div class="hero-question">
+        你面对三扇门：其中一扇门后有汽车，另外两扇门后是空房间。你先选一扇门（不打开）。主持人<strong>知道门后是什么</strong>，并会从剩下两扇门里打开一扇<strong>必定是空房间</strong>的门。<br><br>
+        然后你可以选择：坚持原来的门，或改选另一扇仍关闭的门。<br>
+        <strong>问：改选是否更有利？为什么？</strong>
+      </div>
+    </section>
+
+    <section id="analysis">
+      <span class="label">逻辑解析 / analysis</span>
+      <h2 class="heading">主持人的“必开空门”改变了概率结构</h2>
+      <div class="card">
+        <div class="nav">
+          <div class="status" id="stepStatus">步骤 1 / 4</div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end">
+            <button class="btn" id="btnPrev" disabled>上一步</button>
+            <button class="btn" id="btnNext">下一步</button>
+          </div>
+        </div>
+
+        <div class="steps">
+          <div class="step-card" data-step="1">
+            <div class="step-title"><div class="badge">1</div><h3>第一眼直觉：剩两门各 1/2？</h3></div>
+            <p>直觉会把“开掉一扇空门”当成普通筛选，误以为剩下两扇门对称，各 1/2。关键在于：主持人的开门行为<strong>不是随机</strong>，而是“避开汽车”的有信息动作。</p>
+          </div>
+          <div class="step-card" data-step="2">
+            <div class="step-title"><div class="badge">2</div><h3>把概率放回第一步：你初选命中汽车概率是 1/3</h3></div>
+            <p>你第一次随便选一扇门，命中汽车的概率是 <strong>1/3</strong>；选中空门的概率是 <strong>2/3</strong>。主持人无论如何都会打开一扇空门，但他无法改变你第一次“选中空门的 2/3 事件”。</p>
+            <div class="mini">
+              <span class="pill">坚持：胜率 <strong>1/3</strong></span>
+              <span class="pill">改选：胜率 <strong>2/3</strong></span>
+            </div>
+          </div>
+          <div class="step-card" data-step="3">
+            <div class="step-title"><div class="badge">3</div><h3>为什么改选是 2/3？</h3></div>
+            <p>当你第一次选错（概率 2/3）时，汽车必在另外两扇门之一。主持人会打开其中的空门，于是<strong>剩下那扇关闭门必定是汽车</strong>。所以“第一次选错”的 2/3 概率整体被转移到“改选成功”。</p>
+          </div>
+          <div class="step-card" data-step="4">
+            <div class="step-title"><div class="badge">4</div><h3>结论：改选更有利（2/3 vs 1/3）</h3></div>
+            <p>坚持只在“你初选就命中汽车”时获胜（1/3）。改选则在“你初选是空门”时获胜（2/3）。因此在该规则下，<strong>改选是严格优势策略</strong>。</p>
+          </div>
+        </div>
+
+        <div class="insight">
+          <span class="label">洞见总结 / insight</span>
+          <ul>
+            <li>关键不是“剩两扇门”，而是<strong>主持人有偏的信息行为</strong>。</li>
+            <li>把概率锚定在第一次选择：<strong>1/3 命中、2/3 命不中</strong>，再讨论主持人能否改变它。</li>
+            <li>这类题的常用技巧：把“条件动作”改写成<strong>分支树</strong>来观察概率流向。</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    var stepCards = Array.prototype.slice.call(document.querySelectorAll('.step-card'));
+    var btnPrev = document.getElementById('btnPrev');
+    var btnNext = document.getElementById('btnNext');
+    var stepStatus = document.getElementById('stepStatus');
+    var currentIndex = 0;
+    var maxVisible = 0;
+
+    /** 更新顶部“步骤 x / y”状态文本 */
+    function updateStatus(){
+      stepStatus.textContent = '步骤 ' + (currentIndex + 1) + ' / ' + stepCards.length;
+    }
+
+    /** 将指定步骤设为“当前高亮”，并确保它已被展示出来 */
+    function setActiveStep(nextIndex){
+      if(nextIndex < 0 || nextIndex >= stepCards.length) return;
+      currentIndex = nextIndex;
+      if(currentIndex > maxVisible) maxVisible = currentIndex;
+      for(var i=0;i<stepCards.length;i++){
+        var el = stepCards[i];
+        if(i <= maxVisible) el.classList.add('visible'); else el.classList.remove('visible');
+        if(i === currentIndex) el.classList.add('active'); else el.classList.remove('active');
+      }
+      btnPrev.disabled = currentIndex === 0;
+      btnNext.disabled = currentIndex === stepCards.length - 1;
+      updateStatus();
+    }
+
+    /** 初始化“按钮推进 + 步骤点击高亮”的轻交互 */
+    function initStepNavigator(){
+      btnPrev.addEventListener('click', function(){ setActiveStep(currentIndex - 1); });
+      btnNext.addEventListener('click', function(){ setActiveStep(currentIndex + 1); });
+      for(var i=0;i<stepCards.length;i++){
+        (function(idx){
+          stepCards[idx].addEventListener('click', function(){ setActiveStep(idx); });
+        })(i);
+      }
+      setActiveStep(0);
+    }
+
+    initStepNavigator();
+  </script>
+</body>
+</html>

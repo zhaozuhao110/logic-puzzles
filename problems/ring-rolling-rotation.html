@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>两个圆环 — 经典逻辑推理</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Noto+Serif+SC:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/base.css"><link rel="stylesheet" href="../assets/problem-gold.css">
+  <script src="../assets/theme.js" defer></script><script src="../assets/problem-stepper.js" defer></script>
+  <style></style>
+</head>
+<body>
+  <div class="bg"></div>
+  <a href="../index.html" class="back-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg><span>返回首页</span></a>
+  <button class="theme-toggle-sub" id="themeToggle" title="切换明暗模式">
+    <svg class="moon-icon" viewBox="0 0 24 24"><path d="M12.1,22c-4.9,0-9-3.8-9.1-8.7c0-3.1,1.5-6.1,4.1-8c0.2-0.1,0.5-0.1,0.7,0.1c0.2,0.2,0.2,0.5,0.1,0.7c-0.5,0.9-0.7,1.8-0.7,2.8c0,3.5,2.8,6.3,6.3,6.3c1,0,1.9-0.2,2.8-0.7c0.2-0.1,0.5-0.1,0.7,0.1c0.2,0.2,0.2,0.5,0.1,0.7C15.1,20.5,13.6,22,12.1,22z"/></svg>
+    <svg class="sun-icon" viewBox="0 0 24 24"><path d="M12,18c-3.3,0-6-2.7-6-6s2.7-6,6-6s6,2.7,6,6S15.3,18,12,18z M12,8c-2.2,0-4,1.8-4,4s1.8,4,4,4s4-1.8,4-4S14.2,8,12,8z M11,1h2v3h-2V1z M11,20h2v3h-2V20z M3.5,4.9l2.1-2.1l1.4,1.4L4.9,6.3L3.5,4.9z M17,18.4l2.1-2.1l1.4,1.4l-2.1,2.1L17,18.4z M1,11h3v2H1V11z M20,11h3v2h-3V11z M4.9,17.7l2.1,2.1l-1.4,1.4l-2.1-2.1L4.9,17.7z M18.4,5.6l2.1-2.1l1.4,1.4l-2.1,2.1L18.4,5.6z"/></svg>
+  </button>
+
+  <div class="container">
+    <section class="hero">
+      <div class="hero-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="3"/></svg></div>
+      <h1>两个圆环</h1>
+      <p class="subtitle">ring-rolling-rotation</p>
+      <div class="hero-question">
+        两个圆环半径分别为 1 和 2。小圆在大圆<strong>内部</strong>沿大圆内侧滚动一周，问小圆自身转了几周？如果在大圆的<strong>外部</strong>沿大圆外侧滚动一周，小圆自身转几周？
+      </div>
+    </section>
+
+    <section id="analysis">
+      <span class="label">逻辑解析 / analysis</span>
+      <h2 class="heading">用“无滑动 ⇒ 走过的弧长 = 转过的周长”</h2>
+      <div class="card">
+        <div class="nav"><div class="status" id="stepStatus">步骤 1 / 3</div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><button class="btn" id="btnPrev" disabled>上一步</button><button class="btn" id="btnNext">下一步</button></div>
+        </div>
+        <div class="steps">
+          <div class="step-card"><div class="step-title"><div class="badge">1</div><h3>外滚：经典结果是“比直觉多 1 圈”</h3></div><p>外滚时，小圆圆心绕大圆走一圈的路径长度是大圆周长 2πR。无滑动意味着小圆沿切线方向“走过的长度”转成自转角度：自转圈数约为 2πR / (2πr) = R/r。但还要加上“绕行一圈带来的额外转动 1 圈”，所以外滚圈数为 <strong>R/r + 1</strong>。</p></div>
+          <div class="step-card"><div class="step-title"><div class="badge">2</div><h3>内滚：方向相反，变成 R/r - 1</h3></div><p>内滚时，几何约束导致额外项符号相反：圈数为 <strong>R/r - 1</strong>（可理解为绕行带来的额外转动抵消一圈）。</p></div>
+          <div class="step-card"><div class="step-title"><div class="badge">3</div><h3>代入 R=2, r=1：外滚 3 圈，内滚 1 圈</h3></div><p>外滚：2/1 + 1 = <strong>3</strong> 圈。内滚：2/1 - 1 = <strong>1</strong> 圈。<br>答案：内侧 1 圈；外侧 3 圈。</p></div>
+        </div>
+        <div class="insight"><span class="label">洞见总结 / insight</span><ul>
+          <li>“多出来的 1 圈”来自圆心绕行一周时参考系的旋转。</li>
+          <li>外滚加 1、内滚减 1，是很多“滚动不滑动”题的速记公式。</li>
+        </ul></div>
+      </div>
+    </section>
+  </div>
+  <script>window.initProblemStepper&&window.initProblemStepper();</script>
+</body>
+</html>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>鲍西娅三世的肖像一 — 经典逻辑推理</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Noto+Serif+SC:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/base.css">
+  <link rel="stylesheet" href="../assets/problem-gold.css">
+  <script src="../assets/theme.js" defer></script>
+  <script src="../assets/problem-stepper.js" defer></script>
+  <style>
+    .hero-question strong{color:var(--gold-bright)}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:18px}
+    @media (max-width:900px){.grid{grid-template-columns:1fr}}
+    .mini-card{background:rgba(0,0,0,0.14);border:1px solid rgba(212,165,55,0.10);border-radius:12px;padding:16px}
+    [data-theme="light"] .mini-card{background:rgba(176,130,53,0.06)}
+    .mini-card h3{color:var(--gold-mid);font-weight:850;font-size:1rem;margin-bottom:8px}
+    .mini-card p{color:var(--cream-dim);font-size:0.92rem;line-height:1.9}
+    .tag{display:inline-block;padding:2px 10px;border-radius:999px;border:1px solid rgba(212,165,55,0.18);background:rgba(212,165,55,0.08);color:var(--cream-dim);font-size:0.82rem;letter-spacing:0.06em}
+  </style>
+</head>
+<body>
+  <div class="bg"></div>
+
+  <a href="../index.html" class="back-link">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    <span>返回首页</span>
+  </a>
+  <button class="theme-toggle-sub" id="themeToggle" title="切换明暗模式">
+    <svg class="moon-icon" viewBox="0 0 24 24"><path d="M12.1,22c-4.9,0-9-3.8-9.1-8.7c0-3.1,1.5-6.1,4.1-8c0.2-0.1,0.5-0.1,0.7,0.1c0.2,0.2,0.2,0.5,0.1,0.7c-0.5,0.9-0.7,1.8-0.7,2.8c0,3.5,2.8,6.3,6.3,6.3c1,0,1.9-0.2,2.8-0.7c0.2-0.1,0.5-0.1,0.7,0.1c0.2,0.2,0.2,0.5,0.1,0.7C15.1,20.5,13.6,22,12.1,22z"/></svg>
+    <svg class="sun-icon" viewBox="0 0 24 24"><path d="M12,18c-3.3,0-6-2.7-6-6s2.7-6,6-6s6,2.7,6,6S15.3,18,12,18z M12,8c-2.2,0-4,1.8-4,4s1.8,4,4,4s4-1.8,4-4S14.2,8,12,8z M11,1h2v3h-2V1z M11,20h2v3h-2V20z M3.5,4.9l2.1-2.1l1.4,1.4L4.9,6.3L3.5,4.9z M17,18.4l2.1-2.1l1.4,1.4l-2.1,2.1L17,18.4z M1,11h3v2H1V11z M20,11h3v2h-3V11z M4.9,17.7l2.1,2.1l-1.4,1.4l-2.1-2.1L4.9,17.7z M18.4,5.6l2.1-2.1l1.4,1.4l-2.1,2.1L18.4,5.6z"/></svg>
+  </button>
+
+  <div class="container">
+    <section class="hero">
+      <div class="hero-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M6 7h12"/><path d="M7 7v13h10V7"/><path d="M9 11h6"/><path d="M10 3h4v4h-4z"/>
+        </svg>
+      </div>
+      <h1>鲍西娅三世的肖像一</h1>
+      <p class="subtitle">THE DAGGER BOXES</p>
+      <div class="hero-question">
+        本城有两位匠人：<strong>切利尼</strong>（作品上刻假话）与 <strong>别利尼</strong>（作品上刻真话）。<br>
+        有金、银、铅三只匣子，每只匣子都由二人之一打造，且每只匣子上刻着一句话：<br>
+        <span class="tag">金</span> “匕首在此匣中”　<span class="tag">银</span> “此匣是空的”　<span class="tag">铅</span> “三只匣中至多一只是别利尼打造的”<br><br>
+        匣中放的不是肖像而是<strong>匕首</strong>。要求：<strong>避开匕首</strong>，应该选哪个匣子？
+      </div>
+    </section>
+
+    <section id="analysis">
+      <span class="label">逻辑解析 / analysis</span>
+      <h2 class="heading">用“最坏情况”锁定安全选择</h2>
+
+      <div class="card">
+        <div class="nav">
+          <div class="status" id="stepStatus">步骤 1 / 4</div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end">
+            <button class="btn" id="btnPrev" disabled>上一步</button>
+            <button class="btn" id="btnNext">下一步</button>
+          </div>
+        </div>
+
+        <div class="steps">
+          <div class="step-card">
+            <div class="step-title"><div class="badge">1</div><h3>把“真假”当作匠人签名</h3></div>
+            <p>每个匣子只刻一句话，因此：若该句为真，它更像别利尼作品；若为假，则更像切利尼作品。铅匣那句还涉及“别利尼数量”，天然是个<strong>自指条件</strong>。</p>
+          </div>
+          <div class="step-card">
+            <div class="step-title"><div class="badge">2</div><h3>分情况：铅匣那句若为真</h3></div>
+            <p>若铅匣那句为真：三匣中别利尼至多 1 只。铅匣本身为真 → 它就是那唯一的别利尼，其余两句为假。<br>
+              则：银匣“空的”为假 → 银匣有匕首；金匣“有匕首”为假 → 金匣无匕首。</p>
+          </div>
+          <div class="step-card">
+            <div class="step-title"><div class="badge">3</div><h3>分情况：铅匣那句若为假</h3></div>
+            <p>若铅匣那句为假：意味着“别利尼不止 1 只”，至少 2 只为别利尼，于是金匣与银匣两句都为真。<br>
+              则：金匣真 → 金匣有匕首；银匣真 → 银匣为空。</p>
+          </div>
+          <div class="step-card">
+            <div class="step-title"><div class="badge">4</div><h3>找两种情况的交集：只有铅匣永远安全</h3></div>
+            <p>两种情况里，匕首要么在<strong>银</strong>（情况 2），要么在<strong>金</strong>（情况 3）。<br>
+              无论哪种，<strong>铅匣都不放匕首</strong>。因此想“稳稳避开”，选铅匣。</p>
+          </div>
+        </div>
+
+        <div class="insight">
+          <span class="label">洞见总结 / insight</span>
+          <ul>
+            <li>遇到<strong>自指/计数</strong>语句，优先用“真假两分支”拆解。</li>
+            <li>当目标是“避险”而非“求真”，用<strong>最坏情况</strong>思维：找分支的交集。</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="grid">
+        <div class="mini-card">
+          <h3>答案</h3>
+          <p>选择：<strong>铅匣</strong>（两种分支下都不会中匕首）。</p>
+        </div>
+        <div class="mini-card">
+          <h3>轻交互</h3>
+          <p>点击“下一步”逐步展开推理链；也可直接点击某一步高亮定位。</p>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>window.initProblemStepper&&window.initProblemStepper();</script>
+</body>
+</html>

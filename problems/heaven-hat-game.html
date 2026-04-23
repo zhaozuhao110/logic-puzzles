@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>天堂里的游戏 — 经典逻辑推理</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Noto+Serif+SC:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/base.css">
+  <link rel="stylesheet" href="../assets/problem-gold.css">
+  <style>
+    /* ===== 六边形星图 ===== */
+    .hex-diagram{
+      display:flex;justify-content:center;margin:0 auto 18px;
+      max-width:520px;width:100%;
+    }
+    .hex-diagram svg{width:100%;height:auto;}
+    .hex-diagram g{transition:opacity 0.45s ease;}
+
+    /* 星图装饰 */
+    .outer-ring{fill:none;stroke:var(--gold-dim,#8a6d1b);stroke-width:0.6;stroke-dasharray:2 6;opacity:0.25}
+    .star-dot{fill:var(--gold-mid,#d4a537);opacity:0.3;transition:opacity 0.6s}
+    .star-dot.twinkle{animation:twinkle 4s ease-in-out infinite}
+    .sight-line{stroke:rgba(240,201,77,0.12);stroke-width:0.5;opacity:0.5}
+    .halo-ring{fill:none;stroke:var(--gold-dim,#8a6d1b);stroke-width:0.5;opacity:0.1;animation:haloPulse 5s ease-in-out infinite}
+    .halo-ring:nth-child(2){animation-delay:1.2s}
+    .halo-ring:nth-child(3){animation-delay:2.4s}
+    @keyframes haloPulse{0%,100%{opacity:0.06}50%{opacity:0.18}}
+    @keyframes twinkle{0%,100%{opacity:0.2}50%{opacity:0.6}}
+
+    /* 对面连线 */
+    .opp-line{fill:none;stroke:var(--gold-dim,#8a6d1b);stroke-width:0.8;stroke-dasharray:4 3;opacity:0.35;transition:all 0.4s}
+
+    /* 人物圈 */
+    .person-c{fill:var(--gold-surface,#1a1712);stroke:var(--gold-dim,#8a6d1b);stroke-width:1.5;transition:stroke 0.35s,stroke-width 0.35s}
+    .person-g-c{fill:rgba(212,165,55,0.14);stroke:var(--gold-bright,#f0c94d);stroke-width:2}
+    .person-lbl{fill:var(--cream,#e8dcc8);font-size:13px;font-weight:700;text-anchor:middle;font-family:'Playfair Display','Noto Serif SC',serif}
+    .person-g-lbl{fill:var(--gold-bright,#f0c94d);font-size:14px;font-weight:900;text-anchor:middle;font-family:'Playfair Display','Noto Serif SC',serif}
+
+    /* 蒙眼布 */
+    .blindfold{fill:var(--cream,#e8dcc8);opacity:0.55;rx:2.5}
+
+    /* 帽子：未知态 */
+    .hat-crown-unk{fill:rgba(212,165,55,0.08);stroke:var(--gold-mid,#d4a537);stroke-width:1.2}
+    .hat-brim-unk{fill:rgba(212,165,55,0.08);stroke:var(--gold-mid,#d4a537);stroke-width:1.2;rx:1.5}
+    .hat-q{fill:var(--cream-dim,#9e9483);font-size:10px;text-anchor:middle;font-family:'Noto Serif SC',serif;opacity:0.5}
+
+    /* 帽子：黑帽态 */
+    .hat-crown-blk{fill:#2a2420;stroke:#8a6d1b;stroke-width:1.5}
+    .hat-brim-blk{fill:#2a2420;stroke:#8a6d1b;stroke-width:1.5;rx:1.5}
+
+    /* 帽子：白帽态（G结论） */
+    .hat-crown-wht{fill:#f0c94d;stroke:#d4a537;stroke-width:0.6}
+    .hat-brim-wht{fill:#f0c94d;stroke:#d4a537;stroke-width:0.6;rx:1.5}
+
+    /* 覆盖指标 */
+    .cover-glow{fill:none;stroke:var(--gold-bright,#f0c94d);stroke-width:2.5;opacity:0.55;transition:opacity 0.4s}
+    .warn-ring{fill:none;stroke:#e74c3c;stroke-width:2;stroke-dasharray:5 3;opacity:0.6;transition:opacity 0.4s}
+    .cover-lbl{fill:var(--gold-bright,#f0c94d);font-size:10px;font-weight:700;text-anchor:middle;font-family:'Noto Serif SC',serif;opacity:0.65}
+    .warn-lbl{fill:#e74c3c;font-size:9px;font-family:'Noto Serif SC',serif;opacity:0.7}
+    .cover-arc{fill:none;stroke:var(--gold-bright,#f0c94d);stroke-width:0.8;stroke-dasharray:5 4;opacity:0.3}
+
+    /* 爆发环 */
+    .reveal-ring{fill:none;stroke:var(--gold-bright,#f0c94d);stroke-width:3;opacity:0;transition:opacity 0.3s}
+
+    /* 图注 */
+    .diagram-note{fill:var(--cream-dim,#9e9483);font-size:10px;text-anchor:middle;font-family:'Noto Serif SC',serif;opacity:0.6;transition:all 0.4s}
+
+    /* ===== 明亮主题 ===== */
+    [data-theme="light"] .person-c{fill:#fff;stroke:#8a6528}
+    [data-theme="light"] .person-g-c{fill:rgba(176,130,53,0.10);stroke:#d4a537}
+    [data-theme="light"] .person-lbl{fill:#1a1410}
+    [data-theme="light"] .person-g-lbl{fill:#d4a537}
+    [data-theme="light"] .blindfold{fill:#5a5550;opacity:0.5}
+    [data-theme="light"] .hat-crown-blk{fill:#3a3028;stroke:#b08235}
+    [data-theme="light"] .hat-brim-blk{fill:#3a3028;stroke:#b08235}
+    [data-theme="light"] .hat-crown-unk{fill:rgba(176,130,53,0.06);stroke:#b08235}
+    [data-theme="light"] .hat-brim-unk{fill:rgba(176,130,53,0.06);stroke:#b08235}
+    [data-theme="light"] .hat-q{fill:#5a5550}
+    [data-theme="light"] .hat-crown-wht{fill:#d4a537;stroke:#b08235}
+    [data-theme="light"] .hat-brim-wht{fill:#d4a537;stroke:#b08235}
+    [data-theme="light"] .outer-ring{stroke:#b08235;opacity:0.2}
+    [data-theme="light"] .star-dot{fill:#b08235}
+    [data-theme="light"] .sight-line{stroke:rgba(176,130,53,0.10)}
+    [data-theme="light"] .halo-ring{stroke:#b08235}
+    [data-theme="light"] .opp-line{stroke:#8a6528}
+    [data-theme="light"] .cover-glow{stroke:#d4a537}
+    [data-theme="light"] .cover-lbl{fill:#d4a537}
+    [data-theme="light"] .warn-ring{stroke:#c0392b}
+    [data-theme="light"] .warn-lbl{fill:#c0392b}
+    [data-theme="light"] .cover-arc{stroke:#d4a537}
+    [data-theme="light"] .reveal-ring{stroke:#d4a537}
+    [data-theme="light"] .diagram-note{fill:#5a5550}
+
+    /* ===== 图注 & 配额徽章 ===== */
+    .diagram-caption{text-align:center;font-size:0.82rem;color:var(--cream-dim);margin-bottom:6px;line-height:1.6}
+    .diagram-caption strong{color:var(--gold-mid)}
+    .hat-quota{
+      display:flex;justify-content:center;gap:6px;align-items:center;
+      margin-bottom:16px;font-size:0.84rem;color:var(--cream-dim);letter-spacing:0.04em;
+    }
+    .hat-quota .qw{color:var(--gold-bright);font-weight:700}
+    .hat-quota .qb{color:var(--cream-dim);font-weight:700}
+    .hat-quota .qt{color:var(--cream);font-weight:900;font-size:0.92rem}
+
+    /* ===== 图表脉冲 ===== */
+    .diagram-pulse{animation:diagPulse 0.7s ease-out}
+    @keyframes diagPulse{
+      0%{filter:drop-shadow(0 0 0 rgba(240,201,77,0))}
+      40%{filter:drop-shadow(0 0 14px rgba(240,201,77,0.18))}
+      100%{filter:drop-shadow(0 0 0 rgba(240,201,77,0))}
+    }
+    [data-theme="light"] .diagram-pulse{animation:diagPulseL 0.7s ease-out}
+    @keyframes diagPulseL{
+      0%{filter:drop-shadow(0 0 0 rgba(176,130,53,0))}
+      40%{filter:drop-shadow(0 0 14px rgba(176,130,53,0.15))}
+      100%{filter:drop-shadow(0 0 0 rgba(176,130,53,0))}
+    }
+
+    /* ===== 覆盖表 ===== */
+    .cover-table{
+      width:100%;border-collapse:separate;border-spacing:3px;margin:14px 0;font-size:0.86rem;
+    }
+    .cover-table th,.cover-table td{
+      padding:7px 9px;border-radius:6px;text-align:center;
+      background:rgba(0,0,0,0.06);color:var(--cream-dim);
+    }
+    .cover-table th{background:rgba(212,165,55,0.08);color:var(--gold-mid);font-weight:700;font-size:0.82rem}
+    .cover-table .cell-yes{background:rgba(240,201,77,0.10);color:var(--gold-bright);font-weight:700}
+    .cover-table .cell-no{background:rgba(231,76,60,0.06);color:#e74c3c;font-weight:600;opacity:0.85}
+    .cover-table .cell-dim{opacity:0.25}
+    .cover-table .cell-result{background:rgba(240,201,77,0.14);color:var(--gold-bright);font-weight:900;font-size:0.92rem}
+    [data-theme="light"] .cover-table th,.cover-table td{background:rgba(0,0,0,0.02)}
+    [data-theme="light"] .cover-table th{background:rgba(176,130,53,0.06)}
+    [data-theme="light"] .cover-table .cell-yes{background:rgba(176,130,53,0.08);color:#d4a537}
+    [data-theme="light"] .cover-table .cell-no{background:rgba(192,57,43,0.06);color:#c0392b}
+    [data-theme="light"] .cover-table .cell-result{background:rgba(176,130,53,0.10);color:#d4a537}
+
+    /* ===== 结论块 ===== */
+    .conclusion{
+      margin-top:18px;padding:18px 20px;
+      background:rgba(240,201,77,0.06);border:1px solid rgba(212,165,55,0.28);
+      border-radius:10px;
+    }
+    .conclusion strong{color:var(--gold-bright);font-weight:900;font-size:1.02rem}
+    .conclusion p{color:var(--cream);font-size:0.94rem;line-height:1.75;margin:6px 0 0}
+
+    /* ===== 步骤标题微调 ===== */
+    .step-card h3{font-size:1rem;color:var(--gold-mid);font-weight:800;line-height:1.35}
+    .step-card p{font-size:0.92rem;color:var(--cream-dim);line-height:1.85}
+  </style>
+  <script src="../assets/theme.js" defer></script>
+  <script src="../assets/problem-stepper.js" defer></script>
+</head>
+<body>
+  <div class="bg"></div>
+
+  <a href="../index.html" class="back-link">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    <span>返回首页</span>
+  </a>
+  <button class="theme-toggle-sub" id="themeToggle" title="切换明暗模式">
+    <svg class="moon-icon" viewBox="0 0 24 24"><path d="M12.1,22c-4.9,0-9-3.8-9.1-8.7c0-3.1,1.5-6.1,4.1-8c0.2-0.1,0.5-0.1,0.7,0.1c0.2,0.2,0.2,0.5,0.1,0.7c-0.5,0.9-0.7,1.8-0.7,2.8c0,3.5,2.8,6.3,6.3,6.3c1,0,1.9-0.2,2.8-0.7c0.2-0.1,0.5-0.1,0.7,0.1c0.2,0.2,0.2,0.5,0.1,0.7C15.1,20.5,13.6,22,12.1,22z"/></svg>
+    <svg class="sun-icon" viewBox="0 0 24 24"><path d="M12,18c-3.3,0-6-2.7-6-6s2.7-6,6-6s6,2.7,6,6S15.3,18,12,18z M12,8c-2.2,0-4,1.8-4,4s1.8,4,4,4s4-1.8,4-4S14.2,8,12,8z M11,1h2v3h-2V1z M11,20h2v3h-2V20z M3.5,4.9l2.1-2.1l1.4,1.4L4.9,6.3L3.5,4.9z M17,18.4l2.1-2.1l1.4,1.4l-2.1,2.1L17,18.4z M1,11h3v2H1V11z M20,11h3v2h-3V11z M4.9,17.7l2.1,2.1l-1.4,1.4l-2.1-2.1L4.9,17.7z M18.4,5.6l2.1-2.1l1.4,1.4l-2.1,2.1L18.4,5.6z"/></svg>
+  </button>
+
+  <div class="container">
+    <section class="hero">
+      <div class="hero-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 10h18"/><path d="M7 10V7a5 5 0 0 1 10 0v3"/><path d="M10 7h4"/>
+        </svg>
+      </div>
+      <h1>天堂里的游戏</h1>
+      <p class="subtitle">heaven-hat-game</p>
+      <div class="hero-question">
+        六个少年 A、B、C、D、E、F 按六边形围坐，少年 G 用毛巾蒙着眼睛坐在中间。<br>
+        有人给每人戴一顶帽子：<strong>四顶白帽</strong>、<strong>三顶黑帽</strong>。由于 G 挡住视线，六个少年都<strong>看不见自己正对面的人</strong>戴的帽子颜色。<br><br>
+        让 A~F 猜自己帽子的颜色，大家都想了一会儿仍猜不出来。<br>
+        这时被蒙眼的 G 说：<strong>"我猜到了，我戴的是白帽子。"</strong><br><br>
+        <strong>问：G 是如何推理的？</strong>
+      </div>
+    </section>
+
+    <section id="analysis">
+      <span class="label">逻辑解析 / analysis</span>
+      <h2 class="heading">看不见的反面就是推理的入口</h2>
+
+      <!-- ===== 配额徽章 ===== -->
+      <div class="hat-quota">
+        <span class="qw">4</span> 白帽 +
+        <span class="qb">3</span> 黑帽 =
+        <span class="qt">7</span> 顶帽子
+      </div>
+
+      <!-- ===== 六边形星图 ===== -->
+      <div class="hex-diagram" id="hexDiagram">
+        <svg viewBox="0 0 500 390" xmlns="http://www.w3.org/2000/svg">
+          <!-- ── 装饰层 ── -->
+          <circle id="outerRing" cx="250" cy="195" r="168" class="outer-ring"/>
+          <!-- 星点（六边形各边中点） -->
+          <circle cx="306" cy="97" r="1.8" class="star-dot twinkle"/>
+          <circle cx="363" cy="195" r="1.8" class="star-dot twinkle" style="animation-delay:0.7s"/>
+          <circle cx="306" cy="293" r="1.8" class="star-dot twinkle" style="animation-delay:1.3s"/>
+          <circle cx="194" cy="293" r="1.8" class="star-dot twinkle" style="animation-delay:2s"/>
+          <circle cx="137" cy="195" r="1.8" class="star-dot twinkle" style="animation-delay:2.6s"/>
+          <circle cx="194" cy="97" r="1.8" class="star-dot twinkle" style="animation-delay:3.2s"/>
+          <!-- 视线（G→每人） -->
+          <line class="sight-line" x1="250" y1="195" x2="250" y2="65"/>
+          <line class="sight-line" x1="250" y1="195" x2="363" y2="130"/>
+          <line class="sight-line" x1="250" y1="195" x2="363" y2="260"/>
+          <line class="sight-line" x1="250" y1="195" x2="250" y2="325"/>
+          <line class="sight-line" x1="250" y1="195" x2="137" y2="260"/>
+          <line class="sight-line" x1="250" y1="195" x2="137" y2="130"/>
+          <!-- 光环（G周围） -->
+          <circle id="halo1" cx="250" cy="195" r="40" class="halo-ring"/>
+          <circle id="halo2" cx="250" cy="195" r="60" class="halo-ring"/>
+          <circle id="halo3" cx="250" cy="195" r="80" class="halo-ring"/>
+
+          <!-- ── 对面连线 ── -->
+          <line id="oppAD" class="opp-line" x1="250" y1="65" x2="250" y2="325"/>
+          <line id="oppBE" class="opp-line" x1="363" y1="130" x2="137" y2="260"/>
+          <line id="oppCF" class="opp-line" x1="363" y1="260" x2="137" y2="130"/>
+
+          <!-- ── 覆盖指标层（步骤4时显示） ── -->
+          <g id="coverageGroup" opacity="0">
+            <!-- 已覆盖光圈 -->
+            <circle cx="250" cy="65" r="30" class="cover-glow"/>
+            <circle cx="363" cy="130" r="30" class="cover-glow"/>
+            <circle cx="250" cy="325" r="30" class="cover-glow"/>
+            <circle cx="137" cy="260" r="30" class="cover-glow"/>
+            <!-- 未覆盖警告圈 -->
+            <circle cx="363" cy="260" r="30" class="warn-ring"/>
+            <circle cx="137" cy="130" r="30" class="warn-ring"/>
+            <!-- 覆盖弧线：黑帽@A → 覆盖A(自身) + D(对面) -->
+            <path d="M250,65 Q250,195 250,325" class="cover-arc"/>
+            <!-- 覆盖弧线：黑帽@B → 覆盖B(自身) + E(对面) -->
+            <path d="M363,130 Q250,195 137,260" class="cover-arc"/>
+            <!-- 标签 -->
+            <text x="280" y="55" class="cover-lbl">✓</text>
+            <text x="393" y="120" class="cover-lbl">✓</text>
+            <text x="280" y="335" class="cover-lbl">✓</text>
+            <text x="115" y="268" class="cover-lbl" text-anchor="end">✓</text>
+            <text x="393" y="260" class="warn-lbl">✗</text>
+            <text x="108" y="130" class="warn-lbl" text-anchor="end">✗</text>
+          </g>
+
+          <!-- ── 爆发环（步骤5结论） ── -->
+          <circle id="revealBurst1" cx="250" cy="195" r="26" class="reveal-ring"/>
+          <circle id="revealBurst2" cx="250" cy="195" r="26" class="reveal-ring" stroke-width="2"/>
+
+          <!-- ── 外圈人物 ── -->
+          <!-- A (顶) -->
+          <g id="personA" transform="translate(250,65)">
+            <circle id="circleA" r="22" class="person-c"/>
+            <text y="5" class="person-lbl">A</text>
+            <g id="hatA" transform="translate(0,-30)">
+              <g id="hatA_unk" opacity="1">
+                <path d="M-15,0 C-15,-3 -11,-14 0,-16 C11,-14 15,-3 15,0" class="hat-crown-unk"/>
+                <rect x="-19" y="-1.5" width="38" height="3" class="hat-brim-unk"/>
+                <text y="-7" class="hat-q">?</text>
+              </g>
+              <g id="hatA_blk" opacity="0">
+                <path d="M-15,0 C-15,-3 -11,-14 0,-16 C11,-14 15,-3 15,0" class="hat-crown-blk"/>
+                <rect x="-19" y="-1.5" width="38" height="3" class="hat-brim-blk"/>
+              </g>
+            </g>
+          </g>
+
+          <!-- B (右上) -->
+          <g id="personB" transform="translate(363,130)">
+            <circle id="circleB" r="22" class="person-c"/>
+            <text y="5" class="person-lbl">B</text>
+            <g id="hatB" transform="translate(0,-30)">
+              <g id="hatB_unk" opacity="1">
+                <path d="M-15,0 C-15,-3 -11,-14 0,-16 C11,-14 15,-3 15,0" class="hat-crown-unk"/>
+                <rect x="-19" y="-1.5" width="38" height="3" class="hat-brim-unk"/>
+                <text y="-7" class="hat-q">?</text>
+              </g>
+              <g id="hatB_blk" opacity="0">
+                <path d="M-15,0 C-15,-3 -11,-14 0,-16 C11,-14 15,-3 15,0" class="hat-crown-blk"/>
+                <rect x="-19" y="-1.5" width="38" height="3" class="hat-brim-blk"/>
+              </g>
+            </g>
+          </g>
+
+          <!-- C (右下) -->
+          <g id="personC" transform="translate(363,260)">
+            <circle id="circleC" r="22" class="person-c"/>
+            <text y="5" class="person-lbl">C</text>
+            <g transform="translate(0,-30)">
+              <path d="M-15,0 C-15,-3 -11,-14 0,-16 C11,-14 15,-3 15,0" class="hat-crown-unk"/>
+              <rect x="-19" y="-1.5" width="38" height="3" class="hat-brim-unk"/>
+              <text y="-7" class="hat-q">?</text>
+            </g>
+          </g>
+
+          <!-- D (底，A对面) -->
+          <g id="personD" transform="translate(250,325)">
+            <circle id="circleD" r="22" class="person-c"/>
+            <text y="5" class="person-lbl">D</text>
+            <g transform="translate(0,-30)">
+              <path d="M-15,0 C-15,-3 -11,-14 0,-16 C11,-14 15,-3 15,0" class="hat-crown-unk"/>
+              <rect x="-19" y="-1.5" width="38" height="3" class="hat-brim-unk"/>
+              <text y="-7" class="hat-q">?</text>
+            </g>
+          </g>
+
+          <!-- E (左下，B对面) -->
+          <g id="personE" transform="translate(137,260)">
+            <circle id="circleE" r="22" class="person-c"/>
+            <text y="5" class="person-lbl">E</text>
+            <g transform="translate(0,-30)">
+              <path d="M-15,0 C-15,-3 -11,-14 0,-16 C11,-14 15,-3 15,0" class="hat-crown-unk"/>
+              <rect x="-19" y="-1.5" width="38" height="3" class="hat-brim-unk"/>
+              <text y="-7" class="hat-q">?</text>
+            </g>
+          </g>
+
+          <!-- F (左上，C对面) -->
+          <g id="personF" transform="translate(137,130)">
+            <circle id="circleF" r="22" class="person-c"/>
+            <text y="5" class="person-lbl">F</text>
+            <g transform="translate(0,-30)">
+              <path d="M-15,0 C-15,-3 -11,-14 0,-16 C11,-14 15,-3 15,0" class="hat-crown-unk"/>
+              <rect x="-19" y="-1.5" width="38" height="3" class="hat-brim-unk"/>
+              <text y="-7" class="hat-q">?</text>
+            </g>
+          </g>
+
+          <!-- ── G（中心，蒙眼） ── -->
+          <g id="personG" transform="translate(250,195)">
+            <circle r="26" class="person-g-c"/>
+            <rect x="-15" y="-9" width="30" height="6" class="blindfold"/>
+            <text y="8" class="person-g-lbl">G</text>
+            <g id="hatG" transform="translate(0,-34)">
+              <g id="hatG_unk" opacity="1">
+                <path d="M-17,0 C-17,-3 -13,-16 0,-18 C13,-16 17,-3 17,0" class="hat-crown-unk"/>
+                <rect x="-21" y="-1.5" width="42" height="3" class="hat-brim-unk"/>
+                <text y="-8" class="hat-q">?</text>
+              </g>
+              <g id="hatG_blk" opacity="0">
+                <path d="M-17,0 C-17,-3 -13,-16 0,-18 C13,-16 17,-3 17,0" class="hat-crown-blk"/>
+                <rect x="-21" y="-1.5" width="42" height="3" class="hat-brim-blk"/>
+              </g>
+              <g id="hatG_wht" opacity="0">
+                <path d="M-17,0 C-17,-3 -13,-16 0,-18 C13,-16 17,-3 17,0" class="hat-crown-wht"/>
+                <rect x="-21" y="-1.5" width="42" height="3" class="hat-brim-wht"/>
+              </g>
+            </g>
+          </g>
+
+          <!-- ── 底部图注 ── -->
+          <text id="diagramNote" x="250" y="380" class="diagram-note">
+            六边形座位：A↔D、B↔E、C↔F 为对面组合
+          </text>
+        </svg>
+      </div>
+      <div class="diagram-caption">
+        虚线 = 对面关系（看不见对方）· 星图随步骤变化，展示推理关键
+      </div>
+
+      <div class="card">
+        <div class="nav">
+          <div class="status" id="stepStatus">步骤 1 / 5</div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end">
+            <button class="btn" id="btnPrev" disabled>上一步</button>
+            <button class="btn" id="btnNext">下一步</button>
+          </div>
+        </div>
+
+        <div class="steps" id="steps">
+          <div class="step-card" data-step="1">
+            <div class="step-title"><div class="badge">1</div><h3>盲区结构：每人看不见的恰好是两顶——自己 + 对面</h3></div>
+            <p>7 顶帽 = 4 白 + 3 黑。对外圈任意一人（以 A 为例）：<br>
+              能看见的 = G 的帽 + 除自己和对面 D 以外的 4 顶 = <strong>5 顶</strong>；<br>
+              看不见的 = 自己的帽 + 对面 D 的帽 = <strong>2 顶</strong>。<br>
+              若 A 在可见 5 顶中<strong>已经看到全部 3 顶黑帽</strong>，则剩下的 2 顶只能是白帽 → 他能立刻说出"我是白帽"。但 A 猜不出来，说明他没看到 3 顶黑帽。</p>
+          </div>
+
+          <div class="step-card" data-step="2">
+            <div class="step-title"><div class="badge">2</div><h3>反设：如果 G 戴黑帽 → 外圈只剩 2 顶黑帽</h3></div>
+            <p>假设 G 戴的是黑帽。3 顶黑帽中 1 顶给了 G，外圈 A~F 只分配了 <strong>2 顶黑帽</strong> + 4 顶白帽。<br>
+              在此假设下，每个外圈人看到的 5 顶帽子里，G 的那顶<strong>一定是黑帽</strong>。如果他还在外圈看到了另外 2 顶黑帽，就凑齐 3 顶 → 能推断自己是白帽。</p>
+          </div>
+
+          <div class="step-card" data-step="3">
+            <div class="step-title"><div class="badge">3</div><h3>"猜不出来" ⇒ 每人盲区必须至少含 1 顶外圈黑帽</h3></div>
+            <p>A~F 都猜不出来 ⇒ 每人看到的 5 顶帽中<strong>未包含全部 3 顶黑帽</strong>。<br>
+              G 的黑帽（在反设下）人人都看得到，所以差距来自外圈：<strong>每人至少有 1 顶外圈黑帽落在他的盲区里</strong>（自己或对面的位置）。<br>
+              翻译成覆盖语言——外圈那 2 顶黑帽，必须对<strong>每个</strong>外圈人都"躲"在盲区中。</p>
+          </div>
+
+          <div class="step-card" data-step="4">
+            <div class="step-title"><div class="badge">4</div><h3>覆盖计数：2 顶黑帽最多覆盖 4 人盲区 ≠ 6 人 → 矛盾</h3></div>
+            <p>一顶外圈黑帽能"躲开"几个人？<br>
+              戴帽者本人看不见自己的帽 → 覆盖<strong>戴帽者</strong>的盲区；<br>
+              对面那人看不见这顶帽 → 覆盖<strong>对面</strong>的盲区。<br>
+              一顶黑帽最多覆盖 <strong>2 人</strong>的盲区。两顶黑帽最多覆盖 <strong>4 人</strong>。</p>
+            <p>但外圈有 <strong>6 人</strong>，每人盲区都需要被覆盖 → 需要 6 个覆盖。4 < 6，不可能！<br>
+              即使把 2 顶黑帽放在覆盖面最广的位置（如 A 和 B），也只能覆盖 4 人：</p>
+            <table class="cover-table">
+              <tr><th></th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th><th>F</th><th>覆盖</th></tr>
+              <tr>
+                <th>黑帽 @ A</th>
+                <td class="cell-yes">✓ 自身</td><td class="cell-dim">—</td><td class="cell-dim">—</td>
+                <td class="cell-yes">✓ 对面</td><td class="cell-dim">—</td><td class="cell-dim">—</td>
+                <td class="cell-yes">2</td>
+              </tr>
+              <tr>
+                <th>黑帽 @ B</th>
+                <td class="cell-dim">—</td><td class="cell-yes">✓ 自身</td><td class="cell-dim">—</td>
+                <td class="cell-dim">—</td><td class="cell-yes">✓ 对面</td><td class="cell-dim">—</td>
+                <td class="cell-yes">2</td>
+              </tr>
+              <tr>
+                <th>合计</th>
+                <td class="cell-yes">✓</td><td class="cell-yes">✓</td><td class="cell-no">✗</td>
+                <td class="cell-yes">✓</td><td class="cell-yes">✓</td><td class="cell-no">✗</td>
+                <td class="cell-result">4 &lt; 6</td>
+              </tr>
+            </table>
+            <p>C 和 F 的盲区中<strong>没有任何黑帽</strong>，他们将看到 G 的黑帽 + A 的黑帽 + B 的黑帽 = 全部 3 顶黑帽 → 立刻猜出自己是白帽。与"全员猜不出来"矛盾。</p>
+          </div>
+
+          <div class="step-card" data-step="5">
+            <div class="step-title"><div class="badge">5</div><h3>结论：反设不成立，G 只能戴白帽</h3></div>
+            <div class="conclusion">
+              <strong>G 戴的是白帽子。</strong>
+              <p>假设 G 戴黑帽 → 外圈只有 2 顶黑帽 → 最多覆盖 4 人盲区 → 至少 2 人能看全 3 顶黑帽 → 他们会猜出 → 与"全员猜不出来"矛盾。<br>
+                所以 G 不可能戴黑帽，只能戴白帽。</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="insight">
+          <span class="label">洞见总结 / insight</span>
+          <ul>
+            <li>蒙眼者虽然看不见，但能利用<strong>"别人看见了什么却仍然沉默"</strong>做推理——沉默本身就是公共信息。</li>
+            <li>每人的<strong>盲区结构</strong>是"自己 + 对面"一对：一顶帽子最多躲开 2 个人，这是覆盖计数的核心。</li>
+            <li><strong>反设 → 推矛盾 → 否定反设</strong>在这类帽子题中反复出现：先假设最不利情况，再用人数约束算出不可能。</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    /* ── 图注文案 ── */
+    var notes = {
+      1: '每人的盲区 = 自己 + 对面 = 看不见的2顶帽子',
+      2: '反设：G戴黑帽 → 外圈只剩2顶黑帽',
+      3: '猜不出来 → 每人盲区必须含至少1顶外圈黑帽',
+      4: '2顶黑帽最多覆盖4人盲区 ≠ 6人 → 矛盾！',
+      5: '结论：G戴白帽 ✓'
+    };
+
+    /* ── 帽子态切换 ── */
+    function setHat(id, state) {
+      var hat = document.getElementById(id);
+      if (!hat) return;
+      var states = id === 'hatG' ? ['unk','blk','wht'] : ['unk','blk'];
+      states.forEach(function(s) {
+        var g = document.getElementById(id + '_' + s);
+        if (g) g.setAttribute('opacity', s === state ? '1' : '0');
+      });
+    }
+
+    /* ── 对面线模式 ── */
+    function setOppLines(mode) {
+      ['oppAD','oppBE','oppCF'].forEach(function(id) {
+        var el = document.getElementById(id);
+        if (!el) return;
+        if (mode === 'highlight') {
+          el.setAttribute('stroke-width', '2');
+          el.setAttribute('stroke-dasharray', '6 4');
+          el.setAttribute('opacity', '0.7');
+          el.setAttribute('stroke', '#f0c94d');
+        } else {
+          el.setAttribute('stroke-width', '0.8');
+          el.setAttribute('stroke-dasharray', '4 3');
+          el.setAttribute('opacity', '0.35');
+          el.setAttribute('stroke', '#8a6d1b');
+        }
+      });
+    }
+
+    /* ── 人物圈标记 ── */
+    function markCircle(id, type) {
+      var c = document.getElementById('circle' + id);
+      if (!c) return;
+      if (type === 'covered') {
+        c.setAttribute('stroke', '#f0c94d');
+        c.setAttribute('stroke-width', '3');
+      } else if (type === 'uncovered') {
+        c.setAttribute('stroke', '#e74c3c');
+        c.setAttribute('stroke-width', '2.5');
+        c.setAttribute('stroke-dasharray', '5 3');
+      } else {
+        c.setAttribute('stroke', '#8a6d1b');
+        c.setAttribute('stroke-width', '1.5');
+        c.setAttribute('stroke-dasharray', 'none');
+      }
+    }
+
+    /* ── 爆发环动画 ── */
+    function animateBurst() {
+      var configs = [
+        { el: 'revealBurst1', startR: 26, endR: 120, dur: 1500, maxOp: 0.6 },
+        { el: 'revealBurst2', startR: 26, endR: 85, dur: 1200, maxOp: 0.4, delay: 180 }
+      ];
+      var now = performance.now();
+      configs.forEach(function(cfg) {
+        var el = document.getElementById(cfg.el);
+        if (!el) return;
+        var t0 = now + (cfg.delay || 0);
+        function frame(ts) {
+          var p = (ts - t0) / cfg.dur;
+          if (p < 0) { requestAnimationFrame(frame); return; }
+          if (p > 1) { el.setAttribute('opacity','0'); return; }
+          var r = cfg.startR + (cfg.endR - cfg.startR) * p;
+          var op = cfg.maxOp * Math.pow(1 - p, 2);
+          el.setAttribute('r', String(Math.max(1, r)));
+          el.setAttribute('opacity', String(Math.max(0, op)));
+          requestAnimationFrame(frame);
+        }
+        requestAnimationFrame(frame);
+      });
+    }
+
+    /* ── 图表脉冲 ── */
+    function pulseDiagram() {
+      var d = document.getElementById('hexDiagram');
+      d.classList.remove('diagram-pulse');
+      void d.offsetWidth;
+      d.classList.add('diagram-pulse');
+    }
+
+    /* ── 同步图表到当前步骤 ── */
+    function syncDiagram() {
+      var active = document.querySelector('.step-card.active');
+      if (!active) return;
+      var step = parseInt(active.getAttribute('data-step') || '1');
+
+      /* 重置 */
+      setHat('hatG','unk'); setHat('hatA','unk'); setHat('hatB','unk');
+      setOppLines('default');
+      ['A','B','C','D','E','F'].forEach(function(id){ markCircle(id,'default'); });
+      var cov = document.getElementById('coverageGroup');
+      if (cov) cov.setAttribute('opacity','0');
+      var b1 = document.getElementById('revealBurst1');
+      var b2 = document.getElementById('revealBurst2');
+      if (b1) b1.setAttribute('opacity','0');
+      if (b2) b2.setAttribute('opacity','0');
+
+      /* 步骤态 */
+      switch(step) {
+        case 1: setOppLines('highlight'); break;
+        case 2: setHat('hatG','blk'); break;
+        case 3: setHat('hatG','blk'); setOppLines('highlight'); break;
+        case 4:
+          setHat('hatG','blk'); setHat('hatA','blk'); setHat('hatB','blk');
+          if (cov) cov.setAttribute('opacity','1');
+          ['A','B','D','E'].forEach(function(id){ markCircle(id,'covered'); });
+          ['C','F'].forEach(function(id){ markCircle(id,'uncovered'); });
+          break;
+        case 5:
+          setHat('hatG','wht');
+          animateBurst();
+          break;
+      }
+
+      /* 图注 */
+      var noteEl = document.getElementById('diagramNote');
+      if (noteEl && notes[step]) noteEl.textContent = notes[step];
+
+      pulseDiagram();
+    }
+
+    /* ── 初始化 ── */
+    function initDiagramSync() {
+      var btnPrev = document.getElementById('btnPrev');
+      var btnNext = document.getElementById('btnNext');
+      if (btnPrev) btnPrev.addEventListener('click', syncDiagram);
+      if (btnNext) btnNext.addEventListener('click', syncDiagram);
+      var cards = document.querySelectorAll('.step-card');
+      for (var i = 0; i < cards.length; i++) {
+        cards[i].addEventListener('click', syncDiagram);
+      }
+      syncDiagram();
+    }
+
+    function initPage() {
+      function run() { initDiagramSync(); }
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', run);
+      } else {
+        run();
+      }
+    }
+    initPage();
+  </script>
+</body>
+</html>

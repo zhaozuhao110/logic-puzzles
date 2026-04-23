@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>水平思考法 — 经典逻辑推理</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Noto+Serif+SC:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/base.css">
+  <link rel="stylesheet" href="../assets/problem-gold.css">
+  <script src="../assets/theme.js" defer></script>
+  <script src="../assets/problem-stepper.js" defer></script>
+</head>
+<body>
+  <div class="bg"></div>
+
+  <a href="../index.html" class="back-link">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    <span>返回首页</span>
+  </a>
+  <button class="theme-toggle-sub" id="themeToggle" title="切换明暗模式">
+    <svg class="moon-icon" viewBox="0 0 24 24"><path d="M12.1,22c-4.9,0-9-3.8-9.1-8.7c0-3.1,1.5-6.1,4.1-8c0.2-0.1,0.5-0.1,0.7,0.1c0.2,0.2,0.2,0.5,0.1,0.7c-0.5,0.9-0.7,1.8-0.7,2.8c0,3.5,2.8,6.3,6.3,6.3c1,0,1.9-0.2,2.8-0.7c0.2-0.1,0.5-0.1,0.7,0.1c0.2,0.2,0.2,0.5,0.1,0.7C15.1,20.5,13.6,22,12.1,22z"/></svg>
+    <svg class="sun-icon" viewBox="0 0 24 24"><path d="M12,18c-3.3,0-6-2.7-6-6s2.7-6,6-6s6,2.7,6,6S15.3,18,12,18z M12,8c-2.2,0-4,1.8-4,4s1.8,4,4,4s4-1.8,4-4S14.2,8,12,8z M11,1h2v3h-2V1z M11,20h2v3h-2V20z M3.5,4.9l2.1-2.1l1.4,1.4L4.9,6.3L3.5,4.9z M17,18.4l2.1-2.1l1.4,1.4l-2.1,2.1L17,18.4z M1,11h3v2H1V11z M20,11h3v2h-3V11z M4.9,17.7l2.1,2.1l-1.4,1.4l-2.1-2.1L4.9,17.7z M18.4,5.6l2.1-2.1l1.4,1.4l-2.1,2.1L18.4,5.6z"/></svg>
+  </button>
+
+  <div class="container">
+    <section class="hero">
+      <div class="hero-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2l3 6h6l-4.8 3.6L18 20l-6-3.5L6 20l1.8-8.4L3 8h6l3-6z"/>
+        </svg>
+      </div>
+      <h1>水平思考法</h1>
+      <p class="subtitle">lateral-thinking-rent</p>
+      <div class="hero-question">
+        一家三口（夫妻二人和一个 5 岁孩子）进城找房，看到一则公寓出租广告。房子很好，于是去敲门。<br>
+        房东打量一番后说：<strong>“对不起，我们公寓不招有孩子的住户。”</strong><br>
+        夫妻俩无奈离开。孩子却又去敲门，对房东说了句话，房东听后大笑，决定把房子租给他们。<br><br>
+        <strong>问：孩子说了什么？</strong>
+      </div>
+    </section>
+
+    <section id="analysis">
+      <span class="label">逻辑解析 / analysis</span>
+      <h2 class="heading">换个角度理解“有孩子”：让语言的指代发生转折</h2>
+      <div class="card">
+        <div class="nav">
+          <div class="status" id="stepStatus">步骤 1 / 3</div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end">
+            <button class="btn" id="btnPrev" disabled>上一步</button>
+            <button class="btn" id="btnNext">下一步</button>
+          </div>
+        </div>
+
+        <div class="steps" id="steps">
+          <div class="step-card" data-step="1">
+            <div class="step-title"><div class="badge">1</div><h3>房东拒绝的理由通常是“噪音/麻烦”，而不是法律问题</h3></div>
+            <p>“不招有孩子的住户”更多是一句生活偏好：怕孩子吵、怕破坏设施等。破解点往往在于<strong>改变房东对“孩子”的认知</strong>。</p>
+          </div>
+
+          <div class="step-card" data-step="2">
+            <div class="step-title"><div class="badge">2</div><h3>一句话让“孩子”不再等同于“这家人的孩子”</h3></div>
+            <p>孩子可以用一句反转式表述，把自己从“他们的孩子”这个身份里摘出去，让房东意识到自己被语言表象误导。</p>
+          </div>
+
+          <div class="step-card" data-step="3">
+            <div class="step-title"><div class="badge">3</div><h3>参考解：孩子说“他们不是我父母，我只是跟他们来的小矮人朋友”</h3></div>
+            <p>一种常见的“水平思考”答案是：孩子一本正经地说：<br>
+              <strong>“先生，他们不是带孩子来租房的——我不是他们的孩子，我只是个跟着来的小矮人（或亲戚家的孩子）。”</strong><br>
+              房东被这种机智的“重新定义”逗笑，于是愿意放松规则。</p>
+            <p class="note">注：此题属于“脑筋急转弯/水平思考”风格，核心不在唯一标准答案，而在于从不同语义角度重新解释条件。</p>
+          </div>
+        </div>
+
+        <div class="insight">
+          <span class="label">洞见总结 / insight</span>
+          <ul>
+            <li>水平思考题常通过<strong>语义歧义</strong>制造突破口。</li>
+            <li>先拆解“规则背后的真实动机”，再对准动机“下手”。</li>
+            <li>如果题目没有唯一解，给出一个<strong>能让人会心一笑且自洽</strong>的解释即可。</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    /**
+     * 页面初始化：启用“步骤推进器”轻交互。
+     */
+    function initPage(){
+      if (window.initProblemStepper) window.initProblemStepper();
+    }
+    initPage();
+  </script>
+</body>
+</html>
